@@ -177,26 +177,12 @@ Based on user confirmation:
 - **Medium confidence:** Partial match — present pros/cons, let user decide
 - **Low confidence:** Can't determine relevance — explain what's unclear, ask user for context
 
-## Integration with Other Skills
+## After Completion
 
-### Downstream
-- **Save** → hands off to `/url-dump` with pre-filled category
+- **Save** → hand off to `/url-dump` with pre-filled category suggestion
+- `/daily-brief` and `/auto-research` often surface new tools — suggest `/scout` to triage them
 
-### Upstream
-- `/daily-brief` may surface new tools/services → user can run `/scout` to evaluate
-- `/auto-research` may discover tools during research → scout can triage them
+## What Good Looks Like
 
-## Success Metrics
-- Quick triage (< 1 minute for single URL in solo mode)
-- Clear, actionable recommendations
-- Accurate vault coverage detection (no duplicate saves)
-- Relevance scoring matches user expectations
-- Smooth handoff to `/url-dump` when saving
+A successful scout triage is quick (under 1 minute for a single URL), gives a clear save/skip recommendation, surfaces existing vault coverage to prevent duplicates, and hands off cleanly to `/url-dump` when saving.
 
-## Philosophy
-
-Scout embodies COG's "evaluate before you accumulate" principle:
-- Not everything deserves a bookmark — be selective
-- Existing coverage should be surfaced before creating duplicates
-- Binary save/skip keeps decisions fast and avoids half-measures
-- Clear recommendations reduce decision fatigue

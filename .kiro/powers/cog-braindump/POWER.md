@@ -248,11 +248,29 @@ tags: ["#competitive", "#intelligence", "#[company-slug]"]
 *Auto-extracted by COG Brain Dump Analyst*
 ```
 
-### 6. Confirm Completion
+### 6. Decision Propagation
+
+If the braindump contains **decisions that supersede existing plans or documents**, update those documents in the same session. Braindumps are the historical record (the "why"); plans are the source of truth (the "what"). Both must stay in sync.
+
+**How to detect:**
+- Phase 2 "Decisions Contemplated" identified concrete choices (e.g., "use X instead of Y", "drop tool Z", "change approach to coded")
+- The braindump's domain/project has existing planning docs, PROJECT-OVERVIEWs, or research files
+
+**When a decision is detected:**
+1. Identify which existing documents are affected (check the project's `planning/`, `research/`, and `PROJECT-OVERVIEW.md`)
+2. Compare dates — if the planning doc is older, it's stale
+3. **Ask the user:** "This braindump changes the plan for [X]. Should I update [list of affected docs] now?"
+4. If yes: update the affected documents and add changelog entries with today's date
+5. If no: add a note to the braindump's Action Items: `- [ ] Pending: propagate decision to [doc list] 📅 [tomorrow's date]`
+
+**Why this matters:** Without propagation, braindumps and plans diverge. The next person (or AI) reading the plan gets outdated information. The braindump has the truth but isn't the expected place to look for current state.
+
+### 7. Confirm Completion
 - Confirm file was created
 - Show user: "Braindump saved to [file path]"
 - Show quick summary of main themes identified
 - If competitive intel extracted, mention: "Also extracted competitive intelligence to [file path]"
+- If decision propagation was done, mention: "Updated [N] planning docs to reflect new decisions"
 
 ## YAML Formatting Requirements
 
@@ -276,74 +294,23 @@ themes: [automation, testing, ui-improvements]
 analysis_needed: "true"
 ```
 
-## Verification Protocols
+## Quality Gates
 
-### Content Accuracy
-- **Interpretation Verification:** Confirm understanding matches intent
-- **Context Validation:** Ensure situational context is accurately captured
-- **Emotional Accuracy:** Verify emotional tone and energy level assessment
-- **Completeness Check:** Confirm all major themes are identified
+Before finalizing the braindump output, verify:
+- **Domain classification is defensible** — if it could go two ways, ask the user
+- **Emotional tone assessment matches content** — don't label frustration as neutral
+- **All major themes are captured** — re-read the raw input and check nothing was missed
+- **Strategic insights are evidence-based** — supported by what the user actually said, not inferred from thin air
 
-### Domain Classification Verification
-- **Boundary Clarity:** Ensure domain classification is clear and defensible
-- **Privacy Protection:** Verify personal content is properly protected
-- **Cross-Domain Value:** Confirm cross-domain insights are valuable and appropriate
-- **Classification Confidence:** State confidence level for domain assignments
+If confidence is below 70%, ask for clarification rather than guessing. State confidence levels in the Processing Notes section: High (90%+), Medium (70-89%), Low (50-69%), Very Low (<50%).
 
-### Strategic Insight Validation
-- **Evidence-Based:** Ensure insights are supported by content evidence
-- **Actionability:** Verify recommendations are specific and implementable
-- **Priority Accuracy:** Confirm priority assessments align with stated goals
-- **Timeline Realism:** Ensure recommended timelines are achievable
+## After Completion
 
-## Uncertainty Handling
+The braindump is a capture point that feeds other skills. After saving, suggest:
+- `/weekly-checkin` — to reflect on themes across multiple braindumps
+- `/knowledge-consolidation` — if patterns are emerging across several braindumps
+- If competitive intel was extracted, mention the competitive intelligence file
 
-### When to Request Clarification
-- **Ambiguous Domain Classification:** Content could belong to multiple domains
-- **Unclear Strategic Implications:** Insights have multiple possible interpretations
-- **Conflicting Information:** Content contains contradictory elements
-- **Missing Context:** Important background information seems to be missing
+## What Good Looks Like
 
-### Confidence Indicators
-- **High Confidence (90%+):** Clear content with obvious domain and implications
-- **Medium Confidence (70-89%):** Generally clear with some ambiguous elements
-- **Low Confidence (50-69%):** Significant ambiguity requiring user input
-- **Very Low Confidence (<50%):** Major uncertainty requiring clarification
-
-Always explicitly state confidence levels and reasoning in the processing notes.
-
-## Integration with Other Skills
-
-### Immediate Follow-up
-After braindump, suggest:
-- Review patterns across multiple braindumps
-- Weekly check-in to reflect on themes
-- Knowledge consolidation to build frameworks
-
-### Competitive Intelligence
-If competitive mentions detected:
-- Automatically update competitive files
-- Mention this in the output
-- Provide link to competitive intelligence file
-
-## Success Metrics
-- Speed of capture (minimize user friction)
-- Accurate domain classification
-- File saved to correct location
-- User feels heard and understood
-- Competitive intel auto-extracted when relevant
-- High confidence in analysis accuracy
-
-## Learning and Adaptation
-
-### Pattern Learning
-- Learn user's thinking patterns and communication style
-- Understand user's specific domain separation preferences
-- Recognize what types of insights user finds most valuable
-- Learn which recommendations user typically implements
-
-### Continuous Improvement
-- Track accuracy of insights and recommendations over time
-- Monitor user engagement with and implementation of recommendations
-- Improve speed and accuracy of analysis through learning
-- Refine analysis frameworks based on effectiveness
+A successful braindump capture means: the user felt heard and unburdened, their raw thoughts are preserved exactly as given, the analysis adds value without distorting meaning, domain classification is correct, and action items are specific with real dates.

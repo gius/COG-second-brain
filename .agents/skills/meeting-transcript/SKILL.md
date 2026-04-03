@@ -221,17 +221,16 @@ status: [processed|needs-follow-up|action-required]
 - Request clarification for ambiguous content
 - Explicitly note when information is incomplete
 
-## Integration with Daily Brief
+## How This Feeds Other Skills
 
-Meeting notes processed by this command feed directly into the daily brief:
-- **Phase 2, Agent 3** (`meeting-reviewer`) scans for recent meeting files
-- **Phase 3** cross-references action items against GitHub PRs and Linear issues
-- **Section 13** (`Meeting Follow-Up Tracker`) tracks commitment completion
+Meeting notes feed directly into the `/team-brief` daily brief:
+- Agent 3 (`meeting-reviewer`) scans for recent meeting files
+- Phase 3 cross-references action items against GitHub PRs and Linear issues
+- Section 13 (`Meeting Follow-Up Tracker`) tracks commitment completion
 
-This creates accountability: decisions and action items from meetings are automatically tracked against actual execution in code and project management tools.
+This creates accountability: decisions and action items from meetings are automatically tracked against actual execution.
 
-## Learning Integration
-- Track meeting effectiveness patterns over time
-- Identify successful decision-making processes
-- Learn team communication preferences
-- Adapt filtering based on user feedback on relevance
+## What Good Looks Like
+
+A successful meeting processing means: all decisions have clear context and rationale, action items have specific owners and deadlines, noise is filtered without losing nuance, and the output is immediately useful for the team brief pipeline.
+

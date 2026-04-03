@@ -31,7 +31,7 @@ Each skill has a full playbook in `.agents/skills/[name]/SKILL.md`. When the use
 | `/braindump` | Capture raw thoughts with domain classification and competitive intelligence extraction | "braindump", "capture thoughts", "write down ideas" |
 | `/daily-brief` | Verified news intelligence from the last 7 days, personalized to user interests | "daily brief", "news", "morning brief" |
 | `/weekly-checkin` | Cross-domain pattern analysis and strategic reflection | "weekly review", "reflect on my week" |
-| `/knowledge-consolidation` | Build frameworks from scattered braindumps, briefs, and notes | "consolidate knowledge", "extract patterns" |
+| `/knowledge-consolidation` | Build frameworks from scattered insights, or run a lightweight vault health audit with freshness scoring | "consolidate knowledge", "extract patterns", "vault health", "vault audit" |
 | `/url-dump` | Save URLs with auto-extracted insights, categorized into knowledge booklets | "save this link", "bookmark this" |
 | `/scout` | Quick-triage URLs — check vault coverage, assess relevance, recommend save or skip | "scout this", "is this relevant?" |
 | `/auto-research` | Decompose strategic questions into parallel research threads with real sources | "research [topic]", "deep dive into [topic]" |

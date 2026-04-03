@@ -346,71 +346,14 @@ After creating the check-in:
 - Skip the emotional/energy assessment
 - Be clinical or robotic in tone
 
-## Pattern Recognition Techniques
+## After Completion
 
-### Frequency Analysis
-- What themes come up repeatedly across braindumps?
-- Which topics get the most attention?
-- What's mentioned but not deeply explored?
+After saving the check-in, suggest:
+- `/knowledge-consolidation` — if patterns across multiple weeks are ready for framework synthesis
+- `/braindump` — if the reflection sparked new thoughts worth capturing separately
+- Review patterns across multiple check-ins for long-term trends
 
-### Temporal Clustering
-- What insights emerged together in time?
-- How did thinking evolve from Monday to Friday?
-- Were there inflection points during the week?
+## What Good Looks Like
 
-### Domain Correlation
-- What patterns cross personal/professional/project boundaries?
-- How do domains influence each other?
-- Where is there alignment or tension?
+A successful weekly check-in means: the user completed a meaningful reflection (not rushed), patterns across domains were identified and documented, clear priorities are set for next week with real dates, the user feels heard and understood, and cross-domain insights reveal connections the user might not have seen on their own.
 
-### Contradiction Analysis
-- Where does thinking conflict with actions?
-- Are there competing priorities?
-- What tensions exist between domains?
-
-### Energy Pattern Detection
-- When was energy highest/lowest?
-- What activities energized vs. drained?
-- How did energy affect productivity and insights?
-
-## Integration with Other Skills
-
-### Pattern Analysis
-Review multiple weekly check-ins to:
-- Spot long-term patterns (monthly, quarterly)
-- Track goal progress over time
-- Identify seasonal or cyclical patterns
-- Use knowledge-consolidation skill to extract frameworks
-
-### Project Tracking
-Weekly check-ins provide:
-- Historical record of project progress
-- Evolution of thinking on projects
-- Correlation between project work and other domains
-- Context for future project analysis
-
-### Knowledge Building
-Check-ins feed into:
-- Personal development patterns
-- Strategic thinking evolution
-- Decision-making frameworks
-- Life/work balance insights
-
-## Success Metrics
-- User completes meaningful reflection
-- Patterns identified and documented
-- Clear priorities set for next week
-- User feels heard and understood
-- File saved with complete information
-- Cross-domain insights revealed
-- Actionable next steps defined
-
-## Philosophy
-
-The weekly check-in skill embodies COG's integrated intelligence approach:
-- Holistic view across all life domains
-- Pattern recognition over isolated events
-- Strategic reflection driving tactical planning
-- Emotional and practical dimensions both honored
-- Thinking evolution tracked and celebrated
-- Self-awareness as foundation for growth

@@ -50,7 +50,7 @@ Done — COG is personalized and ready in ~2 minutes. See [SETUP.md](SETUP.md) f
 | **url-dump** | Save URLs with auto-extracted insights | "Save this URL" |
 | **scout** | Quick-triage URLs and tools — assess relevance, check vault coverage, recommend save or skip | "Scout this" / "Is this relevant?" |
 | **weekly-checkin** | Cross-domain pattern analysis | "Weekly review" |
-| **knowledge-consolidation** | Build frameworks from scattered notes | "Consolidate my knowledge" |
+| **knowledge-consolidation** | Build frameworks from scattered insights, or run a lightweight vault health audit | "Consolidate my knowledge" / "Vault health" |
 | **update-cog** | Update framework files without touching your content | "Update COG" |
 
 ### Team Intelligence Skills (for Product & Engineering Leads)

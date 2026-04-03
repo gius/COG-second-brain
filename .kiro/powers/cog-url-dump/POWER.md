@@ -356,75 +356,20 @@ relevance: high
 reviewed: "false"
 ```
 
-## Verification Protocols
+## Edge Cases
 
-### Content Accuracy
-- **Title Verification:** Ensure extracted title matches page
-- **Author Attribution:** Verify author if stated
-- **Date Accuracy:** Confirm publication date if shown
-- **Summary Fidelity:** Ensure summary accurately represents content
-
-### Categorization Verification
-- **Category Fit:** Confirm content matches selected category
-- **Tag Relevance:** Verify tags accurately describe content
-- **Interest Alignment:** Confirm relevance assessment is accurate
-- **Project Connection:** Verify project relevance if claimed
-
-### Quality Checks
-- **Completeness:** All required fields populated
-- **Formatting:** Proper markdown and YAML syntax
-- **Links:** All internal links valid
-- **Metadata:** Frontmatter properly formatted
-
-## Uncertainty Handling
-
-### When Content is Unclear
 - **Paywalled Content:** Note limitation, extract available preview
-- **Dynamic Content:** Note if content may change
-- **Complex Content:** Flag for manual review if needed
+- **Dynamic Content:** Note if content may change (e.g., live dashboards)
 - **Non-English:** Note language, provide translation if possible
+- **Low Confidence:** If categorization is unclear, save to inbox and flag for manual review
 
-### Confidence Indicators
-- **High Confidence (90%+):** Clear content with obvious categorization
-- **Medium Confidence (70-89%):** Generally clear with some ambiguity
-- **Low Confidence (50-69%):** Significant ambiguity requiring user input
-- **Very Low Confidence (<50%):** Major uncertainty, save to inbox
+## After Completion
 
-Always explicitly state confidence levels and reasoning in processing notes.
+After saving, suggest relevant follow-ups:
+- `/braindump` — if the URL sparked thoughts worth capturing
+- `/knowledge-consolidation` — if booklets are piling up and patterns might be emerging
+- `/scout` — if the user has more URLs to triage before saving
 
-## Integration with Other Skills
+## What Good Looks Like
 
-### Immediate Follow-up
-After URL capture, suggest:
-- `/braindump` - Capture thoughts about the URL
-- `/knowledge-consolidation` - Integrate into knowledge frameworks
-- Daily brief will surface relevant saved URLs
-
-### Cross-Referencing
-Automatically check for connections to:
-- Active projects (from MY-PROFILE.md)
-- Recent braindumps
-- Competitive watchlist companies (if exists)
-- User interests
-
-## Success Metrics
-- Speed of capture (< 30 seconds for single URL)
-- Accurate categorization with user confirmation
-- Useful insight extraction
-- Proper integration with existing knowledge
-- Easy retrieval and discovery later
-- High confidence in extractions
-
-## Learning and Adaptation
-
-### Pattern Learning
-- Track which bookmarks get revisited
-- Learn user's categorization preferences
-- Improve relevance scoring based on engagement
-- Refine insight extraction based on what user finds useful
-
-### Continuous Improvement
-- Monitor categorization accuracy over time
-- Adapt to user's preferred tag taxonomy
-- Learn domain-specific terminology
-- Improve cross-referencing accuracy
+A successful URL capture is fast (under 30 seconds for a single URL), accurately categorized, extracts genuinely useful insights (not just restating the title), and connects to existing vault knowledge where relevant.

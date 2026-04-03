@@ -57,17 +57,9 @@ Find verified, relevant news for personalized daily briefings with strict verifi
 
 Collect the information needed for personalized curation:
 
-- Read `00-inbox/MY-PROFILE.md` for:
-  - User's name
-  - User's role/job
-  - Active projects
-
-- Read `00-inbox/MY-INTERESTS.md` for:
-  - Topics they're interested in
-  - Preferred news sources
-
-- Read `03-professional/COMPETITIVE-WATCHLIST.md` (if exists) for:
-  - Companies/people to track
+- Read `00-inbox/MY-PROFILE.md` for user's name, role, active projects
+- Read `00-inbox/MY-INTERESTS.md` for topics and preferred news sources
+- Read `03-professional/COMPETITIVE-WATCHLIST.md` (if exists) for companies/people to track
 
 #### Deduplication — Previous Brief Scan
 
@@ -87,8 +79,6 @@ During news research (Step 2), apply dedup rules:
 
 ### 2. News Research and Curation
 
-Apply comprehensive news research methodology:
-
 #### Interest-Based Research
 - Search based on user's current interest profile
 - Focus on strategic relevance to user's role and projects
@@ -103,9 +93,9 @@ Apply comprehensive news research methodology:
 - NEVER include older news without explicit disclosure
 
 **Source Credibility Assessment:**
-- **Tier 1 Sources (Highest Credibility):** Major news organizations (Reuters, AP, Bloomberg, WSJ, NYT), official company announcements, government statements
-- **Tier 2 Sources (High Credibility):** Industry publications, credible tech/business blogs, research reports from reputable firms
-- **Tier 3 Sources (Moderate - Verify Carefully):** Social media from verified accounts, company blogs, community discussions
+- **Tier 1 (Highest):** Major news organizations (Reuters, AP, Bloomberg, WSJ, NYT), official company announcements, government statements
+- **Tier 2 (High):** Industry publications, credible tech/business blogs, research reports from reputable firms
+- **Tier 3 (Moderate — Verify Carefully):** Social media from verified accounts, company blogs, community discussions
 - Minimum 2 credible sources for any claim
 - Cross-reference key facts and figures
 
@@ -116,295 +106,57 @@ Apply comprehensive news research methodology:
 
 #### Strategic Relevance Analysis
 
-Assess impact on user:
+Assess impact on user at three levels:
 
-**Direct Impact (High Priority):**
-- News directly affecting user's projects or companies
-- Regulatory changes affecting user's industry
-- Competitive moves by direct competitors
-- Technology developments affecting user's tech stack
-
-**Strategic Impact (Medium Priority):**
-- Market trends affecting user's target customers
-- Investment patterns in user's industry
-- Talent market changes affecting hiring
-- Partnership opportunities or threats
-
-**Contextual Impact (Lower Priority):**
-- Broader economic trends affecting business climate
-- Technology trends affecting future planning
-- Industry thought leadership and opinion
-- Educational content for professional development
+- **Direct Impact (High Priority):** News directly affecting user's projects, regulatory changes in their industry, competitive moves by direct competitors, tech developments affecting their stack
+- **Strategic Impact (Medium):** Market trends affecting target customers, investment patterns, talent market changes, partnership opportunities
+- **Contextual Impact (Lower):** Broader economic trends, future-oriented technology trends, industry thought leadership
 
 #### Opportunity and Threat Identification
 
-**Opportunities:**
-- Market Opportunities: New markets or customer segments opening
-- Technology Opportunities: New tools or platforms to leverage
-- Partnership Opportunities: Potential collaboration partners
-- Competitive Opportunities: Competitor weaknesses or market gaps
-
-**Threats:**
-- Competitive Threats: New competitors or competitive advantages
-- Technology Threats: Disruptive technologies or obsolescence risks
-- Market Threats: Market shifts or customer behavior changes
-- Regulatory Threats: New regulations or compliance requirements
+Scan for actionable signals:
+- **Opportunities:** New markets opening, tools to leverage, partnership candidates, competitor weaknesses
+- **Threats:** New competitors, disruptive tech, market shifts, regulatory changes
 
 ### 3. Generate Daily Brief
 
-Create structured briefing document:
-
-```markdown
-type: "daily-brief"
-domain: "shared"
-date: "YYYY-MM-DD"
-created: "YYYY-MM-DD HH:MM"
-sources_verified: true
-news_age_verified: true
-confidence: "high"
-tags: ["#daily-brief", "#news", "#strategic-intelligence"]
-interests: ["interest1", "interest2"]
-projects_referenced: ["project1"]
-items_count: [number]
-dedup_urls: ["https://primary-source-url-for-each-story-covered"]
-
-# Daily Brief - [Date]
-
-**Good [morning/afternoon], [Name]!**
-
-## Executive Summary
-[2-3 sentences highlighting the most important developments across all your interest areas]
-
-
-## High Impact News
-
-### [News Item 1 - Direct Impact]
-**Relevance:** [Why this matters to you specifically]
-
-[Detailed summary of the news]
-
-**Impact Assessment:**
-- **Projects Affected:** [Which of your projects this impacts]
-- **Potential Effects:** [Specific implications]
-- **Action Suggested:** [Recommended response or follow-up]
-
-**Sources:**
-- [Source Name 1] (Tier [1/2/3]) - [Publication Date] - [Link]
-- [Source Name 2] (Tier [1/2/3]) - [Publication Date] - [Link]
-
-**Confidence:** [High/Medium/Low] - [Reasoning]
-
-
-### [News Item 2 - Direct Impact]
-[Same structure as above]
-
-
-## Strategic Developments
-
-### [News Item 3 - Strategic Impact]
-**Relevance:** [Why this matters strategically]
-
-[Detailed summary]
-
-**Strategic Implications:**
-- [Implication 1]
-- [Implication 2]
-- [Implication 3]
-
-**Sources:**
-- [Source listings with credibility tiers and links]
-
-**Confidence:** [High/Medium/Low] - [Reasoning]
-
-
-## Market Intelligence
-
-### [News Item 4 - Market Trends]
-**Relevance:** [Why this market trend matters]
-
-[Detailed summary]
-
-**Market Impact:**
-- [Impact on target customers]
-- [Industry trends]
-- [Investment patterns]
-
-**Sources:**
-- [Source listings with credibility tiers and links]
-
-**Confidence:** [High/Medium/Low] - [Reasoning]
-
-
-## Technology Watch
-
-### [News Item 5 - Tech Developments]
-**Relevance:** [Why this technology matters]
-
-[Detailed summary]
-
-**Technology Implications:**
-- [Impact on tech stack]
-- [New tools or platforms]
-- [Emerging technologies]
-
-**Sources:**
-- [Source listings with credibility tiers and links]
-
-**Confidence:** [High/Medium/Low] - [Reasoning]
-
-
-## Competitive Landscape
-
-### [Competitor/Company Name - From Watchlist]
-**Recent Activity:**
-
-[Summary of competitive intelligence gathered]
-
-**Competitive Implications:**
-- [What this means for your projects]
-- [Opportunities or threats]
-- [Recommended responses]
-
-**Sources:**
-- [Source listings with credibility tiers and links]
-
-**Confidence:** [High/Medium/Low] - [Reasoning]
-
-
-## Opportunities & Recommendations
-
-**Note:** Calculate actual due dates from today's date and append Obsidian Tasks emoji format.
-
-### Immediate Actions (Today/This Week)
-- [ ] [Specific action item 1] 📅 [YYYY-MM-DD = today's date]
-- [ ] [Specific action item 2] 📅 [YYYY-MM-DD = today's date]
-- [ ] [Specific action item 3] 📅 [YYYY-MM-DD = end of this week]
-
-### Research Needed
-- [Area 1 requiring deeper investigation]
-- [Area 2 to monitor closely]
-
-### People to Inform/Consult
-- [Stakeholder 1]: [About what]
-- [Stakeholder 2]: [About what]
-
-
-## Risks & Threats
-
-### Active Threats
-- **Threat 1:** [Description and mitigation approach]
-- **Threat 2:** [Description and mitigation approach]
-
-### Emerging Risks to Monitor
-- [Risk 1 to watch]
-- [Risk 2 to watch]
-
-
-## Verification Report
-
-### Source Analysis
-- **Tier 1 Sources:** [count] - [list main ones]
-- **Tier 2 Sources:** [count] - [list main ones]
-- **Cross-References Performed:** [number]
-
-### Fact-Checking Results
-- **Verified Claims:** [count]
-- **Unverified Claims:** [count with explanation if any]
-- **Conflicting Information:** [count with resolution approach if any]
-
-### Freshness Verification
-- ✅ All news items verified within 7-day window
-- Publication date range: [Oldest date] to [Newest date]
-
-### Confidence Assessment
-- **Overall Confidence:** [percentage]%
-- **High Confidence Items:** [count]
-- **Medium Confidence Items:** [count]
-- **Low Confidence Items:** [count] - [reasons if any]
-
-
-## Complete Sources
-
-### Strategic News
-1. [Full source citation with link]
-2. [Full source citation with link]
-
-### Market Intelligence
-1. [Full source citation with link]
-2. [Full source citation with link]
-
-### Technology Watch
-1. [Full source citation with link]
-2. [Full source citation with link]
-
-### Competitive Intelligence
-1. [Full source citation with link]
-2. [Full source citation with link]
-
-
-*Curated by COG News Curator | All news verified within 7-day freshness window | Sources cross-referenced for accuracy*
-```
-
 Save to: `01-daily/briefs/daily-brief-YYYY-MM-DD.md`
+
+**Frontmatter fields:** `type: "daily-brief"`, `domain: "shared"`, `date`, `created` (with HH:MM), `sources_verified: true`, `news_age_verified: true`, `confidence`, `tags`, `interests` (array), `projects_referenced` (array), `items_count`, `dedup_urls` (array of primary source URLs for each story covered)
+
+**Required sections:**
+- **Executive Summary** — 2-3 sentences highlighting the most important developments across all interest areas
+- **High Impact News** — Stories with direct impact on user's projects/role. Each item gets: relevance explanation, detailed summary, impact assessment (projects affected, potential effects, suggested action), sources with credibility tiers and links, confidence level
+- **Strategic Developments** — Medium-priority strategic news. Each with: strategic implications list, sourced and confidence-rated
+- **Market Intelligence** — Market trends affecting the user. Impact on customers, industry trends, investment patterns
+- **Technology Watch** — Relevant tech developments. Impact on tech stack, new tools, emerging tech
+- **Competitive Landscape** — Activity from watchlist companies. Recent moves, competitive implications, recommended responses
+- **Opportunities & Recommendations** — Action items in Obsidian Tasks format (`📅 YYYY-MM-DD`): immediate actions (today/this week), research needed, people to inform/consult
+- **Risks & Threats** — Active threats with mitigation approaches, emerging risks to monitor
+- **Verification Report** — Source analysis (counts by tier), fact-checking results (verified/unverified/conflicting claims), freshness verification (all within 7-day window), overall confidence assessment
+- **Complete Sources** — Full citations grouped by section, with links
 
 ### 4. Handle Special Cases
 
-**When No Recent News Found:**
-If no relevant news found in last 7 days for a particular interest area:
-
-```markdown
-### [Interest Area]
-**No significant news found in last 7 days**
-
-Last significant development was [date if known] regarding [topic if known].
-
-**Suggestions:**
-- Consider expanding search criteria
-- Check [alternative sources suggested]
-- This area may be experiencing a quiet period
-```
-
-**NEVER fabricate or use older news without explicit date disclosure.**
+**When No Recent News Found** for an interest area:
+- State clearly: "No significant news found in last 7 days"
+- Note last significant development if known
+- Suggest expanding search criteria or alternative sources
+- NEVER fabricate or use older news without explicit date disclosure
 
 **When Information Cannot Be Verified:**
-```markdown
-### [Potential News Item]
-**⚠️ Unable to verify from independent sources**
-
-**Original Source:** [source] - Credibility: [assessment]
-
-**What We Know:**
-[What can be stated based on single source]
-
-**What's Uncertain:**
-[Specific claims that couldn't be verified]
-
-**Recommendation:** Monitor for additional confirmation before acting
-
-**Confidence:** Low - [reasoning]
-```
+- Mark with ⚠️ warning
+- State what can be confirmed from the single source
+- List what's uncertain
+- Set confidence to Low
+- Recommend monitoring for additional confirmation
 
 **When Sources Conflict:**
-```markdown
-### [News Item with Conflicting Reports]
-**⚠️ Conflicting information from multiple sources**
-
-**Perspective 1:**
-[Summary] - **Source:** [source with credibility tier]
-
-**Perspective 2:**
-[Summary] - **Source:** [source with credibility tier]
-
-**Areas of Agreement:**
-- [What sources agree on]
-
-**Areas of Disagreement:**
-- [Where sources conflict]
-
-**Recommendation:** [Approach for resolution or further research]
-
-**Confidence:** Medium - [reasoning]
-```
+- Mark with ⚠️ warning
+- Present both perspectives with their source credibility tiers
+- List areas of agreement and disagreement
+- Recommend resolution approach
+- Set confidence to Medium
 
 ### 5. Confirm Completion
 - Confirm file was created
@@ -412,60 +164,6 @@ Last significant development was [date if known] regarding [topic if known].
 - Optionally show executive summary
 - Ask if they want to explore any topic deeper or capture thoughts via braindump skill
 
-## Integration with Other Skills
+## What Good Looks Like
 
-### Follow-up Actions
-After daily brief, suggest:
-- **braindump skill** - Capture thoughts sparked by news
-- **weekly-checkin skill** - Reflect on news patterns over the week
-- Project-specific analysis if news impacts active projects
-
-## Performance Metrics
-
-### Verification Quality
-- Source Credibility Score: Average credibility rating of sources used
-- Fact Accuracy Rate: Percentage of facts that remain accurate over time
-- Cross-Reference Rate: Percentage of claims verified through multiple sources
-- Date Accuracy: 100% compliance with 7-day freshness requirement (MANDATORY)
-
-### Relevance Quality
-- User Engagement: Percentage of news items user finds valuable
-- Action Generation: Percentage of news items leading to user action
-- Strategic Value: User assessment of strategic importance
-- Timing Relevance: How well news timing aligns with user needs
-
-## Learning and Adaptation
-
-### Interest Profile Refinement
-- Monitor which news items user finds most valuable
-- Incorporate user feedback on relevance and importance
-- Identify patterns in user interest evolution
-- Anticipate interest changes based on project evolution
-
-### Source Quality Learning
-- Track accuracy of different sources over time
-- Build understanding of source reliability patterns
-- Learn to identify and account for source bias patterns
-- Continuously improve source selection criteria
-
-### Relevance Algorithm Improvement
-- Improve ability to predict news impact on user
-- Learn optimal framing for different types of news
-- Better understanding of user's strategic context
-- Improve identification of actionable news items
-
-## Success Criteria
-- All news within 7-day window (100% compliance)
-- All sources verified and linked
-- User finds briefing relevant and actionable
-- Confidence levels clearly stated
-- Opportunities and risks identified
-- Follow-up actions suggested
-
-## Philosophy
-
-The daily brief skill embodies COG's verification-first approach:
-- No AI hallucinations - everything sourced and verified
-- Transparency in confidence levels
-- Explicit uncertainty when information can't be verified
-- User empowered to make informed decisions based on reliable intelligence
+A successful daily brief means: all news is within the 7-day window (100% compliance), every claim has at least 2 credible sources, confidence levels are honestly stated, the brief is relevant to the user's actual interests and projects, and opportunities/risks are actionable — not generic. The user should walk away informed and knowing what to do, not just what happened.
