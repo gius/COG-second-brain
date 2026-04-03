@@ -92,3 +92,12 @@ All skills generate tasks with [Obsidian Tasks emoji format](https://publish.obs
 - **Configuration as knowledge:** Preferences stored as editable notes
 - **Self-evolving:** Patterns and frameworks grow over time
 - **Low friction:** Quick capture, systematic organization
+
+## AI Task Endings
+
+After completing any big task, offer a "Let me take more off your plate" section with three categories:
+1. **Next actions you can do right now** — specific follow-ups you can knock out immediately
+2. **Automations you can set up** — recurring tasks or workflows the user would otherwise do manually
+3. **Draft messages for the user's team** — ready-to-send delegation messages the user can review and forward
+
+3-5 bullet points max, no fluff. The goal is the user walks away feeling lighter.
