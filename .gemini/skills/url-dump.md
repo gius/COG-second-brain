@@ -34,6 +34,8 @@ Transform raw URLs into structured, insightful knowledge entries through intelli
    - Use interests to help with auto-categorization
    - Check for existing booklet categories in `05-knowledge/booklets/`
 
+**Vault operations and timestamp:** Read `.agents/skills/obsidian/SKILL.md` for vault I/O operations (file creation, search, properties, tags) and follow its timestamp rule and YAML formatting.
+
 ## Process Flow
 
 ### 1. User Interaction & Input Collection
@@ -132,7 +134,7 @@ url: "[original-url]"
 title: "[page-title]"
 author: "[author-if-available]"
 published: "[publish-date-if-available]"
-tags: ["#bookmark", "#category-tag", "#topic-tags"]
+tags: ["bookmark", "category-tag", "topic-tags"]
 relevance: "[high|medium|low]"
 status: "unread"
 related_projects: ["project1", "project2"]
@@ -201,7 +203,7 @@ url: "[url]"
 title: "[tool-name]"
 date_saved: "YYYY-MM-DD"
 pricing: "[free|freemium|paid|enterprise]"
-tags: ["#tool", "#category-tags"]
+tags: ["tool", "category-tags"]
 status: "to-evaluate"
 
 # [Tool Name]
@@ -321,32 +323,6 @@ entry_count: 0
 ## Related Categories
 - [[other-category-1]]
 - [[other-category-2]]
-```
-
-## YAML Formatting Requirements
-
-**CRITICAL:** All YAML frontmatter must use proper Obsidian-compatible formatting:
-- All string values MUST be quoted with double quotes
-- Arrays MUST use quoted strings: `["item1", "item2", "item3"]`
-- URLs MUST be quoted to handle special characters
-- Boolean values should NOT be quoted: `true` or `false`
-- Ensure proper YAML syntax to prevent parsing errors in Obsidian
-
-**Examples:**
-```yaml
-# CORRECT
-type: "url-bookmark"
-url: "https://example.com/path?query=value"
-tags: ["#bookmark", "#article", "#ai"]
-relevance: "high"
-reviewed: false
-
-# INCORRECT
-type: url-bookmark
-url: https://example.com/path?query=value
-tags: [#bookmark, #article, #ai]
-relevance: high
-reviewed: "false"
 ```
 
 ## Edge Cases

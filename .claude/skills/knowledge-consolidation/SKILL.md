@@ -40,11 +40,7 @@ A quick vault health report without framework synthesis. Use when the user says 
 
 ## Pre-Flight Check
 
-**Get current timestamp (REQUIRED before generating any files):**
-
-1. Run `date '+%Y-%m-%d %H:%M'` using Bash to get the actual current date and time
-2. Store this value and use it for the `created:` frontmatter field
-3. NEVER guess or fabricate the time — always use the value returned by the `date` command
+**Vault operations and timestamp:** Read `.agents/skills/obsidian/SKILL.md` for all vault I/O (file creation, search, properties, tags, backlinks, orphans, move/archive). Follow its timestamp rule and YAML formatting. Use CLI operations when available — this skill benefits heavily from `obsidian search`, `obsidian orphans`, `obsidian unresolved`, `obsidian backlinks`, `obsidian move`, and `obsidian tags`.
 
 ## Depth Scaling
 
@@ -361,7 +357,7 @@ After consolidation:
 - Acknowledge uncertainty explicitly
 
 ### Maintain Traceability
-- Always link back to source documents with `[[wiki-links]]`
+- Always link back to source documents with `[[wiki-links]]` (see `references/markdown-syntax.md` in the obsidian skill for full syntax)
 - Show evidence trail for framework claims
 - Document evolution of thinking
 - Make it easy to audit and revise frameworks later

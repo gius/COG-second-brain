@@ -33,11 +33,7 @@ Comprehensive weekly review and analysis integrating insights across all domains
    - Read active projects to review project-specific progress
    - Tailor reflection questions to user's role and projects
 
-**Get current timestamp (REQUIRED before generating any files):**
-
-1. Run `date '+%Y-%m-%d %H:%M'` using Bash to get the actual current date and time
-2. Store this value and use it for the `created:` frontmatter field
-3. NEVER guess or fabricate the time — always use the value returned by the `date` command
+**Vault operations and timestamp:** Read `.agents/skills/obsidian/SKILL.md` for vault I/O operations (file creation, search, properties, tags, tasks) and follow its timestamp rule and YAML formatting.
 
 ## Process Flow
 
@@ -52,6 +48,13 @@ If `MY-PROFILE.md` available:
 - Use user's name for personalization
 - Reference their active projects
 - Tailor questions to their role
+
+#### Knowledge Health Check
+
+Assess consolidation debt:
+- Count braindumps with `status: "captured"` across `02-personal/braindumps/`, `03-professional/braindumps/`, `04-projects/*/braindumps/`, and `00-inbox/braindump-*.md`
+- Find the most recent `05-knowledge/consolidated/consolidation-*.md` and extract its date
+- Calculate days since last consolidation
 
 ### 2. Guided Reflection
 
@@ -128,7 +131,7 @@ domain: "integrated"
 date: "YYYY-MM-DD"
 week_of: "YYYY-MM-DD"
 created: "YYYY-MM-DD HH:MM"
-tags: ["#weekly-checkin", "#reflection", "#planning"]
+tags: ["weekly-checkin", "reflection", "planning"]
 domains_analyzed: ["personal", "professional", "projects"]
 rating: [1-5]
 braindumps_reviewed: [count]
@@ -214,6 +217,14 @@ briefs_reviewed: [count]
 - [ ] [Specific next action 3] 📅 [YYYY-MM-DD = date +1 week from today]
 
 **Rating:** [1-5] ⭐
+
+
+## 📚 Knowledge Health
+
+- **Unconsolidated braindumps:** [count]
+- **Last consolidation:** [date] ([X] days ago)
+- **Debt level:** [Low (<10) | Medium (10-20) | High (20+) | Critical (30+)]
+[If Medium+]: Consider running `/knowledge-consolidation` to process accumulated insights.
 
 
 ## 🔍 Pattern Recognition

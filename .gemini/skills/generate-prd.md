@@ -26,8 +26,7 @@
    - Active projects
    - User's name and role (for PRD author field)
 
-3. **Get current timestamp:**
-   Run `date '+%Y-%m-%d %H:%M'` using Bash for the `created:` frontmatter field
+3. **Vault operations:** Read `.agents/skills/obsidian/SKILL.md` for file creation, timestamp rule, and YAML formatting
 
 
 ## Execution Strategy
@@ -102,7 +101,7 @@ created: [YYYY-MM-DD HH:MM]
 last_updated: [YYYY-MM-DD]
 version: "1.0"
 approvers: [CUSTOMIZE: list of approvers]
-tags: ["#prd", "#product", "#[project-name]"]
+tags: ["prd", "product", "[project-name]"]
 
 # PRD: [Feature Name]
 

@@ -152,7 +152,7 @@ After role pack matching, set up the user's integration preferences:
    ---
    type: integrations
    created: YYYY-MM-DD
-   tags: ["#integrations", "#config", "#cog"]
+   tags: ["integrations", "config", "cog"]
    ---
 
    # My Integrations
@@ -188,7 +188,7 @@ created: YYYY-MM-DD
 onboarding_completed: true
 role_pack: [matched role_id or "custom"]
 agent_mode: [solo or team, based on role pack suggestion]
-tags: ["#profile", "#config", "#cog"]
+tags: ["profile", "config", "cog"]
 
 # My COG Profile
 
@@ -224,7 +224,7 @@ tags: ["#profile", "#config", "#cog"]
 ```markdown
 type: interests
 created: YYYY-MM-DD
-tags: ["#interests", "#daily-brief", "#config"]
+tags: ["interests", "daily-brief", "config"]
 
 # My Interests & News Sources
 
@@ -258,7 +258,7 @@ tags: ["#interests", "#daily-brief", "#config"]
 ```markdown
 type: competitive-intelligence
 created: YYYY-MM-DD
-tags: ["#competitive", "#intelligence", "#tracking"]
+tags: ["competitive", "intelligence", "tracking"]
 
 # Competitive Watchlist
 
@@ -283,7 +283,7 @@ project: [project-name]
 slug: [project-slug]
 created: YYYY-MM-DD
 status: active
-tags: ["#project", "#overview"]
+tags: ["project", "overview"]
 
 # [Project Name]
 
@@ -352,7 +352,7 @@ Generate: `00-inbox/WELCOME-TO-COG.md`
 ```markdown
 type: guide
 created: YYYY-MM-DD
-tags: ["#welcome", "#getting-started", "#cog"]
+tags: ["welcome", "getting-started", "cog"]
 
 # Welcome to Your COG Second Brain, [Name]!
 

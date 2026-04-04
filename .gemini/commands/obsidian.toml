@@ -1,0 +1,6 @@
+description = ">"
+prompt = """
+You are running the COG obsidian workflow. Follow this playbook exactly:
+
+@{.gemini/skills/obsidian.md}
+"""

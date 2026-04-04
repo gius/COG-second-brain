@@ -28,7 +28,7 @@ metadata:
 
 1. **Read `00-inbox/MY-INTEGRATIONS.md`** to determine data sources and publishing options
 2. **Read `00-inbox/MY-PROFILE.md`** for active projects
-3. **Get current timestamp:** Run `date '+%Y-%m-%d %H:%M'` using Bash
+3. **Vault operations:** Read `.agents/skills/obsidian/SKILL.md` for file creation, timestamp rule, and YAML formatting
 
 4. **Ask the user** (if not already provided):
    - What version/release/cycle is this for?
@@ -153,7 +153,7 @@ version: [version]
 date: [YYYY-MM-DD]
 created: [YYYY-MM-DD HH:MM]
 audience: external
-tags: ["#release-notes", "#[project-name]", "#v[version]"]
+tags: ["release-notes", "[project-name]", "v[version]"]
 items_count: [total count]
 categories:
   enhancements: [count]
@@ -214,7 +214,7 @@ version: [version]
 date: [YYYY-MM-DD]
 created: [YYYY-MM-DD HH:MM]
 audience: internal
-tags: ["#release-notes", "#[project-name]", "#v[version]"]
+tags: ["release-notes", "[project-name]", "v[version]"]
 source_tracker: [github/linear/jira/manual]
 
 # Release Notes — [Project Name] [Version] (Internal)

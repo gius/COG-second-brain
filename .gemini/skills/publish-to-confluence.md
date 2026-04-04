@@ -28,7 +28,7 @@
      ```
    - If Confluence is **disabled**: Skip silently per COG conventions. Suggest alternative publishing (HackMD, Notion) if active.
 
-2. **Get current timestamp:** Run `date '+%Y-%m-%d %H:%M'` using Bash
+2. **Vault operations:** Read `.agents/skills/obsidian/SKILL.md` for timestamp rule, property management, and YAML formatting
 
 
 ## Execution Strategy

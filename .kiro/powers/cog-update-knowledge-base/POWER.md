@@ -26,7 +26,7 @@ keywords: ["update knowledge base", "update KB", "sync knowledge", "update produ
 
 1. **Read `00-inbox/MY-INTEGRATIONS.md`** for active data sources and publishing targets
 2. **Read `00-inbox/MY-PROFILE.md`** for active projects
-3. **Get current timestamp:** Run `date '+%Y-%m-%d %H:%M'` using Bash
+3. **Vault operations:** Read `.agents/skills/obsidian/SKILL.md` for file creation, search, timestamp rule, and YAML formatting
 4. **Scan existing knowledge base:** Glob `05-knowledge/**/*.md` to understand current state
 
 
@@ -172,7 +172,7 @@ created: [YYYY-MM-DD HH:MM]
 last_updated: [YYYY-MM-DD]
 source: [release-notes/feature-launch/manual/periodic-review]
 version: "1.0"
-tags: ["#knowledge", "#[project]", "#[topic-area]"]
+tags: ["knowledge", "[project]", "[topic-area]"]
 related:
   - [path to related KB entry]
   - [path to related project file]
@@ -241,7 +241,7 @@ type: kb-update-log
 date: [YYYY-MM-DD]
 created: [YYYY-MM-DD HH:MM]
 trigger: [release/feature/periodic/manual]
-tags: ["#knowledge", "#update-log"]
+tags: ["knowledge", "update-log"]
 
 # Knowledge Base Update — [YYYY-MM-DD]
 

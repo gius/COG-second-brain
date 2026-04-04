@@ -35,11 +35,9 @@ Transform raw thoughts into strategic intelligence through quick capture, system
    - Use user's name for friendly communication
    - Read `03-professional/COMPETITIVE-WATCHLIST.md` if it exists for competitive intelligence detection
 
-**Get current timestamp (REQUIRED before generating any files):**
+**Get current timestamp and set up vault operations:**
 
-1. Run `date '+%Y-%m-%d %H:%M'` using Bash to get the actual current date and time
-2. Store this value and use it for ALL timestamp fields (`created:` frontmatter AND filename `HHMM` component)
-3. NEVER guess or fabricate the time — always use the value returned by the `date` command
+Read `.agents/skills/obsidian/SKILL.md` for all vault I/O operations (file creation, frontmatter, search, tags, wiki-links, task format). Follow its CLI detection (section 1) and timestamp rule (section 3) before generating any files.
 
 ## Process Flow
 
@@ -104,6 +102,12 @@ If COMPETITIVE-WATCHLIST.md exists:
 
 ### 4. Generate Structured Output
 
+#### Tag Validation
+
+Before generating output, validate tags following the obsidian skill's tag hygiene rules (section 5). When CLI is available, query existing tags to prevent fragmentation.
+
+#### File Structure
+
 Create braindump file with this structure:
 
 ```markdown
@@ -113,7 +117,7 @@ project: "[project-name]" # Only if project-specific
 date: "YYYY-MM-DD"
 created: "YYYY-MM-DD HH:MM"
 themes: ["theme1", "theme2", "theme3"]
-tags: ["#braindump", "#raw-thoughts", "#domain-tag"]
+tags: ["braindump", "raw-thoughts", "domain-tag"]
 status: "captured"
 energy_level: "[high|medium|low]"
 emotional_tone: "[primary-emotion]"
@@ -201,15 +205,36 @@ confidence: "[high|medium|low]"
 *Processed by COG Brain Dump Analyst*
 ```
 
-Save to appropriate location:
+#### File Paths
+
+Determine the save path based on domain:
 - **Personal:** `02-personal/braindumps/braindump-YYYY-MM-DD-HHMM-<slug>.md`
 - **Professional:** `03-professional/braindumps/braindump-YYYY-MM-DD-HHMM-<slug>.md`
 - **Project:** `04-projects/[project-slug]/braindumps/braindump-YYYY-MM-DD-HHMM-<slug>.md`
 - **Mixed:** `00-inbox/braindump-YYYY-MM-DD-HHMM-<slug>.md`
 
+#### Saving the File
+
+Use the obsidian skill's vault operations (section 2) to save the file:
+- **Create** the file at the determined path with the markdown body
+- **Set all frontmatter properties:** type, domain, date, created, themes, tags, status, energy_level, emotional_tone, confidence (and `project` if project-specific)
+- Use `silent` flag when creating via CLI to avoid opening the file in Obsidian
+
+#### Connection Discovery
+
+After saving, enrich the Connections section with real vault data instead of guessing:
+- **Search** for related braindumps by the top 2-3 themes
+- **Check backlinks** to see if any existing files already reference this one
+- **Search** for key insight keywords to find relevant frameworks, project docs, or earlier braindumps
+- Update the Connections section with discovered links using `[[wiki-links]]`
+
+Use the obsidian skill's search and backlinks operations — CLI when available, Grep/Glob as fallback.
+
 ### 5. Competitive Intelligence Extraction
 
 If competitive intelligence detected (mentions of companies/people from watchlist):
+
+**Finding existing competitive intel files:** Search for `competitive-intelligence <company>` using the obsidian skill's search operation to check if a file already exists.
 
 Create/update: `04-projects/[project]/competitive/[company-slug].md`
 
@@ -219,7 +244,7 @@ company: "[Company Name]"
 project: "[project-name]"
 last_updated: "YYYY-MM-DD"
 sources: ["braindump"]
-tags: ["#competitive", "#intelligence", "#[company-slug]"]
+tags: ["competitive", "intelligence", "[company-slug]"]
 
 # Competitive Intelligence: [Company Name]
 
@@ -264,28 +289,6 @@ If the braindump contains **decisions that supersede existing plans or documents
 - Show quick summary of main themes identified
 - If competitive intel extracted, mention: "Also extracted competitive intelligence to [file path]"
 - If decision propagation was done, mention: "Updated [N] planning docs to reflect new decisions"
-
-## YAML Formatting Requirements
-
-**CRITICAL:** All YAML frontmatter must use proper Obsidian-compatible formatting:
-- All string values MUST be quoted with double quotes
-- Arrays MUST use quoted strings: `["item1", "item2", "item3"]`
-- Boolean values should NOT be quoted: `true` or `false`
-- Numbers should NOT be quoted unless they are string identifiers
-- Ensure proper YAML syntax to prevent parsing errors in Obsidian
-
-**Examples:**
-```yaml
-# CORRECT
-type: "braindump"
-themes: ["automation", "testing", "ui-improvements"]
-analysis_needed: true
-
-# INCORRECT
-type: braindump
-themes: [automation, testing, ui-improvements]
-analysis_needed: "true"
-```
 
 ## Quality Gates
 

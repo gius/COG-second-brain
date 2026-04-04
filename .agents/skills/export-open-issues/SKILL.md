@@ -28,7 +28,7 @@ metadata:
 
 1. **Read `00-inbox/MY-INTEGRATIONS.md`** to determine which trackers are active
 2. **Read `00-inbox/MY-PROFILE.md`** for active projects
-3. **Get current timestamp:** Run `date '+%Y-%m-%d %H:%M'` using Bash
+3. **Vault operations:** Read `.agents/skills/obsidian/SKILL.md` for file creation, timestamp rule, and YAML formatting
 
 4. **Ask the user** (if not already provided):
    - Which project? (if multiple active)
@@ -143,7 +143,7 @@ project: [project-name]
 date: [YYYY-MM-DD]
 created: [YYYY-MM-DD HH:MM]
 source: [github/linear/jira/multi]
-tags: ["#issues-audit", "#[project-name]", "#backlog"]
+tags: ["issues-audit", "[project-name]", "backlog"]
 summary:
   total_open: [N]
   critical: [N]
