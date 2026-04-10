@@ -353,6 +353,27 @@ When generating tasks, calculate actual dates from the current date:
 
 Always use real calendar dates, never relative text like "next week" or "soon".
 
+### Task Uniqueness
+
+Obsidian Tasks indexes every `- [ ]` line across the vault. If the same task exists as an open checkbox in two files, it appears twice in queries. **An open task must exist as `- [ ]` in exactly one file.**
+
+**When creating a task that duplicates an existing open task:**
+
+1. **In the old file** — remove the `[ ]` checkbox and append a link to the new location:
+   ```markdown
+   - Deploy throttling fix 📅 2026-03-07 → [[weekly-checkin-2026-04-05]]
+   ```
+   Without `[ ]`, Obsidian Tasks ignores the line. The wiki-link provides traceability.
+
+2. **In the new file** — create the task with an updated date:
+   ```markdown
+   - [ ] Deploy throttling fix 📅 2026-04-11
+   ```
+
+3. **Within a single document** — each task appears in exactly one section. For example in a weekly checkin: if a task belongs to a project's "Next Steps", don't also list it in "Carry Forward Items".
+
+**Before generating tasks**, scan related files (previous checkins, braindumps) for existing open `- [ ]` items to avoid duplication.
+
 
 ## 6. COG Vault Structure
 
