@@ -121,6 +121,7 @@ graph TD
 |---|---|---|
 | **Self-Evolving** — Learns your patterns, auto-organizes content, builds frameworks | **Self-Healing** — Rename files or restructure; cross-references update automatically | **Verification-First** — Sources required, 7-day freshness, confidence levels on all analysis |
 | **Privacy-First** — Local `.md` files, strict domain separation, no external servers | **Multi-Device** — iCloud sync to iPhone/iPad/Mac; Git for version history | **Obsidian Tasks** — `📅 YYYY-MM-DD` emoji format works with Tasks plugin dashboards |
+| **Model Tier Routing** — Skills route sub-agents to `worker` / `specialist` / `architect` tiers; provider model mappings in each context file header | | |
 
 ## Your Vault
 

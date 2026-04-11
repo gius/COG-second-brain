@@ -93,6 +93,20 @@ All skills generate tasks with [Obsidian Tasks emoji format](https://publish.obs
 - **Self-evolving:** Patterns and frameworks grow over time
 - **Low friction:** Quick capture, systematic organization
 
+## Model Tiers
+
+When spawning sub-agents in `agent_mode: team`, always set the model tier explicitly. Look up the concrete model name for each tier in your provider-specific context file header (the section above the AUTOGEN_MARKER).
+
+**How to choose the tier:**
+
+- **`worker`** — the sub-agent reads from or queries a single source. Use for: file reads, web searches, API calls, dedup scans, classification, trend detection, anomaly flagging — even if the agent does analysis on what it collects, as long as it works with one data source.
+- **`specialist`** — the sub-agent combines or synthesizes outputs from multiple sources or agents. Use for: cross-reference synthesis, report generation, relevance scoring across domains, combining findings from multiple workers.
+- **`architect`** — the sub-agent needs complex multi-factor reasoning with no clear right answer. Use for: scenario modeling, architecture decisions, strategic analysis across many inputs. The main conversation itself runs at this tier.
+
+**When to delegate vs keep in main conversation:** Delegate any work whose intermediate steps (file reads, tool calls, reasoning chains) don't need to stay in the main context. The sub-agent's working context is discarded after it returns — only the result enters your context. This keeps the main conversation lean for subsequent work. The spawn overhead is small (~few hundred tokens).
+
+**When `agent_mode: solo`:** Do not spawn sub-agents. Handle all work directly.
+
 ## AI Task Endings
 
 After completing any big task, offer a "Let me take more off your plate" section with three categories:

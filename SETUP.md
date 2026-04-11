@@ -169,6 +169,24 @@ COG-second-brain/              # This is your second brain folder
 
 ## Optional: Advanced Configuration
 
+### Model Tier Configuration
+
+COG routes sub-agents to one of three tiers based on source count:
+
+| Tier | Role | Claude Code | Gemini CLI | OpenAI Codex |
+|---|---|---|---|---|
+| `worker` | Single-source collection + first-pass analysis | Haiku | Flash Lite | o4-mini |
+| `specialist` | Multi-source synthesis | Sonnet | Flash | o4-mini |
+| `architect` | Deep reasoning + orchestration | Opus | Pro | o3 |
+
+Tier definitions live in `AGENTS.md` under `## Model Tiers`. Provider mappings live in each context file's header (above the `<!-- AUTO-GENERATED -->` line):
+
+- **`CLAUDE.md`** — Claude Code mappings (edit to swap models)
+- **`GEMINI.md`** — Gemini CLI mappings
+- **`AGENTS.override.md`** — OpenAI Codex mappings (Codex reads `AGENTS.md` natively; this file adds provider-specific config)
+
+To customize: edit the model mapping table in your provider's context file. Never edit below the `<!-- AUTO-GENERATED -->` marker.
+
 ### Git Version Control
 
 Your second brain is already a Git repo (you cloned it). To track your changes:
