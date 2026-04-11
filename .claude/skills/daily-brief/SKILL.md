@@ -25,6 +25,13 @@ Find verified, relevant news for personalized daily briefings with strict verifi
 - If `agent_mode: team` — delegate news research across different interest areas to parallel sub-agents (e.g., one agent per topic cluster). Each agent searches, verifies sources, and returns findings. Combine and synthesize results into the final brief.
 - If `agent_mode: solo` (default) — handle all research and synthesis directly in the conversation. No delegation.
 
+## Interest Tiers
+
+Topics in `MY-INTERESTS.md` may be annotated `[weekly]`. These are slower-moving topics that don't need daily coverage.
+
+- **No annotation** — search every run.
+- **`[weekly]`** — search only on Mondays, or when the user explicitly requests full brief coverage. Skip silently on other days.
+
 ## Pre-Flight Check
 
 **Before executing, check for user profile:**
