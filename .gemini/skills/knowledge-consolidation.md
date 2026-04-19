@@ -223,14 +223,19 @@ Save to: `05-knowledge/consolidated/[framework-name]-framework.md`
 
 **Required sections:**
 - **Framework Overview** — What it is, current status, source count
-- **Core Principles** — Each principle gets: clear statement, evidence (linked sources `[[doc]]`), how it evolved, confidence level (High/Medium/Low with reasoning)
+- **Core Principles** — Each principle gets: clear statement, evidence (linked sources `[[doc]]`), how it evolved, and a short line on the evidence depth — e.g. "5 supporting braindumps across 6 weeks, no contradicting sources" or "only 2 sources, still forming". Avoid abstract High/Medium/Low labels; the evidence count and span are what actually tell you how much to trust the principle.
 - **Applications & Use Cases** — When to apply, how to apply (steps), expected outcomes, real examples from the user's experience
 - **Boundaries & Limitations** — Works when / doesn't work when / common pitfalls
 - **Evolution & History** — Chronological development: what emerged, what catalysts triggered it, evidence trail per phase. End with "Current State" showing latest understanding.
 - **Related Frameworks** — Links to other frameworks with relationship descriptions
 - **Future Development** — Questions to explore, potential extensions, signals to watch for
 
-For **new frameworks**, set `status: "emerging"` and note that it needs more evidence and validation.
+The framework's `status` field is the load-bearing trust signal (not a confidence percentage). Use:
+- `emerging` — first few supporting sources, still forming; needs more evidence before relied on for decisions
+- `working` — enough evidence to use in practice, but still being refined as new data arrives
+- `stable` — well-evidenced, tested across multiple situations, unlikely to change materially
+
+For **new frameworks**, set `status: "emerging"` and explain in the Framework Overview what evidence threshold would promote it to `working`.
 
 #### Pattern Document
 

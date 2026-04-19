@@ -166,9 +166,11 @@ Based on user confirmation:
 
 ## Uncertainty Handling
 
-- **High confidence:** Clear relevance match or clear irrelevance — give direct recommendation
-- **Medium confidence:** Partial match — present pros/cons, let user decide
-- **Low confidence:** Can't determine relevance — explain what's unclear, ask user for context
+Scout's output is a real-time decision aid, not a searchable note — so surfacing uncertainty to the user is the right move when the evidence is genuinely mixed. That's different from the "medium confidence" pattern that laundries unverified content into persistent outputs; here the user is looking at the screen and will decide in the next breath.
+
+- **Clear recommendation:** strong relevance match or clear irrelevance — give a direct Save or Skip
+- **Genuinely mixed:** partial match, or evidence points both ways — show the concrete pros and cons with quotes/facts from the fetched content (not abstract labels), and let the user decide. Don't hide behind "medium confidence" as a catch-all
+- **Can't determine:** the URL failed to fetch, paywall blocked extraction, or the content is too thin to evaluate — explain exactly what's unclear and ask the user for context, rather than recommending based on URL structure alone
 
 ## After Completion
 

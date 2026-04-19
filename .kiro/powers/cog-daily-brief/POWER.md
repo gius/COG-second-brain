@@ -86,24 +86,14 @@ During news research (Step 2), apply dedup rules:
 - Identify emerging patterns and developments
 - Diversify sources for balanced perspective
 
-#### Verification Standards (MANDATORY)
+#### Verification
 
-**Date Verification:**
-- ALL news MUST be from last 7 days ONLY
-- Verify publication dates with verified timestamps
-- NEVER include older news without explicit disclosure
+Source verification follows the research delegation rules in `AGENTS.md → Briefing sub-agents`. Apply them to news specifically:
 
-**Source Credibility Assessment:**
-- **Tier 1 (Highest):** Major news organizations (Reuters, AP, Bloomberg, WSJ, NYT), official company announcements, government statements
-- **Tier 2 (High):** Industry publications, credible tech/business blogs, research reports from reputable firms
-- **Tier 3 (Moderate — Verify Carefully):** Social media from verified accounts, company blogs, community discussions
-- Minimum 2 credible sources for any claim
-- Cross-reference key facts and figures
-
-**Fact Cross-Reference:**
-- Verify claims across multiple independent sources
-- Use WebFetch to verify any statistics before including them
-- Identify potential bias and provide balanced perspective
+- **Primary sources for news:** the original publisher (first outlet to break the story), official company/vendor announcements, GitHub releases pages, GHSA/CVE entries, government or regulatory notices. Aggregators (newsletters, Medium, "top X" roundups, release-tracking sites) are discovery paths, not primary sources — chase them back to the primary and cite that.
+- **One authoritative primary source is enough.** Do not demand a second source when the first is the project's own official channel. Two sources matter only when the primary is disputed.
+- **All news must fall within the last 7 days.** If a sub-agent returns an item outside the window, drop it or clearly mark it as context with the actual date shown inline.
+- **Sub-agent return format must include a `Verification proof` field** with the WebFetched title and publication date. Items without this field are dropped before synthesis — no "medium confidence" laundering.
 
 #### Strategic Relevance Analysis
 
@@ -125,16 +115,13 @@ Save to: `01-daily/briefs/daily-brief-YYYY-MM-DD.md`
 
 **Frontmatter fields:** `type: "daily-brief"`, `domain: "shared"`, `date`, `created` (with HH:MM), `sources_verified: true`, `news_age_verified: true`, `confidence`, `tags`, `interests` (array), `projects_referenced` (array), `items_count`, `dedup_urls` (array of primary source URLs for each story covered)
 
-**Required sections:**
+**Output sections** — use only the ones with real content this week. Don't pad empty buckets; a short brief with airtight items beats a long brief with filler.
 - **Executive Summary** — 2-3 sentences highlighting the most important developments across all interest areas
-- **High Impact News** — Stories with direct impact on user's projects/role. Each item gets: relevance explanation, detailed summary, impact assessment (projects affected, potential effects, suggested action), sources with credibility tiers and links, confidence level
-- **Strategic Developments** — Medium-priority strategic news. Each with: strategic implications list, sourced and confidence-rated
-- **Market Intelligence** — Market trends affecting the user. Impact on customers, industry trends, investment patterns
-- **Technology Watch** — Relevant tech developments. Impact on tech stack, new tools, emerging tech
-- **Competitive Landscape** — Activity from watchlist companies. Recent moves, competitive implications, recommended responses
+- **High Impact News** — Stories with direct impact on user's projects/role. Each item gets: relevance explanation, summary, impact assessment (projects affected, potential effects, suggested action), primary source link
+- **Strategic Developments** — Medium-priority strategic news with strategic implications
+- **Market Intelligence / Technology Watch / Competitive Landscape** — optional sub-buckets if content warrants; merge or omit when thin
 - **Opportunities & Recommendations** — Action items in Obsidian Tasks format (`📅 YYYY-MM-DD`): immediate actions (today/this week), research needed, people to inform/consult
 - **Risks & Threats** — Active threats with mitigation approaches, emerging risks to monitor
-- **Verification Report** — Source analysis (counts by tier), fact-checking results (verified/unverified/conflicting claims), freshness verification (all within 7-day window), overall confidence assessment
 - **Complete Sources** — Full citations grouped by section, with links
 
 ### 4. Handle Special Cases
@@ -145,19 +132,9 @@ Save to: `01-daily/briefs/daily-brief-YYYY-MM-DD.md`
 - Suggest expanding search criteria or alternative sources
 - NEVER fabricate or use older news without explicit date disclosure
 
-**When Information Cannot Be Verified:**
-- Mark with ⚠️ warning
-- State what can be confirmed from the single source
-- List what's uncertain
-- Set confidence to Low
-- Recommend monitoring for additional confirmation
+**When a claim cannot be verified against a primary source:** drop it. Do not include with a warning icon and a softened confidence label — that's how unverified content ends up shaping decisions.
 
-**When Sources Conflict:**
-- Mark with ⚠️ warning
-- Present both perspectives with their source credibility tiers
-- List areas of agreement and disagreement
-- Recommend resolution approach
-- Set confidence to Medium
+**When two primary sources disagree:** present both with their URLs and note the disagreement explicitly. Do not pick a winner; let the user see the conflict.
 
 ### 5. Confirm Completion
 - Confirm file was created
@@ -167,4 +144,4 @@ Save to: `01-daily/briefs/daily-brief-YYYY-MM-DD.md`
 
 ## What Good Looks Like
 
-A successful daily brief means: all news is within the 7-day window (100% compliance), every claim has at least 2 credible sources, confidence levels are honestly stated, the brief is relevant to the user's actual interests and projects, and opportunities/risks are actionable — not generic. The user should walk away informed and knowing what to do, not just what happened.
+A successful daily brief means: every item traces to a primary source the agent actually fetched, all news is within the 7-day window, the brief is relevant to the user's actual interests and projects, and opportunities/risks are actionable — not generic. The user should be able to forward any item to a colleague without saying "let me verify this first."

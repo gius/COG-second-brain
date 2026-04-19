@@ -45,6 +45,8 @@ Same as the daily brief — direct, opinionated, teammate energy. But with more 
 
 **Launch ALL agents in parallel using the Task tool with `run_in_background: true`.**
 
+**Note on verification:** These agents query authenticated systems (gh CLI, Linear/PostHog/Slack MCPs) and read vault files — they are not doing open-web research, so the research delegation rule in `AGENTS.md → Briefing sub-agents` does not apply literally. The hallucination risk is lower because the sources are systems of record. Each agent must still return source-traceable evidence (commit SHAs, PR numbers, issue IDs, channel + timestamp, file paths, specific query results) rather than paraphrased summaries — if it can't point to the exact record, it doesn't belong in the report.
+
 #### Agent 1: "github-deep-analyst" (subagent_type: general-purpose)
 ```
 Deep GitHub analysis for [CUSTOMIZE: your-org/your-repo].
@@ -236,7 +238,7 @@ Return structured data AND insights.
 
 After all agents complete, the orchestrator performs deep cross-referencing:
 
-1. **All 23 cross-reference patterns from the daily brief** (see daily-brief.md)
+1. **Apply daily-brief's verification discipline at the data layer.** Every claim in the synthesis must trace to a specific cited data point — commit SHA, PR number, issue ID, channel + timestamp, dashboard query, file path — not a paraphrase of "from the github-deep-analyst's findings." If a claim can't be pinned to a specific record, drop it.
 
 2. **Additional comprehensive patterns:**
    - **Week-over-week velocity trend**: Is the team accelerating or decelerating? Why?

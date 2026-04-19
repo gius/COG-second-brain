@@ -87,12 +87,14 @@ Extract and identify:
 - **Decisions Contemplated:** [choices being considered]
 - **Action Items:** [tasks and commitments identified]
 
-#### Phase 3: Domain Classification (with confidence)
+#### Phase 3: Domain Classification
 Determine:
-- **Primary Domain:** [personal|professional|project-specific] with confidence level
+- **Primary Domain:** [personal|professional|project-specific]
 - **Secondary Domains:** [if content spans multiple areas]
 - **Cross-Domain Elements:** [themes that apply across domains]
 - **Privacy Considerations:** [sensitive content requiring protection]
+
+If the domain is genuinely ambiguous, ask the user rather than picking one.
 
 #### Phase 4: Strategic Insight Extraction
 Identify:
@@ -128,7 +130,6 @@ tags: ["braindump", "raw-thoughts", "domain-tag"]
 status: "captured"
 energy_level: "[high|medium|low]"
 emotional_tone: "[primary-emotion]"
-confidence: "[high|medium|low]"
 
 # Braindump: [Auto-generated descriptive title]
 
@@ -191,7 +192,7 @@ confidence: "[high|medium|low]"
 - **Knowledge Base:** [[insight1]], [[framework1]]
 
 ## Domain Classification
-- **Primary Domain:** [domain] ([confidence]%)
+- **Primary Domain:** [domain]
 - **Reasoning:** [why this classification]
 - **Cross-Domain Elements:** [if applicable]
 - **Privacy Level:** [public|private|confidential]
@@ -202,11 +203,8 @@ confidence: "[high|medium|low]"
 - **Emotional Tone:** [assessment]
 - **Implications:** [what this suggests]
 
-### Confidence Assessment
-- **Overall Analysis:** [percentage] - [reasoning]
-- **Domain Classification:** [percentage] - [reasoning]
-- **Strategic Insights:** [percentage] - [reasoning]
-- **Areas Requiring Clarification:** [specific questions if needed]
+### Open Questions
+[Only include if the braindump left anything ambiguous — specific questions the user should answer before the analysis can be relied on. Skip this subsection if the analysis is straightforward.]
 
 
 *Processed by COG Brain Dump Analyst*
@@ -224,7 +222,7 @@ Determine the save path based on domain:
 
 Use the obsidian skill's vault operations (section 2) to save the file:
 - **Create** the file at the determined path with the markdown body
-- **Set all frontmatter properties:** type, domain, date, created, themes, tags, status, energy_level, emotional_tone, confidence (and `project` if project-specific)
+- **Set all frontmatter properties:** type, domain, date, created, themes, tags, status, energy_level, emotional_tone (and `project` if project-specific)
 - Use `silent` flag when creating via CLI to avoid opening the file in Obsidian
 
 #### Connection Discovery
@@ -300,12 +298,12 @@ If the braindump contains **decisions that supersede existing plans or documents
 ## Quality Gates
 
 Before finalizing the braindump output, verify:
-- **Domain classification is defensible** — if it could go two ways, ask the user
+- **Domain classification is defensible** — if it could go two ways, ask the user rather than picking one and moving on
 - **Emotional tone assessment matches content** — don't label frustration as neutral
 - **All major themes are captured** — re-read the raw input and check nothing was missed
 - **Strategic insights are evidence-based** — supported by what the user actually said, not inferred from thin air
 
-If confidence is below 70%, ask for clarification rather than guessing. State confidence levels in the Processing Notes section: High (90%+), Medium (70-89%), Low (50-69%), Very Low (<50%).
+If any of these can't be satisfied — for example, the domain is genuinely ambiguous, or the strategic implications can't be supported from the raw text — ask the user a specific clarifying question rather than guessing. Braindumps are capture, not divination: a question is better than a fabricated insight.
 
 ## After Completion
 

@@ -74,34 +74,50 @@ RESEARCH METHODOLOGY:
 5. Note the credibility and potential bias of each source
 6. FOR EMERGING TECH THREADS: Go beyond polished sources. Search GitHub repos (README, issues, discussions), Twitter/X threads from builders, Discord/forum discussions, conference talk summaries, arXiv preprints, and early blog posts. The goal is to surface concepts that are pre-mainstream but technically promising. For each concept found, assess: maturity level, technical approach, relevance to the user's use case, and what it would take to adopt/integrate.
 
+VERIFICATION REQUIREMENT (follow the research delegation rules in AGENTS.md → Briefing sub-agents):
+- Cite primary sources only — vendor blogs, official GitHub repos, company press releases, academic preprints, government notices, research filings. Aggregators (newsletters, Medium, "top X" roundups, release-tracking sites) are discovery paths only. Chase them back to the primary and cite that.
+- One authoritative primary source is enough. Do not pad with a second source when the first is the project's or vendor's own official channel.
+- For each citation, return a `Verification proof` field containing the WebFetched title and publication date exactly as the fetch returned them.
+- If WebFetch fails or no primary source exists, DROP the finding. Do not substitute an aggregator. Do not return it with a caveat. Returning zero items on a thread is acceptable; returning fabricated items is not.
+
 OUTPUT FORMAT (return ALL of this):
 
 ## Thread: [thread name]
 
 ### Key Findings (3-5 bullet points)
-- Finding with source attribution
+- Finding with source attribution and `Verification proof` (WebFetched title + date)
 
 ### Evidence & Data Points
-- Specific statistics, market data, examples with sources
+- Specific statistics, market data, examples with primary-source links and fetched-title proof
 
 ### Expert/Notable Perspectives
-- Named perspectives from credible voices
+- Named perspectives from credible voices with primary-source links
 
 ### Implications for [user's context]
 - What this means specifically for the user's situation
 
 ### Confidence Level
-- HIGH / MEDIUM / LOW with reasoning
+- HIGH / MEDIUM / LOW with reasoning. Note: items returned with MEDIUM or LOW must still have primary-source proof; LOW here means "verified but interpretation is uncertain", not "couldn't quite verify."
+
+### Dropped Items
+- Candidates considered but not included, with one-line reason per drop (WebFetch failed, only aggregators available, outside timeframe, duplicate, etc.). Helps the orchestrator catch over-strict or over-loose filtering.
 
 ### Sources
-- Numbered list of actual URLs consulted
+- Numbered list of actual URLs consulted (primary sources only)
 ```
 
 **Agent naming convention:** `research-[thread-slug]` (e.g., `research-market-forces`, `research-historical-precedent`)
 
 ### Phase 3: Synthesis (Orchestrator — after all agents complete)
 
-Once all agents return, synthesize into a single strategic analysis document:
+**Filter before synthesizing.** Apply these rules to every finding returned by a research agent:
+
+- **Missing `Verification proof` field?** Drop the finding before it enters the synthesis.
+- **Source is an aggregator?** Drop unless the agent also returned the primary source it was chasing.
+- **Confidence Level is MEDIUM or LOW?** This does not mean "unverified but plausible" — per the briefing, the finding must still have primary-source proof; LOW just means the interpretation is uncertain. If the proof is missing OR the reasoning shows the agent couldn't verify, drop the item. Do not elevate it to Strategic Options or Recommended Actions with a softened confidence label.
+- **Check the `Dropped Items` field** from each agent to see what was considered and why. If the agent dropped something the user clearly cares about, spawn a follow-up agent with a more targeted search rather than silently losing the signal.
+
+Once filtered, synthesize into a single strategic analysis document:
 
 #### Document Structure:
 

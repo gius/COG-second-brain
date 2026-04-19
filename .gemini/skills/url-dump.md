@@ -51,12 +51,13 @@ What URL(s) would you like to save?
 
 ### 2. URL Validation & Fetch
 - Validate URL format
-- Check if URL is accessible
 - Detect duplicate URLs in existing knowledge base
-- Fetch the web page content
+- Fetch the web page content with WebFetch
+
+**If the fetch fails** (network error, 403/404, paywall blocking extraction, or WebFetch returns substantially empty content): do NOT proceed to Phase 3 analysis. Instead, save a minimal stub to `00-inbox/url-[title-slug]-YYYY-MM-DD.md` with `status: "fetch-failed"` and the original URL + any user note, and tell the user the fetch failed so they can review manually. Analyzing content that didn't actually load produces plausible-sounding but fabricated insights — exactly the failure mode we're guarding against.
 
 #### Content Extraction
-Extract from the page:
+Extract from the fetched page:
 - **Page Title:** [extracted-title]
 - **Meta Description:** [if available]
 - **Author:** [if detected]
@@ -138,7 +139,7 @@ tags: ["bookmark", "category-tag", "topic-tags"]
 relevance: "[high|medium|low]"
 status: "unread"
 related_projects: ["project1", "project2"]
-confidence: "[high|medium|low]"
+needs_review: false  # set true only if categorization is ambiguous enough that a human should double-check
 
 # [Title]
 
@@ -179,8 +180,7 @@ confidence: "[high|medium|low]"
 
 ## Processing Notes
 - **Extracted:** [timestamp]
-- **Category Confidence:** [percentage]
-- **Review Needed:** [yes|no] - [reason if yes]
+- **Review Needed:** [yes|no] - [reason if yes — e.g. "categorization ambiguous between Articles and Research", "paywalled preview only"]
 
 
 *Processed by COG URL Curator*

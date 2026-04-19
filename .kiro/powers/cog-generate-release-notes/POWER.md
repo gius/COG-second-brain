@@ -125,7 +125,7 @@ Format: one change per line, optionally prefix with [feature], [fix], [tech], [d
 
 ### Phase 2: Categorize and Organize
 
-Organize collected items into standard categories:
+Organize collected items into these categories (listed in output order):
 
 1. **Breaking Changes** (always first if present)
 2. **New Features & Enhancements**
@@ -135,6 +135,8 @@ Organize collected items into standard categories:
 6. **Documentation**
 7. **Deprecations**
 8. **Known Issues** (if any remain)
+
+**Omit empty categories.** A release with 2 features, 1 fix, and no other changes should produce an output with exactly 3 category sections — not 8 sections where 5 say "no items" or "n/a". Empty buckets train readers to skim past sections, which weakens the signal for the non-empty ones. The templates in Phase 3 show all categories as placeholders; skip the ones you don't have real content for.
 
 Within each category, order by:
 1. Priority (highest first)

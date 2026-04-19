@@ -107,6 +107,29 @@ When spawning sub-agents in `agent_mode: team`, always set the model tier explic
 
 **When `agent_mode: solo`:** Do not spawn sub-agents. Handle all work directly.
 
+## Briefing sub-agents
+
+Sub-agents see only the prompt you write — not this file, not your skill, not the user's prior messages. Rules in your context do not cross to sub-agents automatically. Encode anything that matters in the briefing.
+
+### Research / fact-finding delegation (web search, releases, CVEs, funding, competitive intel)
+
+Sub-agents fabricate plausible items when real hits are sparse. "Verify carefully" is aspirational; structural proof is enforceable. Every research briefing must include:
+
+1. **Primary source definition for the domain.** GitHub releases for code, GHSA/CVE for security, vendor advisory for product issues, company press release for funding, government notice for regulatory. Aggregators (newsletters, Medium, "top X" roundups, releasebot.io, personal blogs) are discovery paths only — chase them back to the primary and cite that.
+2. **Fetch + proof:** "Call WebFetch on the primary URL. Return the fetched title and publication date as a `Verification proof` field."
+3. **Drop rule:** "If WebFetch fails or no primary source exists, drop the item. Do not substitute an aggregator. Do not return it with a caveat. Zero items is acceptable; unverified items are not."
+4. **`Dropped items` return field** with a one-line reason per drop. Surfaces filtering so you catch false negatives and leaks.
+
+**One authoritative primary source is enough.** Requiring two sources pushes sub-agents to fabricate a second one. Two sources only matter when the primary is disputed.
+
+### Code / file-manipulation delegation
+
+Include: exact paths, what "done" looks like, constraints (tests must pass, do not touch unrelated files), and whether to write code or just report back.
+
+### Do not trust sub-agent confidence labels as filtering gates
+
+"Medium confidence" from a sub-agent usually means "could not verify but sounds right." Treat as drop-or-re-verify, not as license to include with a softened label.
+
 ## AI Task Endings
 
 After completing any big task, offer a "Let me take more off your plate" section with three categories:
