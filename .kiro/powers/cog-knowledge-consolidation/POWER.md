@@ -142,10 +142,10 @@ Score each document on freshness using category-weighted decay. Content types th
 #### Connectivity Check
 
 For each document, assess:
-- **Inlinks:** How many other vault files reference this document? (search for `[[filename]]` patterns)
+- **Inlinks:** How many other vault files reference this document? Match by **basename**, not path — Obsidian resolves `[[daily-brief-2026-02-09]]` against any file of that basename anywhere in the vault. A path-only match will under-count inlinks when files move into `archive/` subfolders and produce false orphans.
 - **Outlinks:** How many wiki-links does this document contain?
-- **Orphans:** Documents with zero inlinks AND zero outlinks (excluding profile/config files in `00-inbox/`)
-- **Dead links:** Wiki-links pointing to files that don't exist
+- **Orphans:** Documents with zero inlinks AND zero outlinks (excluding profile/config files in `00-inbox/` and any file whose path contains `/archive/` — archived files are intentionally out of active scope and must not count as orphans).
+- **Dead links:** Wiki-links pointing to files that don't exist. Do NOT flag `.html` files that sit next to a same-basename `.md` as duplicates — HTML+MD pairs are often intentional (rendered vs editable; see COG convention).
 
 **Performance guidance:** A full connectivity check is O(n²) — every file searched for every other filename. Scale the approach to vault size:
 - **Small vaults (< 100 docs):** Full check is fine.
@@ -161,7 +161,9 @@ Score each document 0-100 across four dimensions:
 - **Metadata quality (20%):** Valid frontmatter fields, consistent tagging, proper date formats
 - **Freshness (20%):** Age relative to category decay threshold, weighted by category
 
-**Vault health score** = weighted average of all document scores, reported as a single 0-100 number.
+**Vault health score** = weighted average of all document scores, reported as a single 0-100 number. Exclude files whose path contains `/archive/` from scoring — they're out-of-active-scope and shouldn't drag metrics when archival (a cleanup win) happens.
+
+**Obsolescence check:** for braindumps with `status: consolidated` and `consolidated_in: [[...]]`, resolve the parent consolidation and flag the braindump if the parent is >180 days old (the source's reference value has likely passed). List under Freshness Report.
 
 ### 2. Pattern Recognition
 

@@ -28,7 +28,9 @@ Find verified, relevant news for personalized daily briefings with strict verifi
 Topics in `MY-INTERESTS.md` may be annotated `[weekly]`. These are slower-moving topics that don't need daily coverage.
 
 - **No annotation** — search every run.
-- **`[weekly]`** — search only on Mondays, or when the user explicitly requests full brief coverage. Skip silently on other days.
+- **`[weekly]`** — search on the **first brief of the current ISO week** (Monday 00:00 → Sunday 23:59), or when the user explicitly requests full brief coverage. Skip silently otherwise.
+
+**Implementation:** Check the most recent brief's filename date (from the dedup scan in Step 1). If it's before Monday of the current ISO week (or no previous brief exists), this run qualifies as "first of the week."
 
 ## Pre-Flight Check
 

@@ -87,6 +87,13 @@ Lead user through reflection questions in a warm, conversational tone:
 - "How did things go with your team or colleagues?"
 - "Any professional development or learning?"
 
+**Estimation Log Review (if `03-professional/ESTIMATION-LOG.md` exists):**
+- Review the week's estimation entries
+- Calculate average ratio for the week
+- Ask: "Looking at your estimates vs actuals this week, what patterns do you notice?"
+- Help identify common blind spots (testing? edge cases? scope creep?)
+- Update the "My Calibration" section if enough data accumulated (~10+ tasks)
+
 **Projects Domain (if applicable):**
 For each active project from MY-PROFILE.md:
 **Ask:**
@@ -188,6 +195,12 @@ briefs_reviewed: [count]
 
 **Professional Development:**
 [Skills developed, knowledge gained]
+
+**Estimation Calibration:** *(if tracking)*
+- Tasks logged: [X]
+- Average ratio: [X.X]
+- Pattern noticed: [what am I consistently missing?]
+- Current multiplier: [X.X] (update if enough data)
 
 **Rating:** [1-5] ⭐
 

@@ -45,6 +45,7 @@ Each skill has a full playbook in `.agents/skills/[name]/SKILL.md`. When the use
 | `/publish-to-confluence` | Publish any vault markdown file to Confluence (requires active integration) | "publish to Confluence" |
 | `/update-knowledge-base` | Update product knowledge base from releases, features, and project changes | "update knowledge base", "update KB" |
 | `/update-cog` | Apply upstream COG framework updates without touching personal content | "update COG", "check for updates" |
+| `/task-triage` | Clear overdue + due-today tasks from TASKS.md — evidence-based classification, batched approval, rulebook grows over time | "triage tasks", "what's overdue", "clear my tasks", "clean up TASKS.md" |
 
 ## User Configuration
 
