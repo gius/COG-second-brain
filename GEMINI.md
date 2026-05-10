@@ -49,16 +49,8 @@ Each skill has a full playbook in `.agents/skills/[name]/SKILL.md`. When the use
 | `/url-dump` | Save URLs with auto-extracted insights, categorized into knowledge booklets | "save this link", "bookmark this" |
 | `/scout` | Quick-triage URLs — check vault coverage, assess relevance, recommend save or skip | "scout this", "is this relevant?" |
 | `/auto-research` | Decompose strategic questions into parallel research threads with real sources | "research [topic]", "deep dive into [topic]" |
-| `/team-brief` | Cross-reference GitHub, Linear, Slack, PostHog into a daily team intelligence brief | "team brief", "what did we ship?" |
 | `/meeting-transcript` | Process meeting recordings into structured decisions, action items, and team dynamics | "process this meeting", "meeting notes" |
-| `/comprehensive-analysis` | Deep 7-day analysis across all data sources for board prep or strategic planning | "weekly analysis", "board prep" |
-| `/create-user-story` | Create user stories with duplicate checking across Linear, GitHub Issues, or Jira | "create a user story for..." |
-| `/generate-prd` | Draft PRDs with approval gate before publishing to Confluence/Notion | "generate a PRD", "product requirements" |
-| `/generate-release-notes` | Generate release notes from GitHub milestones, Linear cycles, or manual input | "release notes for...", "what shipped in..." |
-| `/export-open-issues` | Audit and export open issues from any project tracker | "export open issues", "issue audit" |
 | `/publish-to-confluence` | Publish any vault markdown file to Confluence (requires active integration) | "publish to Confluence" |
-| `/update-knowledge-base` | Update product knowledge base from releases, features, and project changes | "update knowledge base", "update KB" |
-| `/update-cog` | Apply upstream COG framework updates without touching personal content | "update COG", "check for updates" |
 | `/task-triage` | Clear overdue + due-today tasks from TASKS.md — evidence-based classification, batched approval, rulebook grows over time | "triage tasks", "what's overdue", "clear my tasks", "clean up TASKS.md" |
 
 ## User Configuration

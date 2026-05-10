@@ -501,17 +501,12 @@ Skill outputs follow the pattern: `<type>-YYYY-MM-DD-HHMM-<slug>.md` or `<type>-
 |---|---|
 | `"braindump"` | braindump |
 | `"competitive-intelligence"` | braindump |
-| `"daily-brief"` | daily-brief, team-brief |
+| `"daily-brief"` | daily-brief |
 | `"weekly-checkin"` | weekly-checkin |
 | `"meeting-transcript"` | meeting-transcript |
 | `"url-bookmark"` | url-dump |
 | `"url-tool"` | url-dump |
 | `"booklet-index"` | url-dump |
-| `"prd"` | generate-prd |
-| `"release-notes"` | generate-release-notes |
-| `"open-issues-audit"` | export-open-issues |
-| `"knowledge"` | update-knowledge-base |
-| `"kb-update-log"` | update-knowledge-base |
 | `"consolidated-knowledge"` | knowledge-consolidation |
 | `"pattern-analysis"` | knowledge-consolidation |
 | `"timeline-entry"` | knowledge-consolidation |
@@ -532,8 +527,7 @@ Skill outputs follow the pattern: `<type>-YYYY-MM-DD-HHMM-<slug>.md` or `<type>-
 | `"consolidated"` | Processed into frameworks | braindump (after consolidation) |
 | `"unread"` | Not yet reviewed | url-dump (bookmarks) |
 | `"to-evaluate"` | Pending evaluation | url-dump (tools) |
-| `"draft"` | Work in progress | generate-prd |
-| `"deprecated"` | Superseded or outdated | update-knowledge-base, knowledge-consolidation |
+| `"deprecated"` | Superseded or outdated | knowledge-consolidation |
 | `"stable"` / `"working"` / `"emerging"` | Framework maturity | knowledge-consolidation |
 | `"published"` | Published externally | publish-to-confluence |
 

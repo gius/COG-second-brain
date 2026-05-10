@@ -221,16 +221,7 @@ status: [processed|needs-follow-up|action-required]
 - Request clarification for ambiguous content
 - Explicitly note when information is incomplete
 
-## How This Feeds Other Skills
-
-Meeting notes feed directly into the `/team-brief` daily brief:
-- Agent 3 (`meeting-reviewer`) scans for recent meeting files
-- Phase 3 cross-references action items against GitHub PRs and Linear issues
-- Section 13 (`Meeting Follow-Up Tracker`) tracks commitment completion
-
-This creates accountability: decisions and action items from meetings are automatically tracked against actual execution.
-
 ## What Good Looks Like
 
-A successful meeting processing means: all decisions have clear context and rationale, action items have specific owners and deadlines, noise is filtered without losing nuance, and the output is immediately useful for the team brief pipeline.
+A successful meeting processing means: all decisions have clear context and rationale, action items have specific owners and deadlines, and noise is filtered without losing nuance.
 

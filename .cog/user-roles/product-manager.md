@@ -10,8 +10,6 @@ aliases: [pm, product lead, product owner, head of product, vp product, director
 
 | Skill | Why it matters for you |
 |---|---|
-| team-brief | Daily cross-reference of GitHub, Linear, Slack, and PostHog — see what shipped, what's blocked, and what needs your attention without chasing updates |
-| comprehensive-analysis | Deep 7-day analysis for weekly reviews, board prep, and stakeholder updates — pulls from every data source |
 | meeting-transcript | Turn meeting recordings into structured decisions, action items, and ownership — never lose track of commitments |
 | daily-brief | Personalized news intelligence on your industry, competitors, and market trends |
 | braindump | Capture product ideas, user feedback patterns, and strategic thoughts with automatic domain classification |
@@ -19,15 +17,14 @@ aliases: [pm, product lead, product owner, head of product, vp product, director
 | knowledge-consolidation | Build product strategy frameworks from scattered insights across braindumps and notes |
 | url-dump | Save competitor pages, user research articles, and market reports with auto-extracted insights |
 | onboarding | Initial setup — run this first |
-| update-cog | Keep your COG framework current |
 
 ## Recommended Integrations
 
 | Integration | Why it matters for you |
 |---|---|
-| github | Track PRs, releases, and engineering velocity — feeds into team-brief and comprehensive-analysis |
-| linear | See issue status, sprint progress, and blockers — enables two-way sync from team-brief back to Linear |
-| slack | Surface team discussions, decisions made in channels, and sentiment — critical for team-brief context |
+| github | Track PRs and releases for context in your braindumps and weekly check-ins |
+| linear | See issue status, sprint progress, and blockers |
+| slack | Surface team discussions, decisions made in channels, and sentiment |
 | posthog | Product analytics — feature adoption, funnel metrics, and usage trends inform your briefs |
 | notion | Pull from product specs, PRDs, and team wikis for richer analysis context |
 | hackmd | Access shared meeting notes and collaborative documents |

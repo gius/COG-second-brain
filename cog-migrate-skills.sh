@@ -77,7 +77,6 @@ get_field() {
 }
 
 # Extract keywords from Kiro POWER.md (JSON array → comma-separated)
-# Handles name mismatches: update-cog → cog-update (not cog-update-cog)
 get_kiro_keywords() {
   local name="$1"
   local kiro_file=""
@@ -85,9 +84,6 @@ get_kiro_keywords() {
   # Try standard mapping: cog-${name}
   if [[ -f "${KIRO_DIR}/cog-${name}/POWER.md" ]]; then
     kiro_file="${KIRO_DIR}/cog-${name}/POWER.md"
-  # Try stripping -cog suffix: update-cog → cog-update
-  elif [[ "$name" == *-cog ]] && [[ -f "${KIRO_DIR}/cog-${name%-cog}/POWER.md" ]]; then
-    kiro_file="${KIRO_DIR}/cog-${name%-cog}/POWER.md"
   # Try exact name match
   elif [[ -f "${KIRO_DIR}/${name}/POWER.md" ]]; then
     kiro_file="${KIRO_DIR}/${name}/POWER.md"
@@ -130,16 +126,8 @@ get_curated_keywords() {
   local name="$1"
   case "$name" in
     auto-research)           echo "research,auto-research,investigate,strategic analysis,deep dive" ;;
-    comprehensive-analysis)  echo "weekly analysis,comprehensive review,board prep,deep dive,comprehensive analysis" ;;
-    create-user-story)       echo "create story,new story,add issue,write user story,create ticket,create user story" ;;
-    export-open-issues)      echo "export issues,open issues,backlog audit,issue report,what's open,export open issues" ;;
-    generate-prd)            echo "generate PRD,write PRD,product requirements,spec doc,feature spec,generate prd" ;;
-    generate-release-notes)  echo "release notes,changelog,what shipped,write release notes,generate release notes" ;;
     meeting-transcript)      echo "process meeting,meeting notes,meeting transcript,extract action items,meeting" ;;
     publish-to-confluence)   echo "publish to Confluence,push to wiki,send to Confluence,confluence publish" ;;
-    team-brief)              echo "team brief,team update,what did we ship,standup prep" ;;
-    update-cog)              echo "update COG,check for updates,get latest COG version,update skills" ;;
-    update-knowledge-base)   echo "update knowledge base,update KB,sync knowledge,update product docs" ;;
     scout)                   echo "scout,evaluate,should I save this,is this relevant,scout this,triage url" ;;
     *) echo "" ;;
   esac

@@ -1,6 +1,0 @@
-description = "Create user stories with duplicate checking across any project tracker (Linear, GitHub Issues, Jira)"
-prompt = """
-You are running the COG create-user-story workflow. Follow this playbook exactly:
-
-@{.gemini/skills/create-user-story.md}
-"""

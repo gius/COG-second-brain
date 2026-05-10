@@ -65,44 +65,14 @@
       "description": "Quick capture URLs with automatic content extraction, insights, and categorization into knowledge booklets"
     },
     {
-      "name": "update-cog",
-      "path": ".claude/skills/update-cog/SKILL.md",
-      "description": "Check for and apply upstream COG framework updates without touching personal content"
-    },
-    {
       "name": "auto-research",
       "path": ".claude/skills/auto-research/SKILL.md",
       "description": "Deep strategic research engine with parallel research threads and actionable analysis"
     },
     {
-      "name": "create-user-story",
-      "path": ".claude/skills/create-user-story/SKILL.md",
-      "description": "Create user stories with duplicate checking across Linear, GitHub Issues, or Jira"
-    },
-    {
-      "name": "generate-prd",
-      "path": ".claude/skills/generate-prd/SKILL.md",
-      "description": "Draft PRDs with approval gate before publishing to Confluence or Notion"
-    },
-    {
-      "name": "generate-release-notes",
-      "path": ".claude/skills/generate-release-notes/SKILL.md",
-      "description": "Generate release notes from GitHub milestones, Linear cycles, or manual input"
-    },
-    {
-      "name": "export-open-issues",
-      "path": ".claude/skills/export-open-issues/SKILL.md",
-      "description": "Audit and export open issues from any project tracker"
-    },
-    {
       "name": "publish-to-confluence",
       "path": ".claude/skills/publish-to-confluence/SKILL.md",
       "description": "Publish vault markdown files to Confluence"
-    },
-    {
-      "name": "update-knowledge-base",
-      "path": ".claude/skills/update-knowledge-base/SKILL.md",
-      "description": "Maintain product knowledge base from releases and feature updates"
     }
   ],
   "metadata": {
@@ -129,7 +99,7 @@
       "onboardingTime": "2 minutes"
     },
     "directoryStructure": {
-      ".claude/skills": "10 specialized agent skills",
+      ".claude/skills": "12 specialized agent skills",
       ".cog/user-roles": "7 role packs for personalized skill and integration recommendations",
       "00-inbox": "Temporary processing area with profile and interests files",
       "01-daily": "Daily briefs and check-ins",
@@ -140,7 +110,7 @@
     },
     "skillArchitecture": {
       "type": "agent-skills",
-      "skills": 17,
+      "skills": 12,
       "rolePacks": 7,
       "invocation": "model-invoked",
       "progressiveDisclosure": true,

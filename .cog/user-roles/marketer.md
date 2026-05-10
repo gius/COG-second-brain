@@ -16,7 +16,6 @@ aliases: [marketing manager, growth marketer, content marketer, head of marketin
 | knowledge-consolidation | Build messaging frameworks, audience personas, and campaign playbooks from scattered marketing notes |
 | weekly-checkin | Spot patterns in campaign performance, content themes, and market shifts |
 | onboarding | Initial setup — run this first |
-| update-cog | Keep your COG framework current |
 
 ## Recommended Integrations
 

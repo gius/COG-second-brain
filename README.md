@@ -51,28 +51,9 @@ Done — COG is personalized and ready in ~2 minutes. See [SETUP.md](SETUP.md) f
 | **scout** | Quick-triage URLs and tools — assess relevance, check vault coverage, recommend save or skip | "Scout this" / "Is this relevant?" |
 | **weekly-checkin** | Cross-domain pattern analysis | "Weekly review" |
 | **knowledge-consolidation** | Build frameworks from scattered insights, or run a lightweight vault health audit | "Consolidate my knowledge" / "Vault health" |
-| **update-cog** | Update framework files without touching your content | "Update COG" |
-
-### Team Intelligence Skills (for Product & Engineering Leads)
-
-| Skill | What it does | Try saying... |
-|---|---|---|
-| **team-brief** | Cross-reference GitHub + Linear + Slack + PostHog into a daily team intelligence brief with two-way Linear sync-back | "Team brief" / "What did we ship?" |
+| **task-triage** | Clear overdue + due-today tasks from TASKS.md with evidence-based classification and accumulating rules | "Triage tasks" / "What's overdue?" |
 | **meeting-transcript** | Process meeting recordings into structured decisions, action items, and team dynamics | "Process this meeting" |
-| **comprehensive-analysis** | Deep 7-day analysis for weekly reviews, board prep, or strategic planning (~8-12 min) | "Weekly analysis" / "Board prep" |
-
-### PM Workflow Skills (for Product Managers)
-
-| Skill | What it does | Try saying... |
-|---|---|---|
-| **create-user-story** | Create user stories with duplicate checking across Linear, GitHub Issues, or Jira | "Create a user story for..." |
-| **generate-prd** | Draft PRDs with approval gate before publishing to Confluence/Notion | "Generate a PRD for..." |
-| **generate-release-notes** | Generate release notes from GitHub milestones, Linear cycles, or manual input | "Generate release notes for v2.1" |
-| **export-open-issues** | Audit and export open issues from any tracker into a structured vault summary | "Export open issues" |
 | **publish-to-confluence** | Publish any vault markdown file to Confluence | "Publish this to Confluence" |
-| **update-knowledge-base** | Maintain product knowledge base from releases, features, and project changes | "Update the knowledge base with v2.1 changes" |
-
-> **PM Workflow:** These skills form a complete product management lifecycle: **Research** (`/auto-research`) → **PRD** (`/generate-prd`) → **Stories** (`/create-user-story`) → Development → **Release Notes** (`/generate-release-notes`) → **Knowledge Base** (`/update-knowledge-base`). Use `/export-open-issues` for audits and `/publish-to-confluence` to share externally.
 
 ### Strategic Research
 
@@ -84,36 +65,26 @@ Done — COG is personalized and ready in ~2 minutes. See [SETUP.md](SETUP.md) f
 
 COG matches your role during onboarding to a **role pack** that prioritizes the most relevant skills and integrations for you. Available role packs: Product Manager, Engineering Lead, Engineer, Designer, Founder, Marketer — or create your own from the template.
 
-> **New to team skills?** These require GitHub CLI (`gh`) and work best with Linear, Slack, and PostHog MCP integrations. They degrade gracefully — start with just GitHub and add integrations over time. See [SETUP.md](SETUP.md) for configuration.
-
 ## The Evolution Cycle
 
 ```mermaid
 graph TD
     A[Daily: Braindump thoughts] --> B[Daily: News intelligence]
-    A --> T[Daily: Team intelligence brief]
-    M[Meetings: Process transcripts] --> T
-    T -- syncs back to --> L[Linear / GitHub]
+    M[Meetings: Process transcripts] --> A
     B --> C[Weekly: Pattern analysis]
-    T --> CA[Weekly: Comprehensive analysis]
     C --> D[Monthly: Knowledge consolidation]
-    CA --> D
     D -- COG learns your patterns --> A
-    R[Strategic: Auto-research] --> P[PM: Generate PRD]
-    P --> S[PM: Create user stories]
-    S -- after development --> RN[PM: Release notes]
-    RN --> KB[PM: Update knowledge base]
+    R[Strategic: Auto-research] --> D
+    TT[Daily: Task triage] --> A
 ```
 
 - **Daily capture** — braindump raw thoughts; COG classifies by domain and extracts action items
 - **Daily intelligence** — personalized news briefings with verified, sourced news
-- **Daily team brief** — cross-reference GitHub, Linear, Slack, PostHog, meetings into one brief with two-way sync
 - **Meeting processing** — extract decisions, action items, and team dynamics from transcripts
 - **Weekly reflection** — pattern analysis across all domains surfaces insights you'd miss
-- **Weekly deep dive** — comprehensive analysis for board prep, retros, and strategic planning
-- **Monthly synthesis** — scattered notes become consolidated frameworks and a knowledge base
+- **Monthly synthesis** — scattered notes become consolidated frameworks
 - **Strategic research** — deep multi-agent investigation of strategic questions with real sources
-- **PM workflow** — full product lifecycle from PRD to release notes to knowledge base updates
+- **Task hygiene** — automated triage of overdue items with accumulating rules
 
 ## Features at a Glance
 
@@ -149,18 +120,6 @@ COG-second-brain/
 ```
 
 > **Real-world results:** 120+ braindumps processed, daily briefs with 95%+ source accuracy, 5 major strategic insights discovered — zero maintenance required.
-
-## Keeping COG Updated
-
-COG separates **framework files** (skills, docs, scripts) from **your content** (braindumps, profiles, notes). Updates never touch your personal data.
-
-| Method | Command |
-|---|---|
-| AI Agent (any) | "Update COG" or `/update-cog` |
-| Shell script | `./cog-update.sh` (interactive) &bull; `--check` &bull; `--dry-run` &bull; `--force` |
-| Manual Git | `git fetch cog-upstream main` then checkout specific files |
-
-Check your version: `cat COG-VERSION`
 
 ### For Contributors
 
@@ -198,11 +157,6 @@ Yes. Everything is local markdown files. The AI agent's API is only called when 
 <details><summary><strong>Can I customize or add skills?</strong></summary>
 
 Yes — edit skills in `.agents/skills/[name]/SKILL.md` (source of truth), then run `./cog-sync.sh` to generate tool-specific files. See [CONTRIBUTING.md](CONTRIBUTING.md) for the skill format.
-</details>
-
-<details><summary><strong>Will updating overwrite my customizations?</strong></summary>
-
-No. The update process detects customized files and lets you choose per-file: keep yours, use upstream, or backup + update. Nothing is overwritten without approval.
 </details>
 
 <details><summary><strong>What if I don't use Git?</strong></summary>

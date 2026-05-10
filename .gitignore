@@ -13,8 +13,6 @@
 Thumbs.db
 
 # Personal Content — NOT ignored by default
-# The update script (cog-update.sh) uses file-by-file extraction, not git merge,
-# so there is no risk of merge conflicts with your personal content.
 # Users who fork COG to a private repo can freely track their content via git.
 #
 # If you are using the PUBLIC upstream repo directly (not a fork), uncomment
@@ -51,7 +49,7 @@ Thumbs.db
 # Backup files
 *.bak
 *~
-*.backup.* # created by cog-update.sh
+*.backup.*
 
 # Submission and marketplace tracking (keep private)
 .github/SUBMISSION-CHECKLIST.md
