@@ -43,9 +43,13 @@ Same as the daily brief — direct, opinionated, teammate energy. But with more 
 
 ### Phase 1: Deep Data Collection (~3-5 min)
 
-**Launch ALL agents in parallel using the Task tool with `run_in_background: true`.**
+**Launch agents in parallel using the Task tool with `run_in_background: true`. Skip any agent whose source is unavailable** (no MCP, no integration, no relevant files). Don't spawn idle agents — each costs ~40K context overhead.
 
-**Note on verification:** These agents query authenticated systems (gh CLI, Linear/PostHog/Slack MCPs) and read vault files — they are not doing open-web research, so the research delegation rule in `AGENTS.md → Briefing sub-agents` does not apply literally. The hallucination risk is lower because the sources are systems of record. Each agent must still return source-traceable evidence (commit SHAs, PR numbers, issue IDs, channel + timestamp, file paths, specific query results) rather than paraphrased summaries — if it can't point to the exact record, it doesn't belong in the report.
+**Model tier:** Every agent in this phase runs at **specialist** tier (per the tier→model mapping in your project's agent guide). Data-collection-and-analysis is bounded synthesis across systems — not the architect-tier work needed for open-ended strategic reasoning, but more than a worker-tier single-source query.
+
+**Verification:** These agents query authenticated systems of record (gh CLI, Linear/PostHog/Slack MCPs) and read vault files — not open-web research, so the strict primary-source rule from `AGENTS.md → Briefing sub-agents` does not apply literally. Each agent must still return source-traceable evidence (commit SHAs, PR numbers, issue IDs, channel + timestamp, file paths, query results) rather than paraphrased summaries.
+
+**Output cap per agent:** ≤5KB structured text. Summarize, don't dump raw API responses.
 
 #### Agent 1: "github-deep-analyst" (subagent_type: general-purpose)
 ```
@@ -248,36 +252,14 @@ After all agents complete, the orchestrator performs deep cross-referencing:
    - **Strategic alignment check**: Is what the team is building aligned with what leadership discussed in meetings?
    - **Product-market signal synthesis**: Combine PostHog data + Slack user feedback + meeting customer discussions into a coherent product signal
 
-3. **Generate three output documents:**
+3. **Generate ONE consolidated report** with three sections (Executive / Team / Product). Three separate files force re-synthesis of the same underlying data — wasteful. The single file has clear section headers; downstream consumers copy the section they need.
 
-#### Output 1: Executive Summary (for leadership)
-- 1-page max
-- Key metrics with trends
-- Initiative health dashboard
-- Top 3 risks
-- Top 3 wins
-- Recommendation for next week's focus
+   **Sections:**
+   - **Executive Summary** (1 page) — key metrics with trends, initiative health, top 3 risks, top 3 wins, next-week focus
+   - **Team Report** — what shipped, velocity, contributor stats, review health, stale PRs, blocked issues, tech debt signals
+   - **Product Report** — user metrics, funnel, feature adoption, customer feedback synthesis, growth trajectory, product risks
 
-#### Output 2: Team Report (for engineering)
-- What shipped this week (celebrate!)
-- Velocity and contributor stats
-- Review health (bottlenecks, rubber stamps)
-- Stale PRs and blocked issues
-- Technical debt signals
-- Next week's priorities from meetings
-
-#### Output 3: Product Report (for stakeholders)
-- User metrics with trends
-- Funnel analysis
-- Feature adoption
-- Customer feedback synthesis (from Slack)
-- Growth trajectory
-- Product risks and opportunities
-
-4. **Save** all three to `[CUSTOMIZE: path/to/briefs/]`:
-   - `comprehensive-analysis-YYYY-MM-DD.md` (full report)
-   - `executive-summary-YYYY-MM-DD.md` (leadership version)
-   - `product-report-YYYY-MM-DD.md` (stakeholder version)
+4. **Save** to `[CUSTOMIZE: path/to/briefs/]comprehensive-analysis-YYYY-MM-DD.md`. Split into per-audience files at distribution time, not synthesis time.
 
 ### Phase 3: Output & Distribution (~1-2 min)
 

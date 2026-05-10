@@ -19,9 +19,7 @@ Lightweight URL/tool triage that sits between "ignore" and `/url-dump`. Evaluate
 
 ## Agent Mode Awareness
 
-**Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — delegate vault scanning and web fetching to parallel sub-agents (one for vault search, one for content fetch/analysis). Combine results for recommendation.
-- If `agent_mode: solo` (default) — handle all scanning and analysis directly in the conversation. No delegation.
+**Solo only — sub-agent delegation is not worth the overhead for this skill.** Scout is sub-1-minute work; spawning 2 sub-agents (~80K context overhead) costs more than the work itself. Handle vault scanning and content fetching directly in the main conversation regardless of `agent_mode`.
 
 ## Pre-Flight Check
 

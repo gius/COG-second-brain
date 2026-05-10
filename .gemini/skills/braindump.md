@@ -12,9 +12,7 @@ Transform raw thoughts into strategic intelligence through quick capture, system
 
 ## Agent Mode Awareness
 
-**Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — delegate research, analysis, and writing subtasks to specialist sub-agents (e.g., use Task tool to delegate deep analysis, competitive intel extraction, or pattern recognition to separate agents). Combine results before presenting to user.
-- If `agent_mode: solo` (default) — handle everything directly in the conversation. No delegation.
+**Mostly solo.** Braindump is fast capture-and-classify work that lives in main context regardless of `agent_mode`. **Single allowed delegation** (team mode only): if the braindump contains **3+ competitive watchlist matches** AND the matched companies have existing competitive-intel files, delegate the cross-reference + extraction step (Phase 5) to ONE specialist-tier sub-agent. Don't fan out per company. Don't delegate Phase 1-4 — they need the user's raw input in main context.
 
 ## Pre-Flight Check
 

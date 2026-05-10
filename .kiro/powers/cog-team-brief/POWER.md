@@ -70,8 +70,13 @@ When `/daily-brief` is invoked, the orchestrator (main agent) should:
 3. Check for meeting notes in `[CUSTOMIZE: path/to/meetings/]` matching dates from `LOOKBACK_DATE` through today
 4. Check for recent braindumps in `[CUSTOMIZE: path/to/braindumps/]` matching dates from `LOOKBACK_DATE` through today
 
-### Phase 2: Parallel Data Collection (Spawn 6 Agents Simultaneously)
-**Launch ALL of these agents in a single message using the Task tool with `run_in_background: true`:**
+### Phase 2: Parallel Data Collection (Spawn up to 6 Agents)
+
+**Launch agents in a single message using the Task tool with `run_in_background: true`. Skip any agent whose source is unavailable** (no Slack MCP → skip slack-monitor; no Linear MCP → skip linear-tracker; no PostHog MCP → skip posthog-analyst; no meeting/braindump files in window → skip those reviewers). Each idle agent costs ~40K context overhead. Fewer agents > all agents.
+
+**Model tier (all agents):** specialist (per the tier→model mapping in your project's agent guide). These agents query systems of record and synthesize across them — bounded work, not architect-tier strategic reasoning.
+
+**Output cap per agent:** ≤5KB structured text (linear-tracker and posthog-analyst already enforce this). Apply the same cap to github-analyst, slack-monitor, meeting-reviewer, and braindump-reviewer — return summaries with citations, not raw payloads.
 
 #### Agent 1: "github-analyst" (subagent_type: general-purpose)
 ```

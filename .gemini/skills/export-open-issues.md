@@ -10,8 +10,8 @@
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — use parallel agents to collect from all active trackers simultaneously and produce a unified report
-- If `agent_mode: solo` — collect from the primary tracker sequentially
+- If `agent_mode: team` AND **2+ trackers are active** — spawn one **specialist-tier** issues-collector agent per active tracker. Skip disabled trackers. ≤5KB output cap per agent. With only one active tracker, collect inline.
+- If `agent_mode: solo` OR only one tracker active — collect from the primary tracker sequentially.
 
 ## Command: `/export-open-issues`
 

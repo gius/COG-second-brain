@@ -12,9 +12,7 @@ Transform raw URLs into structured, insightful knowledge entries through intelli
 
 ## Agent Mode Awareness
 
-**Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — delegate content extraction, analysis, and categorization to a sub-agent while handling user interaction directly. The sub-agent fetches URL content, generates insights, and returns structured results for filing.
-- If `agent_mode: solo` (default) — handle everything directly in the conversation. No delegation.
+**Mostly solo.** A single URL save is fast direct work; one sub-agent at ~40K overhead rarely pays off. **Only delegate** (team mode) when batch-processing **3+ URLs** simultaneously: spawn ONE specialist-tier agent that fetches + analyzes all URLs in parallel internally and returns the structured results. Don't spawn one agent per URL.
 
 ## Pre-Flight Check
 

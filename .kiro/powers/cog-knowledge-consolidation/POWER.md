@@ -34,7 +34,11 @@ A quick vault health report without framework synthesis. Use when the user says 
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — delegate scanning and pattern extraction to parallel sub-agents (e.g., one per domain: personal braindumps, professional braindumps, project-specific content, daily briefs). Each agent identifies themes and patterns, then a synthesis agent combines findings into frameworks.
+- If `agent_mode: team` — delegate to **at most 3 specialist-tier sub-agents**, grouped by provenance not by domain:
+  1. **Raw-thinking scan** — all braindumps (personal + professional + project + inbox)
+  2. **Curated-artifacts scan** — daily/team briefs, weekly check-ins, meeting notes, PRDs, release notes
+  3. **Knowledge-base scan** — research, booklets, existing frameworks/patterns/timeline (for staleness + cross-references)
+  Skip any bucket whose source has no fresh content in the chosen scope. **Do NOT spawn one agent per active project** — projects fan out within bucket 1. Synthesis happens in main context.
 - If `agent_mode: solo` (default) — handle all scanning, pattern recognition, and framework building directly. No delegation.
 
 ## Pre-Flight Check

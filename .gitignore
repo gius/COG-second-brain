@@ -42,6 +42,9 @@ Thumbs.db
 # Local Claude Code settings (per-user, not shared)
 .claude/settings.local.json
 
+# Skill run artifacts (transient inputs/outputs staged in-project)
+.cog/task-triage/runs/
+
 # Logs
 *.log
 

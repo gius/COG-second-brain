@@ -13,8 +13,8 @@ Comprehensive weekly review and analysis integrating insights across all domains
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — delegate domain-specific analysis to sub-agents (e.g., one for personal patterns, one for professional review, one per active project). Each agent scans relevant braindumps/briefs and returns insights. Combine into the weekly synthesis.
-- If `agent_mode: solo` (default) — handle all scanning and analysis directly in the conversation. No delegation.
+- If `agent_mode: team` — delegate to **at most 3 specialist-tier sub-agents**, one per provenance bucket: (1) personal-domain scan, (2) professional-domain scan, (3) all-projects-combined scan. **Do NOT spawn one agent per active project** — each agent costs ~40K context overhead, and per-project context is rarely deep enough to need isolation. Skip any bucket with no fresh content in the window.
+- If `agent_mode: solo` (default) — handle all scanning and analysis directly. No delegation.
 
 ## Pre-Flight Check
 

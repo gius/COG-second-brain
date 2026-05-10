@@ -1,23 +1,23 @@
 #!/usr/bin/env python3
 """Parse Obsidian Tasks CLI output, bucket by due date, cluster by source folder.
 
-Usage:
-    obsidian tasks todo format=json verbose > $TEMP/cog-tasks.json
-    python scripts/bucket_and_cluster.py [--scope overdue|today|week|all] [--today YYYY-MM-DD]
+Usage (run from project root):
+    RUN_DIR=".cog/task-triage/runs/$(date +%Y-%m-%d)"
+    mkdir -p "$RUN_DIR"
+    obsidian tasks todo format=json verbose > "$RUN_DIR/cog-tasks.json"
+    python <skills>/task-triage/scripts/bucket_and_cluster.py [--scope overdue|today|week|all] [--today YYYY-MM-DD]
 
-Writes per-cluster JSON files to $TEMP/cluster_<NAME>.json and prints a summary.
-Cluster names match those expected by SKILL.md §2 and §5.
+Defaults: input = <RUN_DIR>/cog-tasks.json, outdir = <RUN_DIR>, where
+RUN_DIR = .cog/task-triage/runs/<today>/ relative to CWD.
 
-UTF-8 safe on Windows consoles (forces stdout reconfigure). The 📅 date marker
-is parsed from task text; today's date comes from --today or the system clock.
+Stage in-project (sub-agents can't read outside project root; Bash-on-Windows
+mistranslates $TEMP to /tmp). UTF-8 safe on Windows consoles.
 """
 from __future__ import annotations
 
 import argparse
 import collections
-import io
 import json
-import os
 import re
 import sys
 from datetime import date, timedelta
@@ -45,9 +45,9 @@ def cluster_for(file_path: str) -> str:
 def parse_args() -> argparse.Namespace:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--input", default=None,
-                    help="Path to cog-tasks.json (default: $TEMP/cog-tasks.json)")
+                    help="Path to cog-tasks.json (default: <RUN_DIR>/cog-tasks.json)")
     ap.add_argument("--outdir", default=None,
-                    help="Directory for cluster_*.json (default: $TEMP)")
+                    help="Directory for cluster_*.json (default: <RUN_DIR>)")
     ap.add_argument("--scope", default="default",
                     choices=["default", "overdue", "today", "week", "all"],
                     help="default = overdue + today (matches TASKS.md view)")
@@ -62,16 +62,19 @@ def main() -> int:
         sys.stdout.reconfigure(encoding="utf-8")
 
     args = parse_args()
-    temp = os.environ.get("TEMP") or "/tmp"
-    input_path = args.input or os.path.join(temp, "cog-tasks.json")
-    outdir = args.outdir or temp
+    today = date.fromisoformat(args.today) if args.today else date.today()
+    default_run_dir = Path(".cog/task-triage/runs") / today.isoformat()
+    input_path = args.input or str(default_run_dir / "cog-tasks.json")
+    outdir = args.outdir or str(default_run_dir)
+    Path(outdir).mkdir(parents=True, exist_ok=True)
 
     if not Path(input_path).exists():
         print(f"ERROR: {input_path} not found. Run:", file=sys.stderr)
-        print("  obsidian tasks todo format=json verbose > \"$TEMP/cog-tasks.json\"", file=sys.stderr)
+        print(f"  RUN_DIR=\"{default_run_dir.as_posix()}\"", file=sys.stderr)
+        print("  mkdir -p \"$RUN_DIR\"", file=sys.stderr)
+        print("  obsidian tasks todo format=json verbose > \"$RUN_DIR/cog-tasks.json\"", file=sys.stderr)
         return 1
 
-    today = date.fromisoformat(args.today) if args.today else date.today()
     week_ahead = today + timedelta(days=7)
 
     with open(input_path, encoding="utf-8") as f:

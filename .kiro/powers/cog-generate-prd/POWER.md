@@ -16,8 +16,8 @@ keywords: ["generate PRD", "write PRD", "product requirements", "spec doc", "fea
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — use parallel agents to gather context from multiple sources (existing PRDs, related issues, competitive research) while drafting
-- If `agent_mode: solo` — gather context and draft sequentially in the main conversation
+- If `agent_mode: team` — spawn the existing-prd-scanner and issue-context-gatherer in parallel at **specialist** tier, ≤3KB output cap each. Skip the issue-context-gatherer if no tracker is active. Drafting itself stays in main context.
+- If `agent_mode: solo` — gather context and draft sequentially in the main conversation.
 
 ## Command: `/generate-prd`
 

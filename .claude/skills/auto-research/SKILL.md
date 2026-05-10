@@ -52,7 +52,7 @@ Break the user's strategic question into 5-7 **research threads** that together 
 7. **Emerging tech & architectures** — what concepts, projects, or frameworks are still in development/discussion (pre-mainstream) that could be foundational? Research open-source projects, research papers, GitHub repos, Discord/forum discussions, conference talks, and early-stage tools that are relevant. Examples: novel agent architectures, new testing paradigms, experimental frameworks. These may not have polished docs — dig into READMEs, GitHub issues, Twitter/X threads, blog posts from builders, and academic preprints.
 8. **Contrarian view** — what's the strongest argument against the consensus?
 
-Not all threads apply to every question. Pick the 5-7 most relevant. **Thread 7 (Emerging tech) should ALWAYS be included** — the user specifically wants to stay ahead of concepts that aren't mainstream yet.
+Not all threads apply to every question. Pick the 3-7 most relevant — fewer threads with sharp scope beat more threads with thin scope. Each thread costs a parallel agent (~40K context overhead each). Thread 7 (Emerging tech) is recommended for tech/strategy questions but skippable when the question is purely about market dynamics or historical patterns.
 
 **Before spawning agents:**
 1. Read relevant files from the vault for existing context:
@@ -61,9 +61,11 @@ Not all threads apply to every question. Pick the 5-7 most relevant. **Thread 7 
    - Recent braindumps for the user's existing thinking on this topic
 2. State the decomposition to the user so they can course-correct before agents launch
 
-### Phase 2: Parallel Deep Research (Spawn 5-7 Agents Simultaneously)
+### Phase 2: Parallel Deep Research (Spawn 3-7 Agents)
 
 **CRITICAL: Launch ALL agents in a single message.** Use `run_in_background: true` for all agents.
+
+**Model tier (all research agents):** specialist (per the tier→model mapping in your project's agent guide). Web research with verification + structured output is bounded synthesis, not architect-tier strategic reasoning — that happens in Phase 3 main context.
 
 Each agent gets a detailed prompt following this template:
 

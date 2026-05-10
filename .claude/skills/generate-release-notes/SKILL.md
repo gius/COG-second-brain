@@ -19,8 +19,8 @@ metadata:
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — use parallel agents to collect data from all active sources simultaneously
-- If `agent_mode: solo` — collect data sequentially from the primary tracker
+- If `agent_mode: team` AND **2+ trackers are active** — spawn one **specialist-tier** release-collector agent per active tracker. Skip any tracker not active. ≤5KB output cap per agent. With only one active tracker, collect inline in main context.
+- If `agent_mode: solo` OR only one tracker active — collect data sequentially from the primary tracker.
 
 ## Command: `/generate-release-notes`
 

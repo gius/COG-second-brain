@@ -20,8 +20,8 @@ Find verified, relevant news for personalized daily briefings with strict verifi
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — delegate news research across different interest areas to parallel sub-agents (e.g., one agent per topic cluster). Each agent searches, verifies sources, and returns findings. Combine and synthesize results into the final brief.
-- If `agent_mode: solo` (default) — handle all research and synthesis directly in the conversation. No delegation.
+- If `agent_mode: team` — delegate news research to **specialist-tier** sub-agents grouped by topic cluster (≤4 agents). One agent per topic cluster, NOT one per news source. Each agent searches, verifies primary sources, and returns findings with `Verification proof`. Combine and synthesize in main context.
+- If `agent_mode: solo` (default) — handle all research and synthesis directly. No delegation.
 
 ## Interest Tiers
 

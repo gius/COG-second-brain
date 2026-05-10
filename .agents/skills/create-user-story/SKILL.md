@@ -18,8 +18,8 @@ metadata:
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — use parallel agents to check for duplicates across all active trackers simultaneously, then create the story
-- If `agent_mode: solo` — check duplicates and create the story sequentially in the main conversation
+- If `agent_mode: team` AND **2+ trackers are active** — spawn one **specialist-tier** duplicate-checker agent per active tracker (skip any tracker that's disabled). With only one active tracker, do the check inline in main context — one agent is not worth ~40K context overhead.
+- If `agent_mode: solo` OR only one tracker active — check duplicates and create the story sequentially in the main conversation.
 
 ## Command: `/create-user-story`
 

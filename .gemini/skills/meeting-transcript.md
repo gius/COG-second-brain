@@ -10,8 +10,8 @@
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — use the full parallel agent execution strategy below (3 agents)
-- If `agent_mode: solo` — process sequentially: extract content first, then analyze dynamics, then enrich with context.
+- If `agent_mode: team` AND transcript is **large (>2000 words)** — use the parallel agent execution strategy below. **Always run the content-extractor**; run the dynamics-analyst and context-enricher only if relevant (skip dynamics-analyst for solo standups; skip context-enricher when no project hint or competitor watchlist match). All agents at **specialist** tier, ≤3KB output cap each.
+- Otherwise (small transcript or solo mode) — process sequentially in main context: extract content, then analyze dynamics, then enrich with context. The 3-agent overhead (~120K context) outweighs the benefit on short transcripts.
 
 ## Purpose
 Extract strategic insights from meeting recordings and notes with intelligent content filtering to focus on substantive, actionable content while removing noise and irrelevant information.

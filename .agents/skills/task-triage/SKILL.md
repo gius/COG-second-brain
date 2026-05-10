@@ -24,7 +24,7 @@ Clear the backlog in `00-inbox/TASKS.md` without making the user answer the same
 
 ## Agent Mode Awareness
 Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:
-- `agent_mode: team` (default for this skill's design) — delegate classification to **specialist-tier (Sonnet)** sub-agents, one per source-folder cluster. See [step 5](#5-dispatch-classification-agents-specialist-sonnet-tier).
+- `agent_mode: team` (default for this skill's design) — delegate classification to **specialist-tier** sub-agents, one per provenance bucket. See [step 5](#5-dispatch-classification-agents-specialist-tier).
 - `agent_mode: solo` — handle classification inline in the main conversation. No delegation.
 
 Solo mode is acceptable for small runs (<10 tasks) but loses the context-isolation benefit of sub-agents for larger runs.
@@ -32,7 +32,13 @@ Solo mode is acceptable for small runs (<10 tasks) but loses the context-isolati
 ## Pre-Flight Check
 
 ### 1. Obsidian CLI availability
-Read `.agents/skills/obsidian/SKILL.md` §1 to detect the CLI. This skill depends on `obsidian tasks todo format=json verbose` — the CLI must be active per `00-inbox/MY-INTEGRATIONS.md`. If unavailable, fall back to grep-based task discovery (slower, less precise) and warn the user.
+Read `.agents/skills/obsidian/SKILL.md` §1 to classify CLI status (`ok` / `disabled` / `app-not-running` / `runtime-blocked`). This skill depends on `obsidian tasks todo format=json verbose`.
+
+| Status | Action |
+|---|---|
+| `ok` | Run the command. |
+| `runtime-blocked` | **Do NOT silently grep-fall-back.** Surface the diagnosis per obsidian §1 Step 4 and wait for user direction — direct fallback misses Tasks-plugin metadata and produces false-zero results. |
+| `disabled` / `app-not-running` | Fall back to grep with explicit path: `rg -n -g "*.md" '- \[ \] .*📅' .`. Warn user fallback is less precise. |
 
 ### 2. Profile and rulebook
 - Read `00-inbox/MY-PROFILE.md` for active projects (used to weight project-scoped tasks).
@@ -48,14 +54,19 @@ Read `.agents/skills/obsidian/SKILL.md` §1 to detect the CLI. This skill depend
 ## Process Flow
 
 ### 1. Pull tasks via Obsidian CLI
+
+Stage inside the project (sub-agents can't read outside it; never use `$TEMP` / `/tmp`):
+
 ```bash
-obsidian tasks todo format=json verbose > "$TEMP/cog-tasks.json"
+RUN_DIR=".cog/task-triage/runs/$(date +%Y-%m-%d)"
+mkdir -p "$RUN_DIR"
+obsidian tasks todo format=json verbose > "$RUN_DIR/cog-tasks.json"
 ```
 
-Each returned record has `{status, text, file, line}`. The `text` field contains the full task line including `- [ ]` and any `📅 YYYY-MM-DD` due date.
+Records: `{status, text, file, line}`. `text` includes `- [ ]` and any `📅 YYYY-MM-DD`.
 
 ### 2. Bucket and cluster
-Run `scripts/bucket_and_cluster.py`. It reads the JSON, parses dates, buckets by `overdue / today / future / nodate`, and groups the in-scope tasks by source-folder cluster.
+Run `scripts/bucket_and_cluster.py` from project root. Defaults: reads `<RUN_DIR>/cog-tasks.json`, writes `cluster_*.json` to same dir. Buckets by `overdue / today / future / nodate`, clusters by source folder.
 
 **Preprocessing — collapse within-file duplicates.** Before handing a cluster to an agent, within each single file (most often a weekly-checkin), merge task pairs that appear in both a "Next Steps" and a "Carry Forward" section into one logical task. These are structural duplicates of the same intent — the user writes them twice because the checkin template has two sections that happen to overlap. Classify the pair as a single unit (usually both supersede to the same newer task). The agent still sees both `file:line` entries so the render can apply the same edit to each occurrence.
 
@@ -71,19 +82,20 @@ Cluster mapping:
 | `braindumps` | `*/braindumps/` |
 | `other` | anything else — triaged inline in main context |
 
-The script writes per-cluster JSON files to `$TEMP/cluster_<NAME>.json` and prints a summary. See [`scripts/bucket_and_cluster.py`](scripts/bucket_and_cluster.py) for the implementation.
+The script writes per-cluster JSON files to `<RUN_DIR>/cluster_<NAME>.json` and prints a summary. See [`scripts/bucket_and_cluster.py`](scripts/bucket_and_cluster.py) for the implementation.
 
 Folder-based clustering is deliberate: a cluster gives each agent a coherent narrative (all weekly-checkins cross-reference each other; all booklets follow the same "evaluate-and-forget" pattern) which tightens the evidence trail.
 
 ### 3. Present scope to user
-Before spawning agents, print a short summary:
+
+**Do NOT dispatch agents in this step.** Print only:
 
 ```
 Triaging N tasks (X overdue, Y due today) across M clusters.
-Rules loaded: 7. Dispatching {M} Sonnet agents...
+Rules loaded: 7. Will dispatch {K} agents after scope confirmation.
 ```
 
-This gives the user a chance to adjust scope before spending sub-agent tokens.
+Then **wait** for user confirmation or scope adjustment before §5. (Earlier wording "Dispatching {M} agents…" caused premature double-dispatch — every cluster got classified twice.)
 
 ### 4. Classification taxonomy (shared by rules and agents)
 
@@ -115,23 +127,30 @@ When classifying "drop this task", the choice between `cancelled` and `untrack` 
 
 The split matters because user-curated tasks were deliberate commitments — marking them `[-]` cancelled records a real decision-change event. AI-generated tasks are suggestions; untracking quietly is appropriate because the commitment never really existed.
 
-### 5. Dispatch classification agents (specialist / Sonnet tier)
+### 5. Dispatch classification agents (specialist tier)
 
-**Model tier is non-negotiable.** Use `model: "sonnet"` for every classification agent. This maps to the `specialist` tier in [CLAUDE.md](../../../CLAUDE.md) — "sub-agent combines or synthesizes outputs from multiple sources or agents."
+**Model tier is non-negotiable: specialist.** Per the tier→model mapping in your project's agent guide. Not worker (cross-references multiple files exceeds single-source scope); not architect (bounded pattern-matching with evidence, not open-ended reasoning).
 
-Reasoning for this tier:
-- Not `worker` (Haiku): classification requires cross-referencing multiple source files (newer checkins, project overviews, git state) and applying the rulebook — exceeds single-source scope.
-- Not `architect` (Opus): classification is bounded pattern-matching with evidence — not open-ended strategic reasoning. Burning Opus here wastes subscription quota.
+#### Fan-out rules (apply in order)
 
-Spawn one agent per non-empty cluster. Do them **in parallel** — independent work, no inter-cluster dependencies. Each agent receives:
+1. **Inline-classify if cluster_size ≤ 5.** Don't spawn an agent. Main context handles the cluster directly using the rulebook + Read/Grep on the cited files. Saves ~40K context overhead per cluster.
+2. **Group by provenance, not by folder.** Merge clusters into at most **two** agent payloads:
+   - **`user_curated_agent`** — `weekly_checkins` + `project_overviews` + `other` (drop → `cancelled`)
+   - **`ai_generated_agent`** — `daily_briefs` + `booklets` + `consolidations` + `braindumps` (drop → `untrack`)
+3. **Split a provenance bucket only if its task count > 40.** Splitting at smaller sizes wastes the agent overhead vs. just letting one agent process more tasks.
 
-1. The cluster's task list (file:line:due:text).
-2. The full content of `references/rules.md` (inline in the prompt — agents apply rules and cite rule IDs).
-3. The classification taxonomy (§4) and provenance rule (§4a).
-4. An evidence requirement: every non-`needs-user` classification must cite a file/line/commit.
-5. An explicit **DO NOT EDIT** constraint — main context applies edits after user approval.
-6. Output schema: one YAML-ish block per task with `classification`, `rule_id` (or `agent-classified`), `evidence`, `suggested_action`, `confidence`.
-7. Word budget: ≤1000 words per cluster report (keeps evidence terse).
+Provenance grouping is more robust than folder grouping: adding a new vault folder type doesn't add an agent, and the taxonomy already splits cleanly by provenance (§4a).
+
+Each agent receives:
+
+1. Task list. Inline if ≤25 tasks (~4KB); else pass project-relative path `.cog/task-triage/runs/<YYYY-MM-DD>/cluster_<NAME>.json`.
+2. Full `references/rules.md` inline. Cite rule IDs.
+3. Taxonomy (§4) + provenance rule (§4a).
+4. Every non-`needs-user` classification cites file/line/commit.
+5. **DO NOT EDIT** — main context applies edits.
+6. Output: one YAML block per task with `classification`, `rule_id` (or `agent-classified`), `evidence`, `suggested_action`, `confidence`.
+7. ≤1000 words per cluster.
+8. Sandbox: Read/Grep/Glob over project root only. Don't probe `AppData\Local\Temp` or `/tmp`.
 
 Also instruct each agent to end with a `CANDIDATE_RULES:` block listing 1-3 generalizable rules discovered during triage. These feed step 10.
 
@@ -226,17 +245,12 @@ Emit:
 2. **Every rule surfaces its hit count per run.** Dead rules should be visible candidates for pruning.
 3. **All edits land in one commit per run.** One `git revert` restores prior state.
 4. **Never delete without explicit user ack.** Default is untrack/cancel.
-5. **Sub-agents use Sonnet (specialist) tier.** Not worker, not architect.
+5. **Sub-agents use specialist tier.** Not worker, not architect.
+6. **Stage inputs inside project root.** Use `.cog/task-triage/runs/<date>/`. Sub-agent sandbox denies `$TEMP` / `%TEMP%` / `/tmp`; Bash-on-Windows also mistranslates them.
+7. **Cap fan-out at 2 agents (one per provenance bucket).** Inline-handle clusters ≤5 tasks. Wait for user confirmation in §3 before dispatching anything in §5.
 
 ## Bundled resources
 
 - [`references/rules.md`](references/rules.md) — The accumulated rulebook. Seeded with 12 rules from the 2026-04-24 pilot run.
 - [`scripts/bucket_and_cluster.py`](scripts/bucket_and_cluster.py) — Deterministic parser + clusterer (UTF-8 safe).
 - [`references/edit-shapes.md`](references/edit-shapes.md) — Before/after examples for each classification's edit shape.
-
-## Relevant user memory
-
-- `feedback_task_untrack_not_delete.md` — Taxonomy origin for cancel / untrack / delete split.
-- `feedback_learn_triage_rules.md` — User expects rule accumulation over runs; don't re-ask answered questions.
-- `feedback_git_workflow.md` — User runs git commands; skill provides the command string only.
-- `feedback_subagent_model_routing.md` — Tier routing rationale for Sonnet choice.

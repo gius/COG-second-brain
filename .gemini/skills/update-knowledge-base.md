@@ -10,8 +10,8 @@
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — use parallel agents to scan multiple sources and update multiple knowledge files simultaneously
-- If `agent_mode: solo` — process updates sequentially, one knowledge file at a time
+- If `agent_mode: team` — spawn at most 2 **specialist-tier** agents based on the trigger: (1) the relevant collector for the trigger (release-scanner / tracker-feature-collector / etc.) and (2) the existing-kb-auditor. Don't spawn idle collectors. ≤5KB output cap each.
+- If `agent_mode: solo` — run only the trigger-relevant collector inline; skip the auditor unless the user asked for a periodic review.
 
 ## Command: `/update-knowledge-base`
 

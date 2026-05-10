@@ -19,27 +19,63 @@ Shared reference for all COG skills that interact with the Obsidian vault.
 
 ## 1. CLI Detection (Once Per Session)
 
-Before performing vault operations, determine if the Obsidian CLI is available. Check once and reuse the result for the entire session.
+Classify CLI status once per session. Reuse for the rest of the session.
 
-### Step 1: Check integration config
+States: `ok` | `disabled` | `app-not-running` | `runtime-blocked`.
 
-Read `00-inbox/MY-INTEGRATIONS.md` and look for `obsidian_cli` in the active integrations.
-- If `MY-INTEGRATIONS.md` doesn't exist → no CLI. Use direct file I/O.
-- If `obsidian_cli` is disabled or not listed → no CLI.
-- If `obsidian_cli` is active → proceed to availability check.
+### Step 1: Integration config
+Read `00-inbox/MY-INTEGRATIONS.md`. If `obsidian_cli` is missing/disabled → `disabled`. Else continue.
 
-### Step 2: Check CLI availability
-
+### Step 2: Probe CLI
 ```bash
-obsidian vault 2>/dev/null && echo "CLI_AVAILABLE" || echo "CLI_UNAVAILABLE"
+obsidian vault
+```
+Success → `ok`. Done.
+
+### Step 3: Classify the failure
+
+`obsidian vault` failing does **not** prove Obsidian is down — agent runtimes with sandboxed bash often block the desktop IPC the CLI needs, while the same command works when run unsandboxed. Probe process + config to distinguish:
+
+**Windows (PowerShell):**
+```powershell
+Get-Process Obsidian -ErrorAction SilentlyContinue
+Get-Content $env:APPDATA\obsidian\obsidian.json -Raw
 ```
 
-The `vault` command lists open vaults — only succeeds when Obsidian is running. The `obsidian` binary works on all platforms (Windows, macOS, Linux).
+**macOS:**
+```bash
+pgrep -f Obsidian
+cat ~/Library/Application\ Support/obsidian/obsidian.json
+```
 
-- If `CLI_UNAVAILABLE` → warn user ("Obsidian CLI is configured but Obsidian doesn't appear to be running — falling back to direct file writes").
-- If `CLI_AVAILABLE` → use CLI operations throughout.
+**Linux:**
+```bash
+pgrep -f Obsidian
+cat ~/.config/obsidian/obsidian.json
+```
 
-### Step 3: Vault name
+Classify:
+
+| Process running? | Config has a vault with `"open": true`? | Status |
+|---|---|---|
+| No | — | `app-not-running` |
+| Yes | No / unreadable | `app-not-running` (no usable open vault) |
+| Yes | Yes | `runtime-blocked` |
+
+Probe failure (e.g. `Get-Process` denied) → `runtime-blocked` (assume sandbox).
+
+### Step 4: Act on status
+
+| Status | Action |
+|---|---|
+| `ok` | Use CLI throughout the session. |
+| `disabled` | Use direct file I/O silently. |
+| `app-not-running` | Warn once: "Obsidian not running — falling back to direct file I/O." Use direct I/O. |
+| `runtime-blocked` | **Surface diagnosis to user, do NOT silently fall back.** Message: "Obsidian is running but `obsidian vault` failed from this agent runtime (likely sandbox-blocked IPC). Retry via this runtime's unrestricted execution path, or approve direct-I/O fallback." Wait for user direction before continuing. |
+
+`runtime-blocked` ≠ unavailable. Direct-I/O fallback loses index updates, backlink rewrites, and Tasks-plugin queries — silently degrading to it produces wrong results (e.g., zero-task triage when 30 are open).
+
+### Step 5: Vault name
 
 If `MY-INTEGRATIONS.md` has a `vault_name` field under `obsidian_cli`, prepend `vault="VaultName"` as the first parameter to all CLI commands. If not set, omit it (works when only one vault is open).
 
@@ -196,7 +232,16 @@ obsidian tasks daily        # Tasks due today
 obsidian tasks todo         # Unchecked tasks
 ```
 
-**Direct:** Grep for `- \[ \]` patterns across the vault.
+**Direct:** Use the Grep tool for `- \[ \]` patterns. If shelling out to `rg`, **always pass an explicit path** (`.`) — pathless `rg` may silently search stdin in agent shells.
+
+```bash
+# All open tasks (literal brackets — needs --fixed-strings)
+rg -n -g "*.md" --fixed-strings "[ ]" .
+
+# Open tasks WITH a due date (single-pass; preferred for triage fallback)
+rg -n -g "*.md" '- \[ \] .*📅' .
+```
+Never: `rg -n -g "*.md" "[ ]"` (no path arg).
 
 
 ## 3. YAML Frontmatter Rules
