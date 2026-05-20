@@ -9,7 +9,8 @@ Complete step-by-step instructions for setting up your COG (Cognition + Obsidian
 1. **AI Agent** (choose one or more):
    - [Claude Code](https://claude.ai/download) - Uses `.claude/skills/`
    - [Kiro](https://kiro.dev/) - Uses `.kiro/powers/`
-   - Any OpenAI-compatible agent - Uses `agents.md`
+   - [Antigravity CLI](https://github.com/google-gemini/antigravity) - Uses `AGENTS.md` (reads natively)
+   - Any OpenAI-compatible agent - Uses `AGENTS.md`
 2. **Obsidian** ([Download here](https://obsidian.md/)) - Recommended (optional)
 3. **Git** - Already on your system if you can run clone commands
 
@@ -34,8 +35,8 @@ code .
 - Say "onboarding" or "setup COG"
 - Kiro will activate the cog-onboarding power
 
-**Other Agents:**
-- Point the agent to `agents.md` for skill documentation
+**Antigravity CLI & Other Agents:**
+- Point the agent to `AGENTS.md` for skill documentation
 - Ask it to run the onboarding workflow
 
 That's it! You now have a working second brain.
@@ -45,7 +46,7 @@ That's it! You now have a working second brain.
 - 17 AI skills are available in multiple formats:
   - `.claude/skills/` - For Claude Code
   - `.kiro/powers/` - For Kiro
-  - `agents.md` - For any agent
+  - `AGENTS.md` - For any agent
 - Onboarding will create your personalized directory structure
 
 **Optional: Use with Obsidian**
@@ -124,7 +125,7 @@ After running onboarding, you'll have this structure:
 
 ```
 COG-second-brain/              # This is your second brain folder
-├── agents.md                  # Universal agent documentation
+├── AGENTS.md                  # Universal agent documentation
 ├── .claude/
 │   ├── roles/                 # 7 role packs for personalized recommendations
 │   └── skills/                # 12 Claude Code skills
@@ -172,7 +173,7 @@ COG-second-brain/              # This is your second brain folder
 
 COG routes sub-agents to one of three tiers based on source count:
 
-| Tier | Role | Claude Code | Gemini CLI | OpenAI Codex |
+| Tier | Role | Claude Code | Antigravity CLI | OpenAI Codex |
 |---|---|---|---|---|
 | `worker` | Single-source collection + first-pass analysis | Haiku | Flash Lite | o4-mini |
 | `specialist` | Multi-source synthesis | Sonnet | Flash | o4-mini |
@@ -181,8 +182,7 @@ COG routes sub-agents to one of three tiers based on source count:
 Tier definitions live in `AGENTS.md` under `## Model Tiers`. Provider mappings live in each context file's header (above the `<!-- AUTO-GENERATED -->` line):
 
 - **`CLAUDE.md`** — Claude Code mappings (edit to swap models)
-- **`GEMINI.md`** — Gemini CLI mappings
-- **`AGENTS.override.md`** — OpenAI Codex mappings (Codex reads `AGENTS.md` natively; this file adds provider-specific config)
+- **`AGENTS.md` / `AGENTS.override.md`** — Antigravity CLI & OpenAI Codex mappings (read `AGENTS.md` natively)
 
 To customize: edit the model mapping table in your provider's context file. Never edit below the `<!-- AUTO-GENERATED -->` marker.
 
@@ -326,14 +326,14 @@ touch .kiro/powers/my-power/POWER.md
 
 ### For Other Agents
 
-Edit `agents.md` to add or modify skill documentation. This file serves as universal documentation that any AI agent can read.
+Edit `AGENTS.md` to add or modify skill documentation. This file serves as universal documentation that any AI agent can read.
 
 ### Keeping Skills in Sync
 
 When you modify a skill, update all formats:
 1. `.claude/skills/[name]/SKILL.md` - Claude Code
 2. `.kiro/powers/cog-[name]/POWER.md` - Kiro
-3. `agents.md` - Universal documentation
+3. `AGENTS.md` - Universal documentation
 
 ## Troubleshooting
 
@@ -353,8 +353,8 @@ When you modify a skill, update all formats:
 3. Try mentioning specific keywords from the power's `keywords` list
 
 **Solutions for Other Agents:**
-1. Ensure `agents.md` exists in the root folder
-2. Point the agent to read `agents.md` for available commands
+1. Ensure `AGENTS.md` exists in the root folder
+2. Point the agent to read `AGENTS.md` for available commands
 
 ### Files Saving to Wrong Location
 

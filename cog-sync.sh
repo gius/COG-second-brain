@@ -9,10 +9,7 @@
 #
 # Generated (committed to git, never hand-edited):
 #   CLAUDE.md                    — Claude-specific header + AGENTS.md appended
-#   GEMINI.md                    — Gemini-specific header + AGENTS.md appended
 #   .claude/skills/*/SKILL.md   — Copy from .agents/skills/ (Claude Code native)
-#   .gemini/skills/*.md          — Skill body only, no frontmatter (Gemini CLI native)
-#   .gemini/commands/*.toml      — Gemini CLI command entry points
 #   .kiro/powers/cog-*/POWER.md — Kiro format with keywords (Kiro native)
 #
 # Run this before releasing a new COG version.
@@ -42,8 +39,6 @@ err()   { echo -e "${RED}x${RESET}  $*" >&2; }
 # ── Paths ───────────────────────────────────────────────────────────
 SOURCE_DIR=".agents/skills"
 CLAUDE_DIR=".claude/skills"
-GEMINI_DIR=".gemini/skills"
-GEMINI_CMD_DIR=".gemini/commands"
 KIRO_DIR=".kiro/powers"
 
 # ── Marker for hybrid context files ────────────────────────────────
@@ -55,7 +50,7 @@ AUTOGEN_MARKER="<!-- AUTO-GENERATED: Everything below is synced from AGENTS.md b
 # Usage: get_field "name" "path/to/SKILL.md"
 get_field() {
   local field="$1" file="$2"
-  sed -n '1,/^---$/!b; /^---$/,/^---$/{ /^'"$field"':/{ s/^'"$field"':[[:space:]]*//; s/^"//; s/"$//; p; } }' "$file" 2>/dev/null | head -1
+  tr -d '\r' < "$file" | sed -n '1,/^---$/!b; /^---$/,/^---$/{ /^'"$field"':/{ s/^'"$field"':[[:space:]]*//; s/^"//; s/"$//; p; } }' 2>/dev/null | head -1
 }
 
 # Extract a metadata sub-field value
@@ -63,7 +58,7 @@ get_field() {
 get_meta() {
   local field="$1" file="$2"
   # Find the metadata block, then the field within it
-  awk '
+  tr -d '\r' < "$file" | awk '
     /^---$/ { fm++; next }
     fm == 1 && /^metadata:/ { in_meta=1; next }
     fm == 1 && in_meta && /^[a-z]/ { in_meta=0 }
@@ -72,13 +67,13 @@ get_meta() {
       gsub(/^"/, ""); gsub(/"$/, "")
       print
     }
-  ' "$file" 2>/dev/null | head -1
+  ' 2>/dev/null | head -1
 }
 
 # Extract the markdown body (everything after the closing --- of frontmatter)
 get_body() {
   local file="$1"
-  awk 'BEGIN{fm=0} /^---$/{fm++; next} fm>=2{print}' "$file"
+  tr -d '\r' < "$file" | awk 'BEGIN{fm=0} /^---$/{fm++; next} fm>=2{print}'
 }
 
 # Convert "my-skill-name" to "My Skill Name"
@@ -97,10 +92,7 @@ Source of truth:
 
 Generated files (committed to git):
   CLAUDE.md                   Claude-specific header + AGENTS.md content
-  GEMINI.md                   Gemini-specific header + AGENTS.md content
   .claude/skills/*/SKILL.md   Copies for Claude Code native discovery
-  .gemini/skills/*.md          Body-only for Gemini CLI
-  .gemini/commands/*.toml      Gemini CLI command entry points
   .kiro/powers/cog-*/POWER.md Kiro format with keywords
 
 Usage:
@@ -131,13 +123,11 @@ parity_check() {
     [[ -z "$name" ]] && continue
 
     [[ ! -f "${CLAUDE_DIR}/${name}/SKILL.md" ]] && warn "Missing: ${CLAUDE_DIR}/${name}/SKILL.md" && issues=$((issues + 1))
-    [[ ! -f "${GEMINI_DIR}/${name}.md" ]] && warn "Missing: ${GEMINI_DIR}/${name}.md" && issues=$((issues + 1))
-    [[ ! -f "${GEMINI_CMD_DIR}/${name}.toml" ]] && warn "Missing: ${GEMINI_CMD_DIR}/${name}.toml" && issues=$((issues + 1))
     [[ ! -f "${KIRO_DIR}/cog-${name}/POWER.md" ]] && warn "Missing: ${KIRO_DIR}/cog-${name}/POWER.md" && issues=$((issues + 1))
   done
 
   # 3. Check context files contain AGENTS.md content
-  for ctx_file in CLAUDE.md GEMINI.md; do
+  for ctx_file in CLAUDE.md; do
     if [[ -f "$ctx_file" ]]; then
       # Verify AGENTS.md content is present (either as pure copy or after marker)
       local first_agents_line
@@ -199,31 +189,6 @@ sync_skill() {
         cp -r "${skill_base}/${subdir}" "${CLAUDE_DIR}/${name}/"
       fi
     done
-  fi
-
-  # ── Gemini CLI: body only (no frontmatter) ─────────────────────
-  local gemini_target="${GEMINI_DIR}/${name}.md"
-  if $dry_run; then
-    echo "    ${gemini_target}"
-  else
-    mkdir -p "$GEMINI_DIR"
-    get_body "$skill_file" > "$gemini_target"
-  fi
-
-  # ── Gemini CLI: .toml command entry point ──────────────────────
-  local gemini_cmd_target="${GEMINI_CMD_DIR}/${name}.toml"
-  if $dry_run; then
-    echo "    ${gemini_cmd_target}"
-  else
-    mkdir -p "$GEMINI_CMD_DIR"
-    cat > "$gemini_cmd_target" <<TOML
-description = "${description}"
-prompt = """
-You are running the COG ${name} workflow. Follow this playbook exactly:
-
-@{.gemini/skills/${name}.md}
-"""
-TOML
   fi
 
   # ── Kiro: transform frontmatter to Kiro format ────────────────
@@ -340,30 +305,6 @@ cleanup_orphans() {
     fi
   done
 
-  # Gemini skills (.md)
-  for f in "${GEMINI_DIR}"/*.md; do
-    [[ -f "$f" ]] || continue
-    local skill_name
-    skill_name=$(basename "$f" .md)
-    if ! is_source_skill "$skill_name"; then
-      warn "Orphaned: ${f}"
-      if ! $dry_run; then rm "$f"; ok "  Removed: ${f}"; fi
-      removed=$((removed + 1))
-    fi
-  done
-
-  # Gemini commands (.toml)
-  for f in "${GEMINI_CMD_DIR}"/*.toml; do
-    [[ -f "$f" ]] || continue
-    local skill_name
-    skill_name=$(basename "$f" .toml)
-    if ! is_source_skill "$skill_name"; then
-      warn "Orphaned: ${f}"
-      if ! $dry_run; then rm "$f"; ok "  Removed: ${f}"; fi
-      removed=$((removed + 1))
-    fi
-  done
-
   # Kiro powers (cog-* prefix) — use forward-mapping from source names
   # Build set of expected Kiro dir names
   local -a expected_kiro=()
@@ -449,7 +390,6 @@ main() {
   # ── Sync context files (hybrid: header + AGENTS.md) ────────────
   info "Context files:"
   sync_context_file "CLAUDE.md" "$dry_run"
-  sync_context_file "GEMINI.md" "$dry_run"
   echo ""
 
   # ── Sync each skill ───────────────────────────────────────────
@@ -476,8 +416,8 @@ main() {
   # ── Summary ────────────────────────────────────────────────────
   echo ""
   echo -e "${BOLD}Summary${RESET}"
-  ok "Synced ${synced} skills to Claude Code, Gemini CLI, and Kiro"
-  ok "Synced CLAUDE.md and GEMINI.md from AGENTS.md"
+  ok "Synced ${synced} skills to Claude Code and Kiro"
+  ok "Synced CLAUDE.md from AGENTS.md"
   [[ $errors -gt 0 ]] && warn "${errors} skill(s) skipped due to errors"
 
   if ! $dry_run; then

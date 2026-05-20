@@ -1,6 +1,0 @@
-description = ">"
-prompt = """
-You are running the COG task-triage workflow. Follow this playbook exactly:
-
-@{.gemini/skills/task-triage.md}
-"""
