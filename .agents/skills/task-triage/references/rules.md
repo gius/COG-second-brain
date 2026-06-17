@@ -30,19 +30,19 @@ Accumulated rules applied during `/task-triage`. Each rule has an ID, a behavior
   - A documented strategy pivot ("Phase 10 swaps to X") makes the task target an abandoned path
 - **Action**: superseded; link to the newer `file:line`. Use the section header or block anchor if the target is specific within the newer doc.
 - **Added**: 2026-04-24 (consolidates pilot R01/R03/R07/R11)
-- **Hits**: 13
+- **Hits**: 0
 
 ### RULE-02 — Evergreen / maintenance items don't get due dates
 - **Fires when**: task text includes explicit evergreen markers — "ongoing", "evergreen", "maintenance", "continuous", "keep doing X" — signalling a standing intention rather than a completable unit of work
 - **Action**: untrack (remove `[ ]`, keep as standing note). Applies regardless of provenance.
 - **Added**: 2026-04-24 (pilot R04)
-- **Hits**: 1
+- **Hits**: 0
 
 ### RULE-03 — Schedule established by ≥3 recurrences
 - **Fires when**: the task is to establish/start a schedule for a recurring activity (e.g. "run this audit monthly", "do a weekly X") AND that activity has occurred ≥3 times since the task was created
 - **Action**: done; the cadence is established de facto even without a formal schedule config
 - **Added**: 2026-04-24 (pilot R05)
-- **Hits**: 1
+- **Hits**: 0
 
 ### RULE-04 — AI-generated action with no vault follow-up
 - **Fires when**: the task is AI-generated (see SKILL.md §4a for provenance) AND no vault note references the topic within the source-type's freshness window. Freshness thresholds:
@@ -57,22 +57,22 @@ Accumulated rules applied during `/task-triage`. Each rule has an ID, a behavior
 
 - **Action**: untrack. Aspirational saves and speculative brief items without follow-through rarely convert; untracking clears the surface without deleting the idea.
 - **Added**: 2026-04-24 (consolidates pilot R06/R09)
-- **Hits**: 6
+- **Hits**: 0
 
 ### RULE-05 — External-execution → needs-user
 - **Fires when**: the task requires action outside the vault's visibility — e.g., runtime patches on external repos, CLI installs outside `.claude/skills/`, sharing an article with a team, external service config changes
 - **Action**: needs-user. The vault cannot verify external execution; route to a question with options `[done / still-todo / drop]`.
 - **Added**: 2026-04-24 (pilot R08)
-- **Hits**: 4
+- **Hits**: 0
 
 ### RULE-06 — Pipeline with step 1 unstarted → postpone chain
 - **Fires when**: 3+ tasks in the same file form a sequential pipeline (step 1 → step 2 → …) AND step 1's artifact doesn't exist yet
 - **Action**: postpone the whole chain from step 1's evidence alone. Proposed new dates should be spaced across the pipeline (e.g. +14d, +17d, +20d…) rather than all stamped the same. Don't investigate each step individually — step 1 being blocked is sufficient signal.
 - **Added**: 2026-04-24 (pilot R10)
-- **Hits**: 5
+- **Hits**: 0
 
 ### RULE-07 — "Read/study X" done when primary sources absorbed
 - **Fires when**: the task is to read/study a specific work by an author (book, repo, paper) AND the author's primary sources (canonical chapters, foundational refs) are cited in a related research or design doc within 30 days
 - **Action**: done; the learning intent was achieved through primary sources rather than the specific secondary work
 - **Added**: 2026-04-24 (pilot R12)
-- **Hits**: 2
+- **Hits**: 0

@@ -139,11 +139,13 @@ The split matters because user-curated tasks were deliberate commitments — mar
    - **`ai_generated_agent`** — `daily_briefs` + `booklets` + `consolidations` + `braindumps` (drop → `untrack`)
 3. **Split a provenance bucket only if its task count > 40.** Splitting at smaller sizes wastes the agent overhead vs. just letting one agent process more tasks.
 
+Materialize the payloads deterministically: `python scripts/split_payloads.py <RUN_DIR>`. It encodes rules 2-3 — merges `cluster_*.json` into provenance buckets, splits any bucket >40 into balanced `payload_<provenance>[_n].json` (same-file tasks kept together), and writes `payload_manifest.json`. Inline-handle (rule 1) any payload ≤5 yourself; don't spawn for it. See [`scripts/split_payloads.py`](scripts/split_payloads.py).
+
 Provenance grouping is more robust than folder grouping: adding a new vault folder type doesn't add an agent, and the taxonomy already splits cleanly by provenance (§4a).
 
 Each agent receives:
 
-1. Task list. Inline if ≤25 tasks (~4KB); else pass project-relative path `.cog/task-triage/runs/<YYYY-MM-DD>/cluster_<NAME>.json`.
+1. Task list = its `payload_<provenance>[_n].json` from split_payloads. Inline the JSON if ≤25 tasks (~4KB); else pass the project-relative path `.cog/task-triage/runs/<YYYY-MM-DD>/payload_<provenance>[_n].json`.
 2. Full `references/rules.md` inline. Cite rule IDs.
 3. Taxonomy (§4) + provenance rule (§4a).
 4. Every non-`needs-user` classification cites file/line/commit.
@@ -202,7 +204,9 @@ Review is conversational. Don't write a staged review doc or other artifact — 
 
 ### 8. Apply edits (main context)
 
-For each approved classification, edit the source file with the `Edit` tool using the original line text as the match. Exact-line matching prevents accidental edits to nearby text.
+Write the approved classifications to `<RUN_DIR>/decisions.json` — a list of `{file, line, action, [date], [target]}` using full vault-relative paths (several files share the name `PROJECT-OVERVIEW.md`). Then run `python scripts/apply_edits.py <RUN_DIR>/decisions.json`. It transforms each cited line per the §4 edit shapes, prints every before/after, and skips (never writes) any line that isn't an open task — a stale line number is reported, not mis-edited. See [`scripts/apply_edits.py`](scripts/apply_edits.py).
+
+For a few edits the `Edit` tool with exact-line matching is fine; reach for the script once a run exceeds ~15 edits or spans many files.
 
 All edits land in **one git commit** per run — this is the non-negotiable revert escape hatch. Commit message format:
 
@@ -253,4 +257,6 @@ Emit:
 
 - [`references/rules.md`](references/rules.md) — The accumulated rulebook. Seeded with 12 rules from the 2026-04-24 pilot run.
 - [`scripts/bucket_and_cluster.py`](scripts/bucket_and_cluster.py) — Deterministic parser + clusterer (UTF-8 safe).
+- [`scripts/split_payloads.py`](scripts/split_payloads.py) — Merges clusters into provenance buckets and splits >40-task buckets into balanced agent payloads (§5).
+- [`scripts/apply_edits.py`](scripts/apply_edits.py) — Applies a `decisions.json` to vault files in place with before/after output and open-task safety checks (§8).
 - [`references/edit-shapes.md`](references/edit-shapes.md) — Before/after examples for each classification's edit shape.

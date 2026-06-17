@@ -1,190 +1,67 @@
 ---
 name: scout
-description: Evaluate URLs and tools — check vault coverage, assess relevance, recommend save or skip
+description: "Investigate one URL, library, or article in depth: read it, gather verified external signal (reviews, comments, reactions), check vault coverage, recommend save / read-in-full / skip"
 metadata:
   roles: all
   integrations: web-fetch,web-search
-  keywords: scout,evaluate,should I save this,is this relevant,scout this,triage url
+  keywords: scout,scout this,investigate,evaluate,should I save this,is this relevant,worth reading,deep dive on this link
   display-name: COG Scout
 ---
 
 # COG Scout Skill
 
 ## Purpose
-Lightweight URL/tool triage that sits between "ignore" and `/url-dump`. Evaluates whether a URL or tool is worth saving or skipping — checking existing vault coverage, assessing relevance to the user's profile and interests, and recommending a clear next action.
+Deep investigation of a single artifact (a URL, library/tool/repo, or article) before you commit time to it. Scout reads the thing, gathers verified external signal (reviews, comments, reactions, comparisons), checks whether the vault already covers the substance, and gives one clear recommendation. It does the reading so you do not have to.
 
 ## When to Invoke
-- User wants to evaluate a URL or tool before committing to a full save
-- User says "scout this", "evaluate this", "should I save this?", "is this relevant?"
-- User shares one or more URLs and wants a quick relevance assessment
-- User mentions a tool/service name and wants to know if it's worth investigating
+- "scout this", "investigate this", "is this worth reading?", "should I save this?"
+- User shares a link/library and wants a read + verdict, not just a metadata glance
+- A `/daily-brief` or `/auto-research` surfaced a tool or article worth a closer look
 
-## Agent Mode Awareness
+## Pre-Flight
+- Read `00-inbox/MY-PROFILE.md` (active projects, role) and `00-inbox/MY-INTERESTS.md` for relevance scoring. If missing, evaluate on general quality and ask if they want `/onboarding`.
+- Confirm `web-fetch` is active in `00-inbox/MY-INTEGRATIONS.md`. If not, fetch is unavailable - say so and work from what the user can paste.
 
-**Solo only — sub-agent delegation is not worth the overhead for this skill.** Scout is sub-1-minute work; spawning 2 sub-agents (~80K context overhead) costs more than the work itself. Handle vault scanning and content fetching directly in the main conversation regardless of `agent_mode`.
+## Process
 
-## Pre-Flight Check
+### 1. Classify the input
+- **Library / tool / repo** - assess by docs + reputation
+- **Article / post / paper** - assess by reading the content
+- **Open-ended question** (not a single artifact) - hand off to `/auto-research`, do not scout
 
-**Before executing, check for user profile:**
+### 2. Read the primary source
+Fetch and read it fully, not just title/author/date.
+- Default: `WebFetch`
+- JS-heavy / login-walled / lazy-loaded (Reddit, X, Disqus, Instagram): use `/playwriter`
+- X/Twitter posts: read via `api.vxtwitter.com`
+- Auth-gated / paywalled (e.g. X Articles `x.com/i/article/...`, which vxtwitter and WebFetch cannot return): try an `archive.today` snapshot first - `https://archive.ph/newest/<url>` - then fall back to `/playwriter` on the live session
 
-1. Look for `00-inbox/MY-PROFILE.md` and `00-inbox/MY-INTERESTS.md` in the vault
-2. If NOT found:
-   ```
-   Welcome to COG! Scout works best with a profile for relevance matching.
+### 3. Gather external signal (input-aware)
+- **Library:** open GitHub issues, HN/Reddit threads, "X vs Y" comparisons, release cadence, maintenance/adoption health
+- **Article:** comment section, discussion threads, notable counter-takes
 
-   Would you like to run /onboarding first, or should I evaluate with general criteria?
-   ```
-3. If found:
-   - Read `MY-PROFILE.md` for active projects and role
-   - Read `MY-INTERESTS.md` for topic areas
-   - Read `00-inbox/MY-INTEGRATIONS.md` for active integrations (check if `web-fetch` and `web-search` are available)
+**Verification (non-negotiable - this is what makes Scout save time instead of mislead):**
+- Every quoted review/comment/reaction must trace to a fetched URL. Include the fetched title + date as proof.
+- Drop anything you cannot fetch. Do not paraphrase a "representative" reaction from memory.
+- "No real reactions found" is a valid, useful result. Fabricated signal is not.
 
-## Boundary with `/url-dump`
+### 4. Vault coverage (substance, not just URL)
+- **Exact:** grep the vault for the URL / domain / library name (catches a literal re-save).
+- **Substance:** pull 3-5 key claims/entities from what you just read, grep vault titles, headers, body, and tags for them, read the hits, and judge real overlap vs a passing mention. Quote the overlapping note and let the user decide - a keyword hit is not proof they have already absorbed this.
 
-**Scout evaluates** ("should I save this?"). **URL-dump saves** ("save this now").
+### 5. Recommend (pick one, with evidence)
+- **Adopt / Try** - strong fit, healthy signal, worth using
+- **Save** - worth keeping; hand off to `/url-dump`
+- **Read in full** - high value, deserves your own read; flag the 2-3 sections worth your time
+- **Skip - already covered** - vault already holds the substance (point to the note)
+- **Skip - low value** - weak signal, wrong stack, or thin content (say why)
 
-- Scout checks existing coverage, assesses relevance, and recommends an action
-- If the recommendation is **Save**, scout hands off to `/url-dump` with pre-filled category
-- Users who already know they want to save should use `/url-dump` directly
+Present: a tight overview of what it says, the verified external signal, the coverage finding, then the one recommendation.
 
-## Process Flow
+## Agent Mode
+- **team:** delegate each external-source lookup to a worker (Haiku). Brief each with the verification rules in step 3 - primary source, fetch + proof, drop rule. Synthesize in the main conversation.
+- **solo:** do all fetching and reading directly.
 
-### 1. Accept Input
-
-Accept one or more of:
-- **URL(s):** Direct links to evaluate
-- **Tool/service name(s):** Will search for the tool first
-- **Mixed:** Combination of URLs and names
-
-**Prompt (if no input provided):**
-```
-What URL(s) or tool(s) would you like me to evaluate?
-(You can paste URLs, tool names, or a mix)
-```
-
-**Batch mode:** Multiple URLs/names in one invocation are processed together with a summary table at the end.
-
-### 2. Vault Coverage Check
-
-For each URL or tool name, search the **entire vault** for existing coverage.
-
-**Search strategy:**
-- Extract domain from URL (e.g., `github.com/owner/repo` → search for repo name)
-- Search for tool/service name across the whole vault (grep for domain, repo name, tool name)
-- Match against URL strings in frontmatter (`url:` fields) and inline links
-
-**If found:**
-```
-🔍 Existing coverage found for [name]:
-- [file path] — saved [date], category: [category]
-- [file path] — mentioned in [context]
-
-Want me to check if an update is needed, or skip this one?
-```
-
-### 3. Content Fetch & Analysis
-
-**If URL provided and web-fetch is active:**
-- Fetch the URL content using WebFetch
-- Extract: title, description, content type, author, date
-
-**If tool name provided (no URL):**
-- Use WebSearch to find the tool's primary page
-- Fetch and analyze the top result
-
-**Content type detection:**
-- **Tool/Service:** Software, SaaS, API, library, framework
-- **Article/Blog:** Long-form content, tutorial, opinion piece
-- **Repository:** GitHub/GitLab repo (extract stars, last commit, language)
-- **Research:** Paper, study, academic content
-- **News:** Industry news, announcement
-- **Reference:** Documentation, spec, standard
-
-### 4. Relevance Assessment
-
-Score relevance against user context:
-
-**Profile Match (from MY-PROFILE.md):**
-- Does it relate to an active project? Which one?
-- Does it align with the user's role?
-- Does it fit the user's tech stack?
-
-**Interest Match (from MY-INTERESTS.md):**
-- Does it match any declared interest topics?
-- How directly relevant is it?
-
-**Quality Signals:**
-- For repos: stars, recent activity, maintainer health
-- For tools: pricing model, maturity, adoption
-- For articles: author credibility, publication quality, recency
-- For all: uniqueness vs. what's already in the vault
-
-### 5. Recommendation
-
-Based on analysis, recommend one of two actions:
-
-#### **Save** — Worth adding to the knowledge base
-```
-✅ SAVE — [Title/Name]
-Category: [suggested category for url-dump]
-Relevance: [High/Medium] — [why it matters]
-Projects: [affected project(s) if any]
-
-Shall I hand off to /url-dump to save it?
-```
-
-#### **Skip** — Not relevant or not worth the time
-```
-⏭️ SKIP — [Title/Name]
-Reason: [clear explanation — wrong stack, low quality, already covered, irrelevant to interests]
-```
-
-### 6. Batch Summary (for multiple items)
-
-When processing multiple URLs/tools, end with a summary table:
-
-```markdown
-## Scout Summary
-
-| # | Item | Verdict | Reason |
-|---|------|---------|--------|
-| 1 | [Name 1] | ✅ Save | [brief reason] |
-| 2 | [Name 2] | ⏭️ Skip | [brief reason] |
-
-**Actions:**
-- [X] items ready to save via /url-dump
-```
-
-### 7. Execute Follow-up Actions
-
-Based on user confirmation:
-- **Save items:** Hand off to `/url-dump` with pre-filled category suggestion
-- **Skip items:** No action needed
-
-## Fallback Behavior
-
-| Scenario | Behavior |
-|----------|----------|
-| web-fetch unavailable | Evaluate based on URL structure, domain reputation, and vault search only. Note that content wasn't fetched. |
-| web-search unavailable | For tool-name inputs (no URL), ask the user for a direct URL instead. For URL inputs, proceed normally — web-search is not needed. |
-| No user profile | Evaluate with general quality/relevance criteria, skip personalized relevance scoring |
-| URL is paywalled | Note limitation, evaluate based on available preview and metadata |
-| Tool not found via search | Ask user for more context or a direct URL |
-
-## Uncertainty Handling
-
-Scout's output is a real-time decision aid, not a searchable note — so surfacing uncertainty to the user is the right move when the evidence is genuinely mixed. That's different from the "medium confidence" pattern that laundries unverified content into persistent outputs; here the user is looking at the screen and will decide in the next breath.
-
-- **Clear recommendation:** strong relevance match or clear irrelevance — give a direct Save or Skip
-- **Genuinely mixed:** partial match, or evidence points both ways — show the concrete pros and cons with quotes/facts from the fetched content (not abstract labels), and let the user decide. Don't hide behind "medium confidence" as a catch-all
-- **Can't determine:** the URL failed to fetch, paywall blocked extraction, or the content is too thin to evaluate — explain exactly what's unclear and ask the user for context, rather than recommending based on URL structure alone
-
-## After Completion
-
-- **Save** → hand off to `/url-dump` with pre-filled category suggestion
-- `/daily-brief` and `/auto-research` often surface new tools — suggest `/scout` to triage them
-
-## What Good Looks Like
-
-A successful scout triage is quick (under 1 minute for a single URL), gives a clear save/skip recommendation, surfaces existing vault coverage to prevent duplicates, and hands off cleanly to `/url-dump` when saving.
-
+## Handoff
+- **Save** -> `/url-dump` with a pre-filled category
+- **Open-ended question** -> `/auto-research`

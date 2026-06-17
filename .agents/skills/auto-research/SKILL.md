@@ -212,7 +212,7 @@ Consolidated, deduplicated list of all sources across threads.
 - **Recency matters.** Prioritize sources from the last 6 months. Flag anything older.
 - **Bias awareness.** Note when sources have obvious commercial incentives.
 - **Specificity over generality.** "The testing tools market is $XX.XB and growing at YY% CAGR" beats "the market is growing."
-- **Actionability ("so what").** Every section ends with an implication, not just a fact. The output should help the user make a decision, not just understand a topic. Reports without an action edge don't get acted on.
+- **Actionability.** The output should help the user make a decision, not just understand a topic.
 - **Intellectual honesty.** If the research is inconclusive, say so. Don't manufacture false confidence.
 
 ## Example Decomposition
