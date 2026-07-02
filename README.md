@@ -2,6 +2,8 @@
 
 **Cognition + Obsidian + Git** — A self-evolving second brain powered by AI agents, markdown files, and version control. No database, no vendor lock-in — just `.md` files that think.
 
+> **This is a personal, divergent fork** of [huytieu/COG-second-brain](https://github.com/huytieu/COG-second-brain). It runs a single-source-of-truth skill architecture (`.agents/skills/` + `cog-sync.sh`) and adopts upstream releases by **curated review, not merge**. See [UPSTREAM-SYNC.md](UPSTREAM-SYNC.md).
+
 [Quick Start](#quick-start) | [Skills](#skills) | [Features](#features-at-a-glance) | [FAQ](#faq) | [SETUP.md](SETUP.md)
 
 > Works with [Claude Code](https://claude.ai/download) &bull; [Kiro](https://kiro.dev/) &bull; [Antigravity CLI](https://github.com/google-gemini/antigravity) &bull; [OpenAI Codex](https://github.com/openai/codex) &bull; any AI that reads markdown
@@ -9,7 +11,7 @@
 ```mermaid
 graph LR
     A[You] -- natural language --> B[AI Agent]
-    B -- runs --> C[18 Skills]
+    B -- runs --> C[12 Skills]
     C -- reads & writes --> D[.md Files]
     C -- syncs with --> G[GitHub / Linear / Slack / PostHog]
     D --> E[Git]
@@ -159,16 +161,13 @@ Yes — edit skills in `.agents/skills/[name]/SKILL.md` (source of truth), then 
 Git is optional but recommended for version history. COG works fine with just iCloud sync.
 </details>
 
-## Roadmap
+## Relationship to Upstream COG
 
-- [x] ~~Gemini CLI + OpenAI Codex support~~ (shipped in v3.1)
-- [x] ~~Upstream update system~~ (shipped in v3.2)
-- [x] ~~Role packs & integration discovery~~ (shipped in v3.3)
-- [x] ~~PM workflow skills & auto-research~~ (shipped in v3.4)
-- [ ] Web interface for knowledge graph visualization
-- [ ] Mobile-first commands (optimized for Obsidian mobile)
-- [ ] Team collaboration features (with privacy preservation)
-- [ ] Integration with calendar/task management tools
+This fork tracks [huytieu/COG-second-brain](https://github.com/huytieu/COG-second-brain) but has **diverged architecturally** and no longer merges from it:
+
+- **Single source of truth** — skills live once in `.agents/skills/`; `cog-sync.sh` generates every tool surface (`.claude/`, `.kiro/`, `CLAUDE.md`). Upstream maintains per-tool dirs by hand.
+- **Curated adoption, not merge** — new upstream capabilities are reviewed release-by-release and ported into `.agents/skills/` when worth it. Upstream's file layout is never merged in. Procedure: [UPSTREAM-SYNC.md](UPSTREAM-SYNC.md).
+- **Local customizations** — model-tier routing (worker/specialist/architect), sub-agent briefing rules, tool-agnostic paths, and family distribution (`cog-update.bat`) are fork-only.
 
 ## Contributing & Support
 
