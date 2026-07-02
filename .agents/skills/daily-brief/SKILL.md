@@ -146,6 +146,15 @@ Save to: `01-daily/briefs/daily-brief-YYYY-MM-DD.md`
 - Optionally show executive summary
 - Ask if they want to explore any topic deeper or capture thoughts via braindump skill
 
+## Loop Engineering
+
+Daily brief is a **verify-retry loop** per interest area, not one search. See the `loop-engineering` skill for the shared vocabulary.
+
+- **Loop:** search → fetch a candidate → verify → keep or re-search with an adjusted query → repeat. In `agent_mode: team`, one worker loop per interest cluster, then synthesize.
+- **Verifier (mechanical, every candidate):** published within 7 days · ≥2 independent credible sources · source tier identified · not already in the brief (dedup). Fail any → discard, never soften.
+- **Termination:** target item count met · hard cap ~5 searches/area · no-progress (2 empty searches → "No significant news found", never backfill) · overall fetch budget.
+- **Patterns:** evaluator-optimizer + reflect-retry + orchestrator-workers (team mode).
+
 ## What Good Looks Like
 
 A successful daily brief means: every item traces to a primary source the agent actually fetched, all news is within the 7-day window, the brief is relevant to the user's actual interests and projects, and opportunities/risks are actionable — not generic. The user should be able to forward any item to a colleague without saying "let me verify this first."

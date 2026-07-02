@@ -10,7 +10,6 @@
 # Generated (committed to git, never hand-edited):
 #   CLAUDE.md                    — Claude-specific header + AGENTS.md appended
 #   .claude/skills/*/SKILL.md   — Copy from .agents/skills/ (Claude Code native)
-#   .kiro/powers/cog-*/POWER.md — Kiro format with keywords (Kiro native)
 #
 # Run this before releasing a new COG version.
 #
@@ -39,7 +38,18 @@ err()   { echo -e "${RED}x${RESET}  $*" >&2; }
 # ── Paths ───────────────────────────────────────────────────────────
 SOURCE_DIR=".agents/skills"
 CLAUDE_DIR=".claude/skills"
-KIRO_DIR=".kiro/powers"
+
+# Skills maintained directly in the tool dirs (not generated from SOURCE_DIR).
+# cog-sync must never treat these as orphans and delete them.
+EXTERNAL_SKILLS=("playwriter" "czech-ai-news")
+
+is_external_skill() {
+  local check="$1"
+  for ext in "${EXTERNAL_SKILLS[@]}"; do
+    [[ "$ext" == "$check" ]] && return 0
+  done
+  return 1
+}
 
 # ── Marker for hybrid context files ────────────────────────────────
 AUTOGEN_MARKER="<!-- AUTO-GENERATED: Everything below is synced from AGENTS.md by cog-sync.sh — do not edit manually -->"
@@ -51,34 +61,6 @@ AUTOGEN_MARKER="<!-- AUTO-GENERATED: Everything below is synced from AGENTS.md b
 get_field() {
   local field="$1" file="$2"
   tr -d '\r' < "$file" | sed -n '1,/^---$/!b; /^---$/,/^---$/{ /^'"$field"':/{ s/^'"$field"':[[:space:]]*//; s/^"//; s/"$//; p; } }' 2>/dev/null | head -1
-}
-
-# Extract a metadata sub-field value
-# Usage: get_meta "keywords" "path/to/SKILL.md"
-get_meta() {
-  local field="$1" file="$2"
-  # Find the metadata block, then the field within it
-  tr -d '\r' < "$file" | awk '
-    /^---$/ { fm++; next }
-    fm == 1 && /^metadata:/ { in_meta=1; next }
-    fm == 1 && in_meta && /^[a-z]/ { in_meta=0 }
-    fm == 1 && in_meta && $0 ~ "^  '"$field"':" {
-      sub(/^  '"$field"':[[:space:]]*/, "")
-      gsub(/^"/, ""); gsub(/"$/, "")
-      print
-    }
-  ' 2>/dev/null | head -1
-}
-
-# Extract the markdown body (everything after the closing --- of frontmatter)
-get_body() {
-  local file="$1"
-  tr -d '\r' < "$file" | awk 'BEGIN{fm=0} /^---$/{fm++; next} fm>=2{print}'
-}
-
-# Convert "my-skill-name" to "My Skill Name"
-title_case() {
-  echo "$1" | tr '-' ' ' | awk '{for(i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2))}1'
 }
 
 # ── Usage ───────────────────────────────────────────────────────────
@@ -93,7 +75,6 @@ Source of truth:
 Generated files (committed to git):
   CLAUDE.md                   Claude-specific header + AGENTS.md content
   .claude/skills/*/SKILL.md   Copies for Claude Code native discovery
-  .kiro/powers/cog-*/POWER.md Kiro format with keywords
 
 Usage:
   ./cog-sync.sh               Sync all generated files
@@ -123,7 +104,6 @@ parity_check() {
     [[ -z "$name" ]] && continue
 
     [[ ! -f "${CLAUDE_DIR}/${name}/SKILL.md" ]] && warn "Missing: ${CLAUDE_DIR}/${name}/SKILL.md" && issues=$((issues + 1))
-    [[ ! -f "${KIRO_DIR}/cog-${name}/POWER.md" ]] && warn "Missing: ${KIRO_DIR}/cog-${name}/POWER.md" && issues=$((issues + 1))
   done
 
   # 3. Check context files contain AGENTS.md content
@@ -155,21 +135,13 @@ parity_check() {
 # ── Sync one skill ──────────────────────────────────────────────────
 sync_skill() {
   local skill_file="$1" dry_run="$2"
-  local name description display_name keywords body
+  local name
 
   name=$(get_field "name" "$skill_file")
   if [[ -z "$name" ]]; then
     warn "Skipping ${skill_file} — no 'name' in frontmatter"
     return 1
   fi
-
-  description=$(get_field "description" "$skill_file")
-  display_name=$(get_meta "display-name" "$skill_file")
-  keywords=$(get_meta "keywords" "$skill_file")
-
-  # Defaults
-  [[ -z "$display_name" ]] && display_name="COG $(title_case "$name")"
-  [[ -z "$keywords" ]] && keywords="$name"
 
   info "Syncing: ${BOLD}${name}${RESET}"
 
@@ -189,39 +161,6 @@ sync_skill() {
         cp -r "${skill_base}/${subdir}" "${CLAUDE_DIR}/${name}/"
       fi
     done
-  fi
-
-  # ── Kiro: transform frontmatter to Kiro format ────────────────
-  local kiro_name="cog-${name}"
-  local kiro_target="${KIRO_DIR}/${kiro_name}/POWER.md"
-
-  if $dry_run; then
-    echo "    ${kiro_target}"
-  else
-    mkdir -p "${KIRO_DIR}/${kiro_name}"
-
-    # Build Kiro keywords array from comma-separated string
-    local kw_json=""
-    local first=true
-    IFS=',' read -ra kw_array <<< "$keywords"
-    for kw in "${kw_array[@]}"; do
-      kw=$(echo "$kw" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
-      [[ -z "$kw" ]] && continue
-      $first || kw_json+=", "
-      kw_json+="\"${kw}\""
-      first=false
-    done
-
-    {
-      echo '---'
-      echo "name: \"${kiro_name}\""
-      echo "displayName: \"${display_name}\""
-      echo "description: \"${description}\""
-      echo "keywords: [${kw_json}]"
-      echo '---'
-      echo ""
-      get_body "$skill_file"
-    } > "$kiro_target"
   fi
 
   return 0
@@ -298,29 +237,8 @@ cleanup_orphans() {
     [[ -d "$d" ]] || continue
     local skill_name
     skill_name=$(basename "$d")
+    is_external_skill "$skill_name" && continue
     if ! is_source_skill "$skill_name"; then
-      warn "Orphaned: ${d}"
-      if ! $dry_run; then rm -rf "$d"; ok "  Removed: ${d}"; fi
-      removed=$((removed + 1))
-    fi
-  done
-
-  # Kiro powers (cog-* prefix) — use forward-mapping from source names
-  # Build set of expected Kiro dir names
-  local -a expected_kiro=()
-  for sn in "${source_names[@]}"; do
-    expected_kiro+=("cog-${sn}")
-  done
-
-  for d in "${KIRO_DIR}"/cog-*/; do
-    [[ -d "$d" ]] || continue
-    local kiro_basename
-    kiro_basename=$(basename "$d")
-    local found=false
-    for ek in "${expected_kiro[@]}"; do
-      [[ "$ek" == "$kiro_basename" ]] && found=true && break
-    done
-    if ! $found; then
       warn "Orphaned: ${d}"
       if ! $dry_run; then rm -rf "$d"; ok "  Removed: ${d}"; fi
       removed=$((removed + 1))
@@ -416,7 +334,7 @@ main() {
   # ── Summary ────────────────────────────────────────────────────
   echo ""
   echo -e "${BOLD}Summary${RESET}"
-  ok "Synced ${synced} skills to Claude Code and Kiro"
+  ok "Synced ${synced} skills to Claude Code"
   ok "Synced CLAUDE.md from AGENTS.md"
   [[ $errors -gt 0 ]] && warn "${errors} skill(s) skipped due to errors"
 

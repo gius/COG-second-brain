@@ -346,6 +346,15 @@ After saving, suggest relevant follow-ups:
 - `/knowledge-consolidation` — if booklets are piling up and patterns might be emerging
 - `/scout` — if the user has more URLs to triage before saving
 
+## Loop Engineering
+
+URL capture is a **fetch-retry loop with a quality gate**, not a single fetch-and-file. See the `loop-engineering` skill for the shared vocabulary.
+
+- **Loop:** fetch → if the body is empty/blocked, retry a different way (https/http, reader mode, archive snapshot) → run the quality gate → file it, or escalate / save to inbox flagged.
+- **Verifier (mechanical):** non-empty body (not a paywall stub) · required fields populated (title, ≥1 insight, category) · valid YAML frontmatter · category confidence over threshold.
+- **Termination:** gate passes → save · retry cap ~3 fetches → save with low-confidence flag, never invent fields · hard stop on paywall/login wall · below-threshold confidence → ask the user.
+- **Patterns:** reflect-retry + evaluator + human-in-the-loop. Process each URL in a batch as its own loop.
+
 ## What Good Looks Like
 
 A successful URL capture is fast (under 30 seconds for a single URL), accurately categorized, extracts genuinely useful insights (not just restating the title), and connects to existing vault knowledge where relevant.

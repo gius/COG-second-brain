@@ -14,7 +14,7 @@ If you find a bug or have a suggestion:
    - Detailed description of the problem or suggestion
    - Steps to reproduce (for bugs)
    - Expected vs actual behavior
-   - Your environment (OS, Obsidian version, AI agent used: Claude Code/Kiro/Other)
+   - Your environment (OS, Obsidian version, AI agent used: Claude Code/Other)
 
 ### Suggesting Enhancements
 
@@ -45,8 +45,7 @@ We welcome ideas for new features or improvements:
 
 1. **Skills**: Add new skills to `.agents/skills/[name]/SKILL.md` only (single source of truth):
    - Follow the [agentskills.io](https://agentskills.io/specification) standard format
-   - Include `metadata.keywords` and `metadata.display-name` for Kiro compatibility
-   - Run `./cog-sync.sh` to generate tool-specific files (Claude Code, Gemini CLI, Kiro)
+   - Run `./cog-sync.sh` to generate tool-specific files (Claude Code)
    - If the skill is role-specific, add it to relevant role packs in `.cog/user-roles/`
    - **Never hand-edit** generated files — see [How skills are discovered](#how-skills-are-discovered) below
 2. **Templates**: Follow existing YAML frontmatter conventions
@@ -151,17 +150,16 @@ Each AI tool discovers skills from its own native folder. `cog-sync.sh` generate
 | `.claude/skills/[name]/SKILL.md` | Copy of source skill (as-is) | Claude Code loads skills from this folder natively |
 | `.gemini/skills/[name].md` | Skill body only (no frontmatter) | Referenced by `.gemini/commands/[name].toml` via `@{path}` |
 | `.gemini/commands/[name].toml` | Entry point with description + prompt | Gemini CLI registers these as `/commands` |
-| `.kiro/powers/cog-[name]/POWER.md` | Kiro frontmatter (`displayName`, `keywords` array) + body | Kiro activates powers by keyword matching |
 | `CLAUDE.md` | Pure copy of AGENTS.md, or header + AGENTS.md if marker present | Claude Code reads as project instructions |
 | `GEMINI.md` | Pure copy of AGENTS.md, or header + AGENTS.md if marker present | Gemini CLI reads as project context |
 
-**When adding a new skill**, also add a row to the skill table in `AGENTS.md`. This table is the skill catalog for agents without native skill discovery (e.g., OpenAI Codex). Tools with native folders (Claude Code, Gemini CLI, Kiro) discover skills automatically from their generated folders.
+**When adding a new skill**, also add a row to the skill table in `AGENTS.md`. This table is the skill catalog for agents without native skill discovery (e.g., OpenAI Codex). Tools with native folders (Claude Code, Gemini CLI) discover skills automatically from their generated folders.
 
 **Context files (CLAUDE.md, GEMINI.md)** support two modes:
 - **Pure copy**: No marker — the file becomes an exact copy of AGENTS.md
 - **Header + AGENTS.md**: If the file contains a `<!-- AUTO-GENERATED -->` marker, content above it is preserved and AGENTS.md is appended below. Use this for tool-specific notes (e.g., Gemini's `.gemini/commands/` path hint).
 
-**Never hand-edit** files in `.claude/skills/`, `.gemini/skills/`, `.gemini/commands/`, or `.kiro/powers/` — they are overwritten on every sync. Also never edit content below the `<!-- AUTO-GENERATED -->` marker in context files.
+**Never hand-edit** files in `.claude/skills/`, `.gemini/skills/`, or `.gemini/commands/` — they are overwritten on every sync. Also never edit content below the `<!-- AUTO-GENERATED -->` marker in context files.
 
 ### Model Tier System
 
