@@ -2,6 +2,28 @@
 
 All notable changes to COG (Cognition + Obsidian + Git) will be documented in this file.
 
+## [Unreleased] - 2026-07-02
+
+Curated upstream adoption (fork). Synced with `huytieu/COG-second-brain` at `5e9851c` (v3.6.0) by review-and-port, not merge — see `UPSTREAM-SYNC.md`.
+
+### Added
+- **`loop-engineering`** — ported upstream's shared loop-engineering reference skill (adapted to this fork's skill set). Added concise `## Loop Engineering` sections to `daily-brief` and `url-dump`.
+- **Knowledge index (`05-knowledge/_index.md`)** — single entry point to compiled knowledge (frameworks, patterns, open contradictions). Maintained by `knowledge-consolidation` (both modes), consulted by `braindump`, `weekly-checkin`, and any work session via new `AGENTS.md → Knowledge Reuse` section. Closes the loop: consolidation outputs previously had no readers.
+- **Open Contradictions contract** — `braindump` and `weekly-checkin` append contradiction flags to the index when new evidence cuts against a documented framework; `knowledge-consolidation` processes them as mandatory input in Contradiction Analysis.
+
+### Changed
+- **`weekly-checkin`** — evidence pre-fill: drafts per-domain summaries from vault content and asks only delta questions instead of interviewing from scratch. Pattern Recognition now grounds against documented patterns/frameworks (confirm/contradict, candidate-pattern marking) instead of re-discovering themes weekly. Reads the last consolidation report's content, not just its date. Estimation Log gets a creation path when missing.
+- **`daily-brief`** — dedup lookback is now a 7-calendar-day window (min 3 briefs) instead of "last 3 files". Reads `04-projects/*/competitive/*.md` intel files so watchlist stories build on accumulated intelligence.
+- **`braindump`** — Connection Discovery consults the knowledge index, links canonical framework/pattern docs, and flags framework contradictions (new Framework Check line in the template).
+- **Agent-mode boilerplate deduplicated** — mode check + tier rules live once in `AGENTS.md → Model Tiers`; skills now state only their delegation buckets.
+- **Timeline entries retired** — `knowledge-consolidation` no longer creates `05-knowledge/timeline/` files (3 ever created, zero readers); thinking shifts are recorded in the affected framework's Evolution & History section. Existing timeline files remain as archive.
+
+### Removed
+- **Kiro tool surface** — deleted `.kiro/`, removed the Kiro generation path from `cog-sync.sh` (and now-dead helpers), and scrubbed Kiro from `README`/`SETUP`/`CONTRIBUTING`. This fork targets Claude Code + `AGENTS.md` only.
+
+### Fixed
+- **`cog-sync.sh`** — orphan cleanup no longer deletes externally-maintained skills (`playwriter`, `czech-ai-news`).
+
 ## [3.5.0] - 2026-04-03
 
 ### Single Source of Truth & Multi-Tool Sync

@@ -168,6 +168,7 @@ emotional_tone: "[primary-emotion]"
 - **Connection to Previous Thinking:** [links to earlier braindumps or frameworks]
 - **Recurring Patterns:** [themes that keep appearing]
 - **Evolution:** [how thinking has developed]
+- **Framework Check:** [confirms / extends / contradicts [[framework-or-pattern]] — omit if no existing framework applies]
 
 ### Strategic Implications
 - [How this affects goals]
@@ -231,8 +232,10 @@ Use the obsidian skill's vault operations (section 2) to save the file:
 After saving, enrich the Connections section with real vault data instead of guessing:
 - **Search** for related braindumps by the top 2-3 themes
 - **Check backlinks** to see if any existing files already reference this one
-- **Search** for key insight keywords to find relevant frameworks, project docs, or earlier braindumps
+- **Consult the knowledge index** `05-knowledge/_index.md` (fallback: scan `05-knowledge/consolidated/`, `05-knowledge/patterns/`): link frameworks/patterns the insights touch — the canonical doc, not a re-derived description
+- **Search** for key insight keywords to find relevant project docs or earlier braindumps
 - Update the Connections section with discovered links using `[[wiki-links]]`
+- **Framework contradiction check:** if a key insight contradicts a linked framework's principles, record it in the Pattern Recognition section's Framework Check line AND append a line to the index's **Open Contradictions** section (`[claim] — [[this braindump]] vs [[framework]] (flagged YYYY-MM-DD)`). Only `/knowledge-consolidation` removes entries there.
 
 Use the obsidian skill's search and backlinks operations — CLI when available, Grep/Glob as fallback.
 

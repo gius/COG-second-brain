@@ -78,6 +78,15 @@ COG uses role packs (`.cog/user-roles/*.md`) to personalize skill recommendation
 
 Available packs: Product Manager, Engineering Lead, Engineer, Designer, Founder, Marketer. Create custom packs from `_template.md`.
 
+## Knowledge Reuse
+
+`05-knowledge/_index.md` is the index of compiled knowledge — frameworks, patterns, open contradictions. `/knowledge-consolidation` maintains it; everything else consults it.
+
+- Before analysis, planning, or strategy work, check the index and read the relevant frameworks/patterns. Don't re-derive what's already compiled.
+- Link consulted frameworks/patterns in outputs with `[[wiki-links]]`.
+- If new evidence contradicts a framework, append a line to the index's **Open Contradictions** section — only `/knowledge-consolidation` resolves and removes entries there.
+- If the index doesn't exist yet, fall back to scanning `05-knowledge/consolidated/` and `05-knowledge/patterns/` directly.
+
 ## Task Format
 
 All skills generate tasks with [Obsidian Tasks emoji format](https://publish.obsidian.md/tasks/Reference/Task+Formats/Tasks+Emoji+Format):
@@ -101,6 +110,8 @@ All skills generate tasks with [Obsidian Tasks emoji format](https://publish.obs
 - **Low friction:** Quick capture, systematic organization
 
 ## Model Tiers
+
+`agent_mode` is read from `00-inbox/MY-PROFILE.md` frontmatter and gates delegation globally: `team` enables it per each skill's own bucket rules; `solo` means never spawn sub-agents. Skills define only their buckets — mode check and tier selection live here.
 
 When spawning sub-agents in `agent_mode: team`, always set the model tier explicitly. Look up the concrete model name for each tier in your provider-specific context file header (the section above the AUTOGEN_MARKER).
 

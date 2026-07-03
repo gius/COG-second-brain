@@ -20,9 +20,7 @@ Comprehensive weekly review and analysis integrating insights across all domains
 
 ## Agent Mode Awareness
 
-**Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — delegate to **at most 3 specialist-tier sub-agents**, one per provenance bucket: (1) personal-domain scan, (2) professional-domain scan, (3) all-projects-combined scan. **Do NOT spawn one agent per active project** — each agent costs ~40K context overhead, and per-project context is rarely deep enough to need isolation. Skip any bucket with no fresh content in the window.
-- If `agent_mode: solo` (default) — handle all scanning and analysis directly. No delegation.
+**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): at most 3 specialist-tier sub-agents, one per provenance bucket: (1) personal-domain scan, (2) professional-domain scan, (3) all-projects-combined scan. **Do NOT spawn one agent per active project** — each agent costs ~40K context overhead, and per-project context is rarely deep enough to need isolation. Skip any bucket with no fresh content in the window.
 
 ## Pre-Flight Check
 
@@ -44,6 +42,7 @@ Scan recent files from the past week:
 - Daily briefs in `01-daily/briefs/`
 - Braindumps in `02-personal/braindumps/`, `03-professional/braindumps/`, `04-projects/*/braindumps/`
 - Previous check-ins in `01-daily/checkins/`
+- Knowledge index `05-knowledge/_index.md` — note frameworks/patterns relevant to this week's themes (fallback if missing: scan `05-knowledge/consolidated/` and `05-knowledge/patterns/` directly)
 
 If `MY-PROFILE.md` available:
 - Use user's name for personalization
@@ -56,16 +55,20 @@ Assess consolidation debt:
 - Count braindumps with `status: "captured"` across `02-personal/braindumps/`, `03-professional/braindumps/`, `04-projects/*/braindumps/`, and `00-inbox/braindump-*.md`
 - Find the most recent `05-knowledge/consolidated/consolidation-*.md` and extract its date
 - Calculate days since last consolidation
+- **Read that consolidation report's content** (Major Themes, frameworks updated/created) — not just its date. Carry it into Pattern Recognition below so this week's reflection builds on the last synthesis instead of restarting from zero.
 
 ### 2. Guided Reflection
 
-Lead user through reflection questions in a warm, conversational tone:
+#### Evidence Pre-Fill
+
+Before asking anything, draft from the files gathered in Step 1: per-domain activity summary, candidate wins/challenges, per-project progress (braindumps, briefs, PROJECT-OVERVIEW changes). Present drafts for correction instead of asking open questions the vault can already answer. Ask only what the evidence can't show: rating, corrections, energy/wellbeing, surprises, forward priorities.
+
+Lead the user through the remaining questions in a warm, conversational tone — one message per block, not one per question:
 
 #### Overall Week Assessment
-**Ask:**
+Present the drafted wins/challenges, then **ask:**
 - "How would you rate this week on a 1-5 scale? Why that rating?"
-- "What were your biggest wins this week?"
-- "What were your main challenges?"
+- "What did I miss or get wrong in this summary?"
 
 **Listen for:**
 - Overall sentiment and energy
@@ -76,16 +79,14 @@ Lead user through reflection questions in a warm, conversational tone:
 #### Domain Reviews
 
 **Personal Domain:**
-**Ask:**
-- "How did you take care of yourself this week?"
+Present the drafted summary (often thin — vault evidence skews professional), then **ask:**
+- "How were your energy levels and well-being — anything the vault can't show?"
 - "Any personal growth or insights?"
-- "How were your energy levels and well-being?"
 
 **Professional Domain:**
-**Ask:**
-- "What did you accomplish at work? Any standout moments?"
-- "How did things go with your team or colleagues?"
-- "Any professional development or learning?"
+Present the drafted summary, then **ask:**
+- "Corrections? Any standout moments the files don't capture?"
+- "Anything with team, colleagues, or learning worth recording?"
 
 **Estimation Log Review (if `03-professional/ESTIMATION-LOG.md` exists):**
 - Review the week's estimation entries
@@ -93,27 +94,27 @@ Lead user through reflection questions in a warm, conversational tone:
 - Ask: "Looking at your estimates vs actuals this week, what patterns do you notice?"
 - Help identify common blind spots (testing? edge cases? scope creep?)
 - Update the "My Calibration" section if enough data accumulated (~10+ tasks)
+- If the file doesn't exist: skip silently; if the user brings up estimates or quoting during the review, offer to create it
 
 **Projects Domain (if applicable):**
-For each active project from MY-PROFILE.md:
-**Ask:**
-- "How did [project name] progress this week?"
-- "What moved forward? What's blocking you?"
-- "Any new insights or direction changes?"
+For each active project from MY-PROFILE.md, present the drafted progress (from PROJECT-OVERVIEW + braindumps), then **ask** only about gaps:
+- "What's blocking you / what's not visible in the vault?"
+- "Any direction changes?"
 
 #### Pattern Recognition
 
+Before asking, check this week's themes against the knowledge index (`05-knowledge/_index.md`): which documented patterns/frameworks does this week's evidence touch?
+
 **Ask:**
-- "Looking at your braindumps this week, did you notice any recurring themes?"
-- "How did your energy levels vary throughout the week?"
+- For themes matching a documented pattern: "This week looks like [[pattern-x]] again — does it confirm the pattern, or is something different this time?"
+- For evidence cutting against a framework: "You documented [[framework-y]], but [this week's evidence] contradicts it — evolution or exception?"
 - "Any connections between different areas of your life - personal, professional, projects?"
 - "What surprised you this week?"
 
-**Help identify:**
-- Themes they might not see themselves
-- Patterns across domains
-- Evolution of thinking
-- Cross-domain connections
+**Record:**
+- Link canonical pattern/framework docs — never re-describe a documented pattern from scratch
+- Recurring theme with no doc yet → mark as **candidate pattern** for the next consolidation
+- Confirmed contradictions → append a line to the index's **Open Contradictions** section (only `/knowledge-consolidation` removes entries there)
 
 #### Forward Planning
 
@@ -244,10 +245,15 @@ briefs_reviewed: [count]
 ## 🔍 Pattern Recognition
 
 ### Recurring Themes
-[Themes identified across all braindumps and activities this week:]
-1. **[Theme 1]:** [Description and significance]
-2. **[Theme 2]:** [Description and significance]
-3. **[Theme 3]:** [Description and significance]
+[Themes identified across all braindumps and activities this week — link the canonical doc when one exists:]
+1. **[Theme 1]** ([[pattern-doc]] — confirms/extends | *candidate pattern, no doc yet*): [Description and significance]
+2. **[Theme 2]** (...): [Description and significance]
+3. **[Theme 3]** (...): [Description and significance]
+
+### Framework Check
+[Only if this week's evidence touched documented frameworks:]
+- **Confirms:** [[framework]] — [what evidence supports it]
+- **Contradicts:** [[framework]] — [what cuts against it; also appended to `05-knowledge/_index.md` Open Contradictions]
 
 ### Energy & Productivity Patterns
 - **Peak Times:** [When they were most productive/energized]

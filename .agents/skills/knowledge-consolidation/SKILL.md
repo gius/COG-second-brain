@@ -12,6 +12,8 @@ metadata:
 ## Purpose
 Transform scattered insights from braindumps, daily briefs, research, bookmarks, and all other vault content into coherent frameworks and "single source of truth" knowledge documents through pattern recognition and systematic synthesis. Optionally run in **audit-only** mode for a lightweight vault health check without full synthesis.
 
+Frameworks and patterns are not archives — braindump, weekly-checkin, and ordinary work sessions consult them through `05-knowledge/_index.md` (see `AGENTS.md → Knowledge Reuse`). Every run must leave that index accurate.
+
 ## When to Invoke
 - User wants to consolidate their insights
 - User says "consolidate knowledge", "build frameworks", "synthesize insights"
@@ -30,17 +32,16 @@ The complete pipeline: scan → pattern recognition → framework synthesis → 
 ### Audit Only (lightweight)
 A quick vault health report without framework synthesis. Use when the user says "vault health", "vault audit", "vault status", "what needs attention", or explicitly asks for an audit without consolidation.
 
-**Audit-only skips:** Steps 2 (Pattern Recognition), 3 (Framework Development), and 4 (Knowledge Integration). It runs Step 1 (Data Gathering) with expanded statistics, the Freshness & Decay Assessment, and generates a Vault Health Report instead of the full consolidation report.
+**Audit-only skips:** Steps 2 (Pattern Recognition), 3 (Framework Development), and 4 (Knowledge Integration) — except the Knowledge Index refresh in Step 4, which runs in both modes. It runs Step 1 (Data Gathering) with expanded statistics, the Freshness & Decay Assessment, and generates a Vault Health Report instead of the full consolidation report.
 
 ## Agent Mode Awareness
 
-**Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — delegate to **at most 3 specialist-tier sub-agents**, grouped by provenance not by domain:
-  1. **Raw-thinking scan** — all braindumps (personal + professional + project + inbox)
-  2. **Curated-artifacts scan** — daily/team briefs, weekly check-ins, meeting notes, PRDs, release notes
-  3. **Knowledge-base scan** — research, booklets, existing frameworks/patterns/timeline (for staleness + cross-references)
-  Skip any bucket whose source has no fresh content in the chosen scope. **Do NOT spawn one agent per active project** — projects fan out within bucket 1. Synthesis happens in main context.
-- If `agent_mode: solo` (default) — handle all scanning, pattern recognition, and framework building directly. No delegation.
+**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): at most 3 specialist-tier sub-agents, grouped by provenance not by domain:
+1. **Raw-thinking scan** — all braindumps (personal + professional + project + inbox)
+2. **Curated-artifacts scan** — daily/team briefs, weekly check-ins, meeting notes, PRDs, release notes
+3. **Knowledge-base scan** — research, booklets, existing frameworks/patterns (for staleness + cross-references)
+
+Skip any bucket whose source has no fresh content in the chosen scope. **Do NOT spawn one agent per active project** — projects fan out within bucket 1. Synthesis happens in main context.
 
 ## Pre-Flight Check
 
@@ -48,13 +49,15 @@ A quick vault health report without framework synthesis. Use when the user says 
 
 ## Depth Scaling
 
-The scope the user chooses determines how deep to go. Not every run should produce the same artifacts — a weekly pass over 5 braindumps shouldn't create new frameworks or timeline entries.
+The scope the user chooses determines how deep to go. Not every run should produce the same artifacts — a weekly pass over 5 braindumps shouldn't create new frameworks.
 
-| Scope | Focus | Create new frameworks? | Create timeline entries? | Create patterns? |
-|---|---|---|---|---|
-| **Weekly** (< ~15 docs) | Update existing frameworks with new evidence. Flag emerging themes for future runs. | No — only update existing | No | Only if frequency ≥ 3 mentions |
-| **Monthly** (~15-60 docs) | Full pattern recognition. Create new frameworks if evidence is strong (≥ 5 supporting sources). | Yes, if well-evidenced | Yes, for clear thinking shifts | Yes |
-| **Quarterly / All time** (60+ docs) | Deep synthesis. Create frameworks, timelines, and cross-domain patterns. Challenge and retire stale frameworks. | Yes | Yes | Yes |
+| Scope | Focus | Create new frameworks? | Create patterns? |
+|---|---|---|---|
+| **Weekly** (< ~15 docs) | Update existing frameworks with new evidence. Flag emerging themes for future runs. | No — only update existing | Only if frequency ≥ 3 mentions |
+| **Monthly** (~15-60 docs) | Full pattern recognition. Create new frameworks if evidence is strong (≥ 5 supporting sources). | Yes, if well-evidenced | Yes |
+| **Quarterly / All time** (60+ docs) | Deep synthesis. Create frameworks and cross-domain patterns. Challenge and retire stale frameworks. | Yes | Yes |
+
+Thinking shifts over time are recorded in the affected framework's **Evolution & History** section — do not create separate timeline files. (Standalone `05-knowledge/timeline/` entries are retired: they accumulated no readers. Existing files stay as archive.)
 
 When in doubt, err toward lighter output. A framework created too early from thin evidence wastes more effort than one created a month later from solid evidence.
 
@@ -107,9 +110,9 @@ When in doubt, err toward lighter output. A framework created too early from thi
   - **Processing note:** Extract competitor strategy trends and market position shifts. Individual data points matter less than trajectories — is a competitor consistently moving in a direction? Cross-reference with braindumps where the user reacted to competitive moves.
 
 - **Existing knowledge base** (for staleness check):
+  - `05-knowledge/_index.md` (knowledge index — read first; its **Open Contradictions** section holds entries appended by braindump and weekly-checkin, mandatory input for Contradiction Analysis in Step 2)
   - `05-knowledge/consolidated/` (frameworks)
   - `05-knowledge/patterns/` (patterns)
-  - `05-knowledge/timeline/` (timeline entries)
 
 **Determine scope:**
 - Ask user: "What time period should I analyze? (last week, last month, last quarter, all time, or custom range?)"
@@ -199,10 +202,12 @@ Apply systematic pattern detection across all content, using the processing note
 
 #### Contradiction Analysis
 **Where does thinking conflict?**
+- Process every entry in the index's **Open Contradictions** section first — these were flagged by braindump/weekly-checkin and are waiting for resolution
 - Identify contradictory thoughts or approaches
 - Recognize evolution vs. inconsistency
 - Understand resolution or ongoing tension
 - Track perspective shifts over time
+- Resolution per contradiction: update the framework, record it as a documented exception in the framework's Boundaries section, or keep it open with a reason. Resolved entries are removed from the index; kept-open entries stay.
 
 #### Cross-Cutting Patterns
 **Meta-patterns across all dimensions:**
@@ -263,20 +268,34 @@ Save to: `05-knowledge/patterns/pattern-[name].md`
 - **Analysis** — What triggers this pattern, what follows it, cross-domain implications, potential actions (amplify if positive, mitigate if negative)
 - **Evolution Over Time** — How the pattern has changed or stayed consistent
 
-#### Timeline Entry
+#### Knowledge Index
 
-Save to: `05-knowledge/timeline/[topic]-evolution-YYYY-MM.md`
+Regenerate `05-knowledge/_index.md` at the end of **every run, both modes**. It is the entry point other skills (braindump, weekly-checkin) and ordinary work sessions use to find compiled knowledge — an unlisted framework is an unused framework.
 
-Only create for quarterly+ scope or when a clear thinking shift is identified across multiple documents.
+```markdown
+---
+type: "knowledge-index"
+last_updated: "YYYY-MM-DD"
+frameworks_count: N
+patterns_count: N
+tags: ["knowledge-index", "moc"]
+---
 
-**Frontmatter fields:** `type: "timeline-entry"`, `topic`, `date_range`, `created`, `tags`
+# Knowledge Index
 
-**Required sections:**
-- **What Changed** — Initial state → end state, the fundamental shift
-- **Catalysts & Triggers** — Dated events with source links and impact descriptions
-- **Evidence Trail** — Chronological: early thinking → intermediate development → current understanding, each with linked sources
-- **Impact** — How this shift affects decisions, strategies, frameworks, and actions
-- **Lessons Learned** — What this evolution teaches, future implications
+Entry point to compiled knowledge. Maintained by `/knowledge-consolidation`; consulted by braindump, weekly-checkin, and any work session. Braindump/weekly-checkin append to Open Contradictions; only knowledge-consolidation removes entries there.
+
+## Frameworks
+- [[name-framework]] (`status`) — one line: what it covers / when to consult it
+
+## Patterns
+- [[pattern-name]] (frequency) — one-line description
+
+## Open Contradictions
+- [claim] — [[source-doc]] vs [[framework]] (flagged YYYY-MM-DD)
+```
+
+Rules: one line per doc; frameworks sorted stable → working → emerging (superseded/deprecated docs are archived, not listed); patterns by frequency high → low. Open Contradictions entries survive regeneration unless resolved in Step 2's Contradiction Analysis.
 
 ### 5. Generate Consolidation Report
 
@@ -285,13 +304,13 @@ Save to: `05-knowledge/consolidated/consolidation-YYYY-MM-DD.md`
 **Frontmatter fields:** `type: "knowledge-consolidation"`, `domain: "integrated"`, `date`, `consolidation_period`, `created` (with HH:MM), `sources_analyzed`, `frameworks_updated` (array), `frameworks_created` (array), `patterns_identified` (count), `tags`
 
 **Required sections:**
-- **Executive Summary** — Period analyzed, document counts by type (braindumps, briefs, check-ins, research, bookmarks, project docs, competitive intel, meeting notes), major outcomes (frameworks updated/created, patterns identified, timeline entries), top 3 key insights synthesized
+- **Executive Summary** — Period analyzed, document counts by type (braindumps, briefs, check-ins, research, bookmarks, project docs, competitive intel, meeting notes), major outcomes (frameworks updated/created, patterns identified, contradictions resolved), top 3 key insights synthesized
 - **Major Themes This Period** — For each: frequency, evolution, key insights with source links, framework implications, status (stable understanding | still exploring | needs more evidence)
 - **Frameworks Updated** — For each: location link, what changed, new evidence added, confidence change (before → after), new applications
 - **New Frameworks Created** — For each: location link, what prompted creation, core principles summary, primary use cases, status (emerging), what's needed to mature it
 - **Patterns Identified** — For each: frequency, domains, description, implications, link to pattern doc
-- **Thinking Evolution** — Major shifts with timeline, catalysts, impact, link to timeline doc
-- **Cross-Cutting Insights** — Cross-domain connections, contradictions identified (with resolution status), strategic implications
+- **Thinking Evolution** — Major shifts with catalysts and impact, recorded in the affected framework's Evolution & History section (link it)
+- **Cross-Cutting Insights** — Cross-domain connections, contradictions identified and Open Contradictions processed (with resolution status), strategic implications
 - **Knowledge Base Maintenance** — Updates made checklist, archive actions (braindumps marked consolidated, superseded content archived)
 - **Future Consolidation Needs** — Ready for framework creation, needs deeper analysis, monitoring required — each with target dates using `📅 YYYY-MM-DD`
 - **Quality Assessment** — Completeness, coherence, traceability, actionability, evolution documented

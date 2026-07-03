@@ -21,9 +21,7 @@ Find verified, relevant news for personalized daily briefings with strict verifi
 
 ## Agent Mode Awareness
 
-**Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — delegate news research to **specialist-tier** sub-agents grouped by topic cluster (≤4 agents). One agent per topic cluster, NOT one per news source. Each agent searches, verifies primary sources, and returns findings with `Verification proof`. Combine and synthesize in main context.
-- If `agent_mode: solo` (default) — handle all research and synthesis directly. No delegation.
+**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): delegate news research to **specialist-tier** sub-agents grouped by topic cluster (≤4 agents). One agent per topic cluster, NOT one per news source. Each agent searches, verifies primary sources, and returns findings with `Verification proof`. Combine and synthesize in main context.
 
 ## Interest Tiers
 
@@ -65,10 +63,11 @@ Collect the information needed for personalized curation:
 - Read `00-inbox/MY-PROFILE.md` for user's name, role, active projects
 - Read `00-inbox/MY-INTERESTS.md` for topics and preferred news sources
 - Read `03-professional/COMPETITIVE-WATCHLIST.md` (if exists) for companies/people to track
+- For watchlist companies with an intel file in `04-projects/*/competitive/`, read it — that's the accumulated intelligence from braindumps and earlier briefs. When a story involves a tracked company, connect it to what's already known instead of reporting it context-free, and cross-link the intel file in the brief.
 
 #### Deduplication — Previous Brief Scan
 
-Read up to 3 most recent daily briefs from `01-daily/briefs/` (most recent first):
+Read all daily briefs from the **last 7 calendar days** in `01-daily/briefs/` — at minimum the 3 most recent regardless of age (most recent first):
 - Extract `dedup_urls` from their frontmatter (if present)
 - Also scan their headlines/story titles as semantic fallback for cross-source matching
 - Build a set of **covered stories** to avoid repeating
@@ -80,7 +79,7 @@ Read up to 3 most recent daily briefs from `01-daily/briefs/` (most recent first
 During news research (Step 2), apply dedup rules:
 - **Skip** stories already covered unless there is a **material update** (new data, resolution, escalation, reversal)
 - If including an update, prefix with "**Update:** _first covered [date]_"
-- Stories older than 3 briefs are eligible for re-inclusion if still developing
+- Stories that have dropped out of the lookback window are eligible for re-inclusion if still developing
 
 ### 2. News Research and Curation
 
@@ -123,7 +122,7 @@ Save to: `01-daily/briefs/daily-brief-YYYY-MM-DD.md`
 - **Executive Summary** — 2-3 sentences highlighting the most important developments across all interest areas
 - **High Impact News** — Stories with direct impact on user's projects/role. Each item gets: relevance explanation, summary, impact assessment (projects affected, potential effects, suggested action), primary source link
 - **Strategic Developments** — Medium-priority strategic news with strategic implications
-- **Market Intelligence / Technology Watch / Competitive Landscape** — optional sub-buckets if content warrants; merge or omit when thin
+- **Market Intelligence / Technology Watch / Competitive Landscape** — optional sub-buckets if content warrants; merge or omit when thin. Competitive items about a tracked company link its intel file (`04-projects/*/competitive/[company].md`) when one exists
 - **Opportunities & Recommendations** — Action items in Obsidian Tasks format (`📅 YYYY-MM-DD`): immediate actions (today/this week), research needed, people to inform/consult
 - **Risks & Threats** — Active threats with mitigation approaches, emerging risks to monitor
 - **Complete Sources** — Full citations grouped by section, with links
