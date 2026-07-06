@@ -126,6 +126,7 @@ Identify connections to:
 - **Related Bookmarks:** [existing similar saves]
 - **Related Braindumps:** [if content connects]
 - **Related Projects:** [if applicable]
+- **Confirms:** [frameworks/patterns from `05-knowledge/_index.md` whose claims this content independently supports — first-hand argument only, not the author citing someone else]
 - **Suggested Tags:** [tag1, tag2, tag3]
 
 ### 5. Generate Structured Output
@@ -166,6 +167,10 @@ needs_review: false  # set true only if categorization is ambiguous enough that 
 
 ## Content Highlights
 [Key excerpts or quotes from the content - 200-400 words max]
+
+## Confirms
+[Only when the content independently supports an existing framework/pattern from `05-knowledge/_index.md`; omit the section otherwise]
+- **[claim in one phrase].** "[supporting quote]" → [[framework-or-pattern]]
 
 ## Practical Takeaways
 - [ ] [Action item 1 if applicable] 📅 [YYYY-MM-DD = date +1 week from today]

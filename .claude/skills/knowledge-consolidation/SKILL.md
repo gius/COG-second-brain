@@ -90,6 +90,7 @@ When in doubt, err toward lighter output. A framework created too early from thi
     - Cross-references and patterns across multiple booklets (e.g., clustering of tool evaluations reveals strategic priorities)
     - Connections to braindumps and project goals
     - Skip tool feature descriptions and technical specs — those are documentation, not insight
+    - `## Confirms` sections: harvest wiki-link targets that resolve to `05-knowledge/consolidated/` or `05-knowledge/patterns/`. These feed the index's External Corroborations section (Step 4) and evidence depth (Step 3). Ignore Confirms links to anything else (braindumps, other booklets).
 
 - **Project artifacts:**
   - `04-projects/*/planning/` (meeting transcripts, planning docs)
@@ -254,6 +255,12 @@ The framework's `status` field is the load-bearing trust signal (not a confidenc
 - `working` — enough evidence to use in practice, but still being refined as new data arrives
 - `stable` — well-evidenced, tested across multiple situations, unlikely to change materially
 
+**External corroborations** (booklet `## Confirms` entries targeting the framework) count toward evidence depth:
+- Count distinct authors, not entries. Entries in the same derivation chain (built-on / repost / roundup of an already-counted source) count once; pure aggregators count zero.
+- emerging → working: 2+ distinct-author corroborations ≈ 2 internal sources toward the evidence-depth judgment. Never promote on external evidence alone.
+- working → stable: external agreement is supporting signal only — stable requires the framework tested in the user's own work.
+- Cite counted corroborations in the Core Principles evidence line, e.g. "4 internal across 6 weeks + 2 external (Roos, Osmani)".
+
 For **new frameworks**, set `status: "emerging"` and explain in the Framework Overview what evidence threshold would promote it to `working`.
 
 #### Pattern Document
@@ -283,7 +290,7 @@ tags: ["knowledge-index", "moc"]
 
 # Knowledge Index
 
-Entry point to compiled knowledge. Maintained by `/knowledge-consolidation`; consulted by braindump, weekly-checkin, and any work session. Braindump/weekly-checkin append to Open Contradictions; only knowledge-consolidation removes entries there.
+Entry point to compiled knowledge. Maintained by `/knowledge-consolidation`; consulted by braindump, weekly-checkin, and any work session. Braindump/weekly-checkin append to Open Contradictions; only knowledge-consolidation removes entries there. External Corroborations is derived from booklet `## Confirms` sections — fix the booklet, not this list.
 
 ## Frameworks
 - [[name-framework]] (`status`) — one line: what it covers / when to consult it
@@ -291,11 +298,14 @@ Entry point to compiled knowledge. Maintained by `/knowledge-consolidation`; con
 ## Patterns
 - [[pattern-name]] (frequency) — one-line description
 
+## External Corroborations
+- [[framework-or-pattern]] ← [[booklet-entry]] (author, published YYYY-MM)
+
 ## Open Contradictions
 - [claim] — [[source-doc]] vs [[framework]] (flagged YYYY-MM-DD)
 ```
 
-Rules: one line per doc; frameworks sorted stable → working → emerging (superseded/deprecated docs are archived, not listed); patterns by frequency high → low. Open Contradictions entries survive regeneration unless resolved in Step 2's Contradiction Analysis.
+Rules: one line per doc; frameworks sorted stable → working → emerging (superseded/deprecated docs are archived, not listed); patterns by frequency high → low. Open Contradictions entries survive regeneration unless resolved in Step 2's Contradiction Analysis. External Corroborations is regenerated every run from booklet `## Confirms` sections: one line per target, corroborating booklets comma-appended with (author, published YYYY-MM); list only targets currently in the Frameworks/Patterns sections — superseded/retired targets drop out; never edit booklet entries to match.
 
 ### 5. Generate Consolidation Report
 

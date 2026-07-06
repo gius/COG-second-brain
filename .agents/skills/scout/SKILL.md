@@ -63,5 +63,5 @@ Present: a tight overview of what it says, the verified external signal, the cov
 - **solo:** do all fetching and reading directly.
 
 ## Handoff
-- **Save** -> `/url-dump` with a pre-filled category
+- **Save** -> `/url-dump` with a pre-filled category + any step-4 framework/pattern overlaps as `## Confirms` targets
 - **Open-ended question** -> `/auto-research`
