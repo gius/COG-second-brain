@@ -42,7 +42,10 @@ Read `.agents/skills/obsidian/SKILL.md` §1 to classify CLI status (`ok` / `disa
 
 ### 2. Profile and rulebook
 - Read `00-inbox/MY-PROFILE.md` for active projects (used to weight project-scoped tasks).
-- Read `references/rules.md` — the accumulated rulebook. Every rule's hit count starts at zero for this run; it's incremented when an agent cites the rule in its classification.
+- Read `.cog/task-triage/rules.md` — **the live rulebook**. If it doesn't exist, copy the skill's bundled `references/rules.md` to that path first, then read it.
+- Every rule's hit count starts at zero for this run; it's incremented when an agent cites the rule in its classification.
+
+**The live rulebook lives at `.cog/task-triage/rules.md`, never in `references/`.** The skill directory is regenerated wholesale by `cog-sync.sh` — accumulated rules written into `references/rules.md` are silently destroyed on the next sync. `references/rules.md` is a read-only seed for fresh installs.
 
 ### 3. Scope
 - Default scope: **overdue + due-today**. This matches the first two sections of `00-inbox/TASKS.md`.
@@ -146,7 +149,7 @@ Provenance grouping is more robust than folder grouping: adding a new vault fold
 Each agent receives:
 
 1. Task list = its `payload_<provenance>[_n].json` from split_payloads. Inline the JSON if ≤25 tasks (~4KB); else pass the project-relative path `.cog/task-triage/runs/<YYYY-MM-DD>/payload_<provenance>[_n].json`.
-2. Full `references/rules.md` inline. Cite rule IDs.
+2. Full live rulebook (`.cog/task-triage/rules.md`) inline. Cite rule IDs.
 3. Taxonomy (§4) + provenance rule (§4a).
 4. Every non-`needs-user` classification cites file/line/commit.
 5. **DO NOT EDIT** — main context applies edits.
@@ -190,17 +193,50 @@ Rules fired this run:
 Key rendering rules:
 - Every row's `edit` column cites either `rule:RULE-NN` or `agent` so the user can audit what drove the classification.
 - Each `needs-user` question offers 2-4 canned options so the user can answer with short codes (`Q1: done`, `Q3: drop`).
-- Rule-fired counts appear at the top — retired rules that never fire should eventually be pruned from `references/rules.md`.
+- Rule-fired counts appear at the top — retired rules that never fire should eventually be pruned from `.cog/task-triage/rules.md`.
+
+### 6a. HTML review page (default when > 10 tasks)
+
+Chat review works, but it degrades once the run is large: many rows, several postpone dates to pick, several `needs-user` questions to answer in one message. Above ~10 tasks, render an interactive review page instead.
+
+Write the consolidated classifications to `<RUN_DIR>/proposals.json` — one record per task:
+
+```json
+{"file": "01-daily/checkins/wc-2026-06-20.md", "line": 232,
+ "text": "Wire up Codex hybrid workflow", "due": "2026-06-27", "bucket": "overdue",
+ "provenance": "user_curated",
+ "proposal": "done",
+ "rule": "RULE-05",
+ "evidence": "subscription active since 06-22; commit 7464541",
+ "target": "wc-2026-07-04",
+ "date": "2026-07-27",
+ "question": "Is the InTour export optimization shipped, or still open?"}
+```
+
+`provenance` is `user_curated` | `ai_generated` (§4a) — it decides whether the page's **Drop** resolves to `cancelled` or `untrack`. `proposal` is one of the §4 classes plus `keep` (leave the task open, no edit). `target` / `date` / `question` are only needed for `superseded` / `postpone` / `needs-user`.
+
+Then:
+
+```bash
+python .agents/skills/task-triage/scripts/render_review.py "$RUN_DIR"
+start "$RUN_DIR/review.html"   # Windows; `open` on macOS
+```
+
+The page groups rows by proposed classification, **pre-selects each row's radio with the agent's proposal**, and shows the rule badge + evidence that drove it. The user only touches exceptions, then clicks **Copy decisions** and pastes the JSON back into chat. Filters (`changed only` / `needs me`) let them jump straight to the rows that matter.
+
+The page never edits the vault — it emits a decisions array in exactly the shape §8 wants. Keep the §6 text summary as well; the page is a review surface, not a replacement for telling the user what you found.
 
 ### 7. Await user response
 
-Accept any of:
+If the review page was used, the response is a pasted decisions JSON array — write it straight to `<RUN_DIR>/decisions.json` and go to §8. Any task absent from the array was left as *still todo* (or unanswered) and gets no edit; say so in the close-out.
+
+Otherwise accept any of:
 - `ok` / `approve all` — apply every auto-classified edit as proposed.
 - `ok except N, M` (with inline reasons) — apply all except those numbered rows; the reasons feed rule generalization in step 9.
 - Per-row instructions — `Q1: done`, `row 3: actually drop`, `row 12: postpone to 05-15` — the user can amend, confirm, or reclassify any row inline.
 - Answers to the numbered questions — route each answered question to a classification.
 
-Review is conversational. Don't write a staged review doc or other artifact — the user's model is: see findings, tell me what to do per row, I learn, we're done.
+Review is conversational (or page-driven). Don't write a staged review doc or other artifact — the user's model is: see findings, tell me what to do per row, I learn, we're done.
 
 ### 8. Apply edits (main context)
 
@@ -220,9 +256,11 @@ Per `memory/feedback_git_workflow.md`, the **user** runs the git commands. Provi
 
 After applying edits, for each **user-corrected exception** and each **answered needs-user question**, ask the user once:
 
+When the review page was used, the exceptions are the rows whose returned action differs from the `proposal` you wrote into `proposals.json` — diff the two files to find them. Ask the user *why* for each before proposing a rule; the page captures the what, not the reasoning.
+
 > "Generalize this into a rule? [y/n/skip]"
 
-If yes, append a new `### RULE-NN` block to `references/rules.md` with:
+If yes, append a new `### RULE-NN` block to `.cog/task-triage/rules.md` (**not** `references/rules.md` — see §2) with:
 
 ```markdown
 ### RULE-NN — <short name>
@@ -247,6 +285,7 @@ Emit:
 
 1. **Every auto-edit cites its rule or `agent`.** No silent classifications.
 2. **Every rule surfaces its hit count per run.** Dead rules should be visible candidates for pruning.
+2a. **Accumulated rules are written to `.cog/task-triage/rules.md` only.** Writing them into the skill's `references/` means `cog-sync.sh` deletes them on the next run.
 3. **All edits land in one commit per run.** One `git revert` restores prior state.
 4. **Never delete without explicit user ack.** Default is untrack/cancel.
 5. **Sub-agents use specialist tier.** Not worker, not architect.
@@ -255,8 +294,9 @@ Emit:
 
 ## Bundled resources
 
-- [`references/rules.md`](references/rules.md) — The accumulated rulebook. Seeded with 12 rules from the 2026-04-24 pilot run.
+- [`references/rules.md`](references/rules.md) — **Seed** rulebook (11 rules, hit counts 0). Copied to `.cog/task-triage/rules.md` on first run; the live rulebook accumulates there and is never overwritten by sync.
 - [`scripts/bucket_and_cluster.py`](scripts/bucket_and_cluster.py) — Deterministic parser + clusterer (UTF-8 safe).
 - [`scripts/split_payloads.py`](scripts/split_payloads.py) — Merges clusters into provenance buckets and splits >40-task buckets into balanced agent payloads (§5).
+- [`scripts/render_review.py`](scripts/render_review.py) — Renders `proposals.json` into a self-contained `review.html` with pre-selected radios; emits a `decisions.json` array (§6a).
 - [`scripts/apply_edits.py`](scripts/apply_edits.py) — Applies a `decisions.json` to vault files in place with before/after output and open-task safety checks (§8).
 - [`references/edit-shapes.md`](references/edit-shapes.md) — Before/after examples for each classification's edit shape.

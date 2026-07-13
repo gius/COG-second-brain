@@ -47,11 +47,12 @@ Each skill has a full playbook in `.agents/skills/[name]/SKILL.md`. When the use
 | `/weekly-checkin` | Cross-domain pattern analysis and strategic reflection | "weekly review", "reflect on my week" |
 | `/knowledge-consolidation` | Build frameworks from scattered insights, or run a lightweight vault health audit with freshness scoring | "consolidate knowledge", "extract patterns", "vault health", "vault audit" |
 | `/url-dump` | Save URLs with auto-extracted insights, categorized into knowledge booklets | "save this link", "bookmark this" |
-| `/scout` | Quick-triage URLs — check vault coverage, assess relevance, recommend save or skip | "scout this", "is this relevant?" |
+| `/scout` | Investigate a URL, library, or article in depth - read it, gather verified external signal, check vault coverage, recommend save / read-in-full / skip | "scout this", "is it worth reading?" |
 | `/auto-research` | Decompose strategic questions into parallel research threads with real sources | "research [topic]", "deep dive into [topic]" |
 | `/meeting-transcript` | Process meeting recordings into structured decisions, action items, and team dynamics | "process this meeting", "meeting notes" |
 | `/publish-to-confluence` | Publish any vault markdown file to Confluence (requires active integration) | "publish to Confluence" |
 | `/task-triage` | Clear overdue + due-today tasks from TASKS.md — evidence-based classification, batched approval, rulebook grows over time | "triage tasks", "what's overdue", "clear my tasks", "clean up TASKS.md" |
+| `/memory-hygiene` | Trust sweep of persistent memory — re-verify environment-dependent claims against the live environment, stamp `last_verified`, propose archiving drifted entries | "audit my memories", "check for stale memories" |
 
 ## User Configuration
 

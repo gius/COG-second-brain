@@ -14,6 +14,8 @@ Transform scattered insights from braindumps, daily briefs, research, bookmarks,
 
 Frameworks and patterns are not archives — braindump, weekly-checkin, and ordinary work sessions consult them through `05-knowledge/_index.md` (see `AGENTS.md → Knowledge Reuse`). Every run must leave that index accurate.
 
+**Scope boundary:** this skill judges whether the vault is *coherent* (structure, connectivity, age, evidence depth). Whether a stored claim is still *true* — paths, URLs, IDs that may have drifted since they were written — belongs to `/memory-hygiene`. Do not add environment verification here.
+
 ## When to Invoke
 - User wants to consolidate their insights
 - User says "consolidate knowledge", "build frameworks", "synthesize insights"

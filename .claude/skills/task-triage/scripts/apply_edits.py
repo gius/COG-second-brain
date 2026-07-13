@@ -6,11 +6,11 @@ Transforms the cited line per the COG task-triage edit shapes (SKILL.md §4):
   cancelled  - [ ] X 📅 d   -> - [-] X 📅 d
   untrack    - [ ] X 📅 d   -> - X 📅 d            (checkbox removed, stays prose)
   superseded - [ ] X 📅 d   -> - X 📅 d → [[target]]
-  postpone   - [ ] X 📅 d   -> - [ ] X 📅 <new>
+  postpone   - [ ] X 📅 d   -> - [ ] X 📅 <new>   (undated task gets 📅 appended)
 
-Safety: verifies each line is an open task (or carries a 📅 date for postpone)
-before editing; mismatches are reported and skipped, never written. Every change
-is printed before/after so the run is auditable before the user commits.
+Safety: verifies each line is an open task before editing; mismatches are
+reported and skipped, never written. Every change is printed before/after so the
+run is auditable before the user commits.
 
 Usage:  python apply_edits.py <decisions.json> [vault_root]
 Vault root defaults to four levels up from the decisions file, matching the
@@ -33,10 +33,6 @@ def transform(line, d):
     nl = '\n' if line.endswith('\n') else ''
     body = line.rstrip('\n')
     action = d['action']
-    if action == 'postpone':
-        if not DATE.search(body):
-            return None, "no 📅 date to postpone"
-        return DATE.sub(f"📅 {d['date']}", body, count=1) + nl, None
     m = OPEN_TASK.match(body)
     if not m:
         return None, f"not an open task: {body[:55]!r}"
@@ -49,6 +45,14 @@ def transform(line, d):
         return f"{indent}- {rest}{nl}", None
     if action == 'superseded':
         return f"{indent}- {rest} → [[{d['target']}]]{nl}", None
+    if action == 'postpone':
+        # An undated task can still be postponed - triage scopes wider than the
+        # due buckets, so nodate tasks reach here and want a date, not an error.
+        if DATE.search(rest):
+            rest = DATE.sub(f"📅 {d['date']}", rest, count=1)
+        else:
+            rest = f"{rest} 📅 {d['date']}"
+        return f"{indent}- [ ] {rest}{nl}", None
     return None, f"unknown action {action!r}"
 
 

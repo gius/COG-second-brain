@@ -17,8 +17,21 @@ A straight merge drags upstream's per-tool file layout on top of our single-sour
 ## Remotes
 
 - `public-souce` → `huytieu/COG-second-brain` — upstream framework (review only, never merge)
-- `my-fork` → `gius/COG-second-brain` — this fork
-- `origin` → `gius/my-second-brain` — the private vault
+- `my-fork` → `gius/COG-second-brain` — this fork: **COG skills and engine only, no personal data**
+- `origin` → `gius/my-second-brain` — the private vault: framework **plus** personal content
+
+## Change flow — one-way, always
+
+```
+public-souce  ──review/port──>  my-fork branches  ──merge──>  origin/main
+   (upstream)                   (framework only)              (vault + personal data)
+```
+
+**All framework changes land in `main` by merging from a `my-fork` branch. Never the reverse.**
+
+`main` carries personal vault content that must never reach `my-fork`. Merging `main` → `my-fork` would leak it. The one-way rule is what keeps the fork publishable.
+
+**Prototyping in `main` is allowed.** Testing a new skill or a change directly in the vault worktree is fine and often faster. But once it is confirmed, it does not stay there: port the change to a `my-fork` branch (normally `feature/custom-changes`), then merge that branch into `main`. A framework change committed only on `main` is unfinished work — it is invisible to the fork and to family installs.
 
 ## Procedure
 
