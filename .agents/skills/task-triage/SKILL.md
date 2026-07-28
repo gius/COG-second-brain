@@ -186,7 +186,7 @@ Rules fired this run:
 ### postpone (9) ...
 
 ### needs-user (7)
- Q1 (01-daily/.../wc-2026-04-11.md:128) TravelNet V1 closed out? [done / open / drop]
+ Q1 (01-daily/.../wc-2026-04-11.md:128) Phase 1 rollout closed out? [done / open / drop]
  Q2 ...
 ```
 
@@ -210,7 +210,7 @@ Write the consolidated classifications to `<RUN_DIR>/proposals.json` — one rec
  "evidence": "subscription active since 06-22; commit 7464541",
  "target": "wc-2026-07-04",
  "date": "2026-07-27",
- "question": "Is the InTour export optimization shipped, or still open?"}
+ "question": "Is the export optimization shipped, or still open?"}
 ```
 
 `provenance` is `user_curated` | `ai_generated` (§4a) — it decides whether the page's **Drop** resolves to `cancelled` or `untrack`. `proposal` is one of the §4 classes plus `keep` (leave the task open, no edit). `target` / `date` / `question` are only needed for `superseded` / `postpone` / `needs-user`.
@@ -249,8 +249,6 @@ All edits land in **one git commit** per run — this is the non-negotiable reve
 ```
 Task triage YYYY-MM-DD — N edits via M rules
 ```
-
-Per `memory/feedback_git_workflow.md`, the **user** runs the git commands. Provide the commit command at the end of the run; don't run `git commit` directly.
 
 ### 9. Rule generalization
 

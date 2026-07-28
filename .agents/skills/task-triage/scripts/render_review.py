@@ -13,7 +13,7 @@ Input:  <RUN_DIR>/proposals.json - the consolidated agent classifications
    "evidence": "subscription active since 04-22",
    "target": "wc-2026-05-02",             # superseded only
    "date": "2026-07-20",                  # postpone only
-   "question": "Is TravelNet V1 closed out?"}   # needs-user only
+   "question": "Is the Phase 1 rollout closed out?"}   # needs-user only
 
 Output: <RUN_DIR>/review.html - self-contained, no network, dark theme.
         Radios come pre-selected with each proposal, so the user only touches

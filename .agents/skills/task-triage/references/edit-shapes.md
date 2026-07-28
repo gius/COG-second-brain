@@ -29,7 +29,7 @@ Preserve audit trail via a wiki-link. Remove the `[ ]` so the Tasks plugin no lo
 
 **After:**
 ```
-- Continue UX design work 📅 2026-04-24 → [[weekly-checkin-2026-04-22#TravelNet v2]]
+- Continue UX design work 📅 2026-04-24 → [[weekly-checkin-2026-04-22#Redesign track]]
 ```
 
 Wiki-link precision: prefer `[[file#section]]` or `[[file#^block-id]]` when the target has a specific section. If the replacement task lives at a particular line, a plain `[[file]]` link is acceptable.
@@ -50,7 +50,7 @@ User committed to this task, then decided not to do it. Use the Obsidian Tasks p
 
 You may optionally append a reason and a cancelled-date marker:
 ```
-- [-] Finish MR automation PoCs 📅 2026-04-23 ❌ 2026-04-24 (handed over as part of eMan exit)
+- [-] Finish MR automation PoCs 📅 2026-04-23 ❌ 2026-04-24 (handed over when the engagement ended)
 ```
 
 The `❌ YYYY-MM-DD` cancelled-date marker is supported by the Obsidian Tasks plugin and behaves analogously to `✅`.

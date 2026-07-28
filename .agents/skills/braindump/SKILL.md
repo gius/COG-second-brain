@@ -112,7 +112,7 @@ If COMPETITIVE-WATCHLIST.md exists:
 
 #### Tag Validation
 
-Before generating output, validate tags following the obsidian skill's tag hygiene rules (section 5). When CLI is available, query existing tags to prevent fragmentation.
+Before generating output, validate tags following the obsidian skill's tag hygiene rules (section 4). When CLI is available, query existing tags to prevent fragmentation.
 
 #### File Structure
 

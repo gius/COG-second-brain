@@ -145,203 +145,22 @@ domains_analyzed: ["personal", "professional", "projects"]
 rating: [1-5]
 braindumps_reviewed: [count]
 briefs_reviewed: [count]
-
-# Weekly Check-in - Week of [Date]
-
-## Executive Summary
-
-**Week Rating:** [1-5] ⭐ - [User's reasoning in their words]
-
-**In Three Words:** [word1], [word2], [word3]
-
-**Key Highlights:**
-- [Win 1 - specific and celebratory]
-- [Win 2 - acknowledge effort and outcome]
-- [Win 3 if applicable]
-
-**Main Challenges:**
-- [Challenge 1 - honest and clear]
-- [Challenge 2 - what made it difficult]
-
-
-## Domain Reviews
-
-### 💭 Personal
-
-**Wellness & Self-Care:**
-[User's reflection on personal wellness, relationships, health]
-
-**Energy Patterns:**
-- [Observations about energy levels throughout the week]
-- [What energized them]
-- [What drained them]
-
-**Personal Growth:**
-- [Insights or realizations]
-- [New habits or changes]
-
-**Rating:** [1-5] ⭐
-
-
-### 💼 Professional
-
-**Accomplishments:**
-[User's reflection on work accomplishments, projects completed, milestones reached]
-
-**Team & Collaboration:**
-[Insights about team dynamics, meetings, relationships]
-
-**Challenges & Learnings:**
-[What was difficult and what they learned]
-
-**Professional Development:**
-[Skills developed, knowledge gained]
-
-**Estimation Calibration:** *(if tracking)*
-- Tasks logged: [X]
-- Average ratio: [X.X]
-- Pattern noticed: [what am I consistently missing?]
-- Current multiplier: [X.X] (update if enough data)
-
-**Rating:** [1-5] ⭐
-
-
-### 🎯 Projects
-
-[For each active project:]
-
-#### [Project Name]
-
-**Progress This Week:**
-- [What moved forward - be specific]
-- [Milestones achieved]
-- [Decisions made]
-
-**Current Status:** [On track | Needs attention | Blocked | Pivoting]
-
-**Blockers:**
-- [What's in the way - if any]
-- [Dependencies waiting on]
-
-**Insights & Direction:**
-[Any strategic insights or direction changes]
-
-**Next Steps:**
-- [ ] [Specific next action 1] 📅 [YYYY-MM-DD = date of next Monday]
-- [ ] [Specific next action 2] 📅 [YYYY-MM-DD = date of next Friday]
-- [ ] [Specific next action 3] 📅 [YYYY-MM-DD = date +1 week from today]
-
-**Rating:** [1-5] ⭐
-
-
-## 📚 Knowledge Health
-
-- **Unconsolidated braindumps:** [count]
-- **Last consolidation:** [date] ([X] days ago)
-- **Debt level:** [Low (<10) | Medium (10-20) | High (20+) | Critical (30+)]
-[If Medium+]: Consider running `/knowledge-consolidation` to process accumulated insights.
-
-
-## 🔍 Pattern Recognition
-
-### Recurring Themes
-[Themes identified across all braindumps and activities this week — link the canonical doc when one exists:]
-1. **[Theme 1]** ([[pattern-doc]] — confirms/extends | *candidate pattern, no doc yet*): [Description and significance]
-2. **[Theme 2]** (...): [Description and significance]
-3. **[Theme 3]** (...): [Description and significance]
-
-### Framework Check
-[Only if this week's evidence touched documented frameworks:]
-- **Confirms:** [[framework]] — [what evidence supports it]
-- **Contradicts:** [[framework]] — [what cuts against it; also appended to `05-knowledge/_index.md` Open Contradictions]
-
-### Energy & Productivity Patterns
-- **Peak Times:** [When they were most productive/energized]
-- **Low Points:** [When energy dipped]
-- **Factors:** [What influenced energy - sleep, meetings, deep work, etc.]
-
-### Cross-Domain Insights
-[Connections between personal, professional, and project domains:]
-- [Connection 1 - e.g., "Personal stress affecting project focus"]
-- [Connection 2 - e.g., "Professional wins boosting personal confidence"]
-- [Connection 3 - e.g., "Project learning applying to work"]
-
-### Thinking Evolution
-[How their thinking or approach evolved during the week:]
-- [Evolution 1]
-- [Evolution 2]
-
-
-## 📅 Forward Planning
-
-### Priorities for Next Week
-
-**Top 3 Must-Do:**
-1. [Priority 1 - specific and actionable]
-2. [Priority 2 - specific and actionable]
-3. [Priority 3 - specific and actionable]
-
-**Why These Matter:**
-[Brief explanation of strategic importance]
-
-### Carry Forward Items
-- [ ] [Unresolved item from this week - with context] 📅 [YYYY-MM-DD = date of next Monday]
-- [ ] [Ongoing task - with next action] 📅 [YYYY-MM-DD = mid-next-week]
-- [ ] [Follow-up needed - with who/what] 📅 [YYYY-MM-DD = date +1 week from today]
-
-### Experiments & Changes
-
-**What to Try Differently:**
-- [Experiment 1 - be specific about what and why]
-- [Experiment 2 - what you hope to learn]
-
-**What to Keep Doing:**
-- [Practice 1 that's working well]
-- [Habit 2 to maintain]
-
-**What to Stop:**
-- [Thing 1 that's not serving you]
-- [Practice 2 to eliminate]
-
-### Success Criteria for Next Week
-
-**I'll know next week was successful if:**
-- [Measurable outcome 1]
-- [Measurable outcome 2]
-- [Qualitative measure 3]
-
-
-## 📊 Week in Review
-
-**Documents Analyzed:**
-- [X] braindumps reviewed
-- [X] daily briefs reviewed
-- [X] previous check-ins referenced
-
-**Time Analysis:**
-- Braindumps: [count] across [domains]
-- Most active domain: [domain name]
-- Dominant themes: [top 2-3 themes]
-
-**Sentiment Trend:**
-[Overall emotional trajectory of the week - growing, stable, declining, mixed]
-
-
-## 💡 Insights & Notes
-
-### Strategic Observations
-[Higher-level observations about trajectory, patterns, or strategic direction]
-
-### Questions for Deeper Reflection
-- [Question 1 that emerged during review]
-- [Question 2 for future consideration]
-
-### Gratitude & Appreciation
-[Optional - what they're grateful for or who they want to acknowledge]
-
-
-*Generated by COG Weekly Check-in Skill | Integrating insights across all domains*
 ```
+
+**Required sections, in this order.** Write them in the user's own language, at whatever length the week warrants. Do not pad a quiet week to fill headings, and do not force a section that has nothing behind it.
+
+1. `# Weekly Check-in - Week of [Date]`
+2. `## Executive Summary` — week rating 1-5 in the user's own reasoning, the week in three words, highlights, challenges.
+3. `## Domain Reviews` — `### 💭 Personal`, `### 💼 Professional`, `### 🎯 Projects` (one `####` sub-section per active project). Each domain carries its own **Rating:** [1-5] ⭐. Professional includes an Estimation Calibration block when the user tracks it (tasks logged, average ratio, pattern noticed, current multiplier). Each project carries **Current Status** (`On track | Needs attention | Blocked | Pivoting`), blockers, and Next Steps as tasks.
+4. `## 📚 Knowledge Health` — unconsolidated braindump count, last consolidation date and days since, debt level (`Low <10 | Medium 10-20 | High 20+ | Critical 30+`). At Medium or above, recommend `/knowledge-consolidation`.
+5. `## 🔍 Pattern Recognition` — recurring themes, each linked to its canonical doc where one exists: `**[Theme]** ([[pattern-doc]] — confirms/extends | *candidate pattern, no doc yet*)`. Include a **Framework Check** only when the week's evidence actually touched a documented framework, listing Confirms and Contradicts; every Contradicts entry is also appended to `05-knowledge/_index.md` Open Contradictions. Then energy and productivity patterns, cross-domain connections, and how their thinking evolved.
+6. `## 📅 Forward Planning` — top 3 priorities and why they matter, carry-forward items as tasks, experiments (try differently / keep doing / stop), and success criteria for next week.
+7. `## 📊 Week in Review` — counts of braindumps, briefs and prior check-ins analyzed; most active domain; dominant themes; sentiment trend.
+8. `## 💡 Insights & Notes` — strategic observations, questions worth deeper reflection, optional gratitude.
+
+Close with `*Generated by COG Weekly Check-in Skill | Integrating insights across all domains*`.
+
+All tasks use the emoji format with real dates: `- [ ] Action 📅 YYYY-MM-DD`. Next Steps default to next Monday / next Friday / +1 week; carry-forward items to next Monday / mid-next-week / +1 week.
 
 Save to: `01-daily/checkins/weekly-checkin-YYYY-MM-DD.md`
 

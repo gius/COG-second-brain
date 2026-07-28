@@ -20,7 +20,7 @@ The starting rulebook for `/task-triage`. Each rule has an ID, a behavioral trig
 ### RULE-01 — Superseded by newer document
 - **Fires when**: a newer document (newer weekly-checkin, newer brief, newer research doc, newer PROJECT-OVERVIEW revision, or a memory entry) contains content that replaces the task's intent. Any of the following is sufficient:
   - Equivalent task text, possibly reworded
-  - Narrative reframe — the newer doc explains *why* the task no longer applies (e.g. "throwaway test" retired because "QPCR is the proving ground now", "follow-up appt" escalated to "operation prep")
+  - Narrative reframe — the newer doc explains *why* the task no longer applies (e.g. a "throwaway test" retired because a real project became the proving ground, or a small follow-up escalated into a larger piece of work)
   - A broader or completed version of the task absorbs it
   - A documented strategy pivot ("Phase 10 swaps to X") makes the task target an abandoned path
 - **Action**: superseded; link to the newer `file:line`. Use the section header or block anchor if the target is specific within the newer doc.

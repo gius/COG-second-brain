@@ -150,7 +150,7 @@ Save to: `01-daily/briefs/daily-brief-YYYY-MM-DD.md`
 Daily brief is a **verify-retry loop** per interest area, not one search. See the `loop-engineering` skill for the shared vocabulary.
 
 - **Loop:** search → fetch a candidate → verify → keep or re-search with an adjusted query → repeat. In `agent_mode: team`, one worker loop per interest cluster, then synthesize.
-- **Verifier (mechanical, every candidate):** published within 7 days · ≥2 independent credible sources · source tier identified · not already in the brief (dedup). Fail any → discard, never soften.
+- **Verifier (mechanical, every candidate):** published within 7 days · primary source identified and fetch-verified (`Verification proof` present) · source tier identified · not already in the brief (dedup). Fail any → discard, never soften.
 - **Termination:** target item count met · hard cap ~5 searches/area · no-progress (2 empty searches → "No significant news found", never backfill) · overall fetch budget.
 - **Patterns:** evaluator-optimizer + reflect-retry + orchestrator-workers (team mode).
 

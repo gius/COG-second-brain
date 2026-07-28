@@ -17,70 +17,18 @@ metadata:
 
 ## Agent Mode Awareness
 
-**Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` AND transcript is **large (>2000 words)** — use the parallel agent execution strategy below. **Always run the content-extractor**; run the dynamics-analyst and context-enricher only if relevant (skip dynamics-analyst for solo standups; skip context-enricher when no project hint or competitor watchlist match). All agents at **specialist** tier, ≤3KB output cap each.
-- Otherwise (small transcript or solo mode) — process sequentially in main context: extract content, then analyze dynamics, then enrich with context. The 3-agent overhead (~120K context) outweighs the benefit on short transcripts.
+**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): only for transcripts over ~2000 words. Below that, process sequentially in main context — the spawn cost outweighs the benefit on a short transcript. At most 3 **specialist-tier** sub-agents, ≤3KB output each:
+
+1. **Content extraction** (always) — decisions with rationale, action items with owners and deadlines, strategic themes, key quotes, unresolved issues.
+2. **Team dynamics** (skip for solo standups) — participation, collaboration quality, decision-making effectiveness, tensions and alignment issues.
+3. **Context enrichment** (skip when there is no project hint and no watchlist match) — connections to recent braindumps, existing strategic priorities, competitive intelligence.
+
+Filtering judgment, assembly against the Content Structure template, and flagging urgent action items happen in main context.
 
 ## Purpose
 Extract strategic insights from meeting recordings and notes with intelligent content filtering to focus on substantive, actionable content while removing noise and irrelevant information.
 
 ## Command: `/meeting-transcript`
-
-## Parallel Agent Team Execution Strategy
-
-**Use parallel agents to process different aspects of the transcript simultaneously.**
-
-### Phase 1: Setup (Orchestrator)
-1. Receive transcript content from user
-2. Detect content type (meeting vs braindump) and classify domain
-3. Split transcript into logical sections for parallel processing
-
-### Phase 2: Parallel Processing (Spawn 2-3 Agents Simultaneously)
-**Launch ALL agents in a single message using Task tool with `run_in_background: true`:**
-
-#### Agent 1: "content-extractor" (subagent_type: general-purpose)
-```
-Extract structured content from the meeting transcript.
-
-1. Filter out side chats, technical difficulties, and irrelevant banter
-2. Identify and extract: decisions made (with rationale), action items (with owners/deadlines), strategic themes
-3. Capture key quotes and insights from participants
-4. Note unresolved issues and follow-up needs
-
-Return: Decisions list, action items list, strategic themes, key quotes, unresolved issues.
-```
-
-#### Agent 2: "dynamics-analyst" (subagent_type: general-purpose)
-```
-Analyze team dynamics and meeting effectiveness.
-
-1. Assess communication patterns and participation levels
-2. Identify leadership moments and collaboration quality
-3. Evaluate decision-making process effectiveness
-4. Assess meeting efficiency (time well spent vs wasted)
-5. Note any tensions, disagreements, or alignment issues
-
-Return: Team dynamics assessment, participation analysis, meeting effectiveness score.
-```
-
-#### Agent 3: "context-enricher" (subagent_type: general-purpose)
-```
-Enrich meeting content with project/product context.
-
-1. If project-related: read recent braindumps and notes for context
-2. Check if discussed topics relate to known issues/PRs on GitHub
-3. Connect decisions to existing strategic priorities
-4. Identify competitive intelligence if competitors mentioned
-
-Return: Contextual connections, related documents, strategic alignment notes.
-```
-
-### Phase 3: Assembly (Orchestrator)
-1. Collect results from all processing agents
-2. Assemble structured meeting summary following Content Structure template
-3. Add proper metadata (participants, duration, type, action item count)
-4. Save to appropriate domain meeting folder
-5. Flag urgent action items for immediate attention
 
 ## Content Filtering Guidelines
 
