@@ -14,6 +14,30 @@ You are the user's personal knowledge agent. Help them capture thoughts, stay in
 - All files are editable by the user — treat configuration as knowledge
 - Skill files ship to other machines and other agent runtimes: never reference a personal memory store (memory is injected into context automatically and is per-user), a tool-specific directory (`.claude/`, `.gemini/`, `.kiro/`), or an absolute path. Runtime artifacts go in `.cog/<skill>/`. Check with `python scripts/check_skill_portability.py`
 
+## Project File Placement
+
+Inside a project folder (`04-projects/<project>/` or `04-projects/<customer>/<project>/`), placement is decided by **whether the doc has a date in its name**, not by topic.
+
+**Undated = living.** Continuously updated, no date suffix, lives at the project root. `PROJECT-OVERVIEW.md`, `build-plan.md`, `architecture.md`, `docs-portal.md`. Update these in place; never fork a dated copy.
+
+**Dated = point-in-time.** Named `<slug>-YYYY-MM-DD.md`, never at the project root — always in a subfolder:
+
+| Subfolder | Holds | Examples |
+|---|---|---|
+| `braindumps/` | Raw capture, session logs (skill-generated, keeps its `braindump-` prefix + HHMM) | `braindump-YYYY-MM-DD-HHMM-<slug>.md` |
+| `research/` | Investigation **input** — findings gathered to inform a decision | `<topic>-optimization-YYYY-MM-DD.md` |
+| `planning/` | Pre-build inputs — requirement extractions, kickoff prompts, scoping | `requirements-extraction-YYYY-MM-DD.md` |
+| `reports/` | Finished **output** for an audience — audits, reviews, milestone plans, handoffs, migration plans, presentation guides | `progress-review-YYYY-MM-DD.md` |
+| `archive/` | Superseded docs of any kind | |
+
+**The root/`reports/` distinction is the one that leaks.** If a dated doc is a *deliverable you produced* rather than something you captured or gathered, it goes in `reports/`. Create `reports/` on first use; do not create empty folders speculatively.
+
+**Exceptions, stated not guessed:** a dated doc that is neither input nor output (e.g. `type: reference` records like a filed tax form) may stay at the project root. Say so when you place one there.
+
+**Links:** prefer bare `[[filename]]` wiki-links — they survive file moves. Use relative (`[[../x]]`) or vault-absolute (`[[04-projects/...]]`) paths only when disambiguating a duplicate filename, since those break on move.
+
+**When moving files:** grep for path-based inbound links first (`\[\[(\.\./|04-projects/)[^]]*<name>`), report what breaks, then move and rewrite. Bare links need no change. The user handles git — use plain `mv`, not `git mv`.
+
 ## Integration Preferences
 
 Before using any external integration in a skill, check `00-inbox/MY-INTEGRATIONS.md`:
@@ -21,6 +45,16 @@ Before using any external integration in a skill, check `00-inbox/MY-INTEGRATION
 - **Active integrations**: Use normally.
 - **Disabled integrations**: Skip silently. Do not attempt to call their tools, do not suggest setting them up, do not mention them in output.
 - **Unknown integrations** (not listed in either section): Ask the user if they want to set it up. If they say no, add it to the Disabled section.
+
+## Fetching Web Content
+
+Ladder. Try in order; fall through on error, empty body, or truncated/elided content.
+
+1. **`defuddle parse <url> --md`** — default for static pages. Strips nav, ads, and boilerplate, so it costs fewer tokens than raw fetch and does not elide long quotes. Not installed: `npm install -g defuddle`. Other forms: `--json` (HTML + markdown + metadata), `-p title|description|domain` (single property).
+2. **`WebFetch`** — when defuddle is absent, errors, or returns an empty body. Note it caps quotes at ~125 chars and elides silently, so verbatim quoting needs rung 3.
+3. **`/playwriter`** — JS-heavy, login-walled, lazy-loaded, or infinite-scroll pages. Rungs 1-2 return an empty shell on SPAs (X, Reddit, Instagram) — start here when the domain is known to be JS-rendered.
+
+Skip the ladder for `.md` URLs and raw API endpoints; fetch those directly.
 
 ## Available Skills
 

@@ -59,9 +59,9 @@ What URL(s) would you like to save?
 ### 2. URL Validation & Fetch
 - Validate URL format
 - Detect duplicate URLs in existing knowledge base
-- Fetch the web page content with WebFetch
+- Fetch the web page content via the fetch ladder (`defuddle` → `WebFetch` → `/playwriter`)
 
-**If the fetch fails** (network error, 403/404, paywall blocking extraction, or WebFetch returns substantially empty content): do NOT proceed to Phase 3 analysis. Instead, save a minimal stub to `00-inbox/url-[title-slug]-YYYY-MM-DD.md` with `status: "fetch-failed"` and the original URL + any user note, and tell the user the fetch failed so they can review manually. Analyzing content that didn't actually load produces plausible-sounding but fabricated insights — exactly the failure mode we're guarding against.
+**If the fetch fails** (network error, 403/404, paywall blocking extraction, or every rung of the ladder returns substantially empty content): do NOT proceed to Phase 3 analysis. Instead, save a minimal stub to `00-inbox/url-[title-slug]-YYYY-MM-DD.md` with `status: "fetch-failed"` and the original URL + any user note, and tell the user the fetch failed so they can review manually. Analyzing content that didn't actually load produces plausible-sounding but fabricated insights — exactly the failure mode we're guarding against.
 
 #### Content Extraction
 Extract from the fetched page:

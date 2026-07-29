@@ -31,8 +31,8 @@ Deep investigation of a single artifact (a URL, library/tool/repo, or article) b
 
 ### 2. Read the primary source
 Fetch and read it fully, not just title/author/date.
-- Default: `WebFetch`
-- JS-heavy / login-walled / lazy-loaded (Reddit, X, Disqus, Instagram): use `/playwriter`
+- Default: the fetch ladder (`defuddle` → `WebFetch` → `/playwriter`)
+- JS-heavy / login-walled / lazy-loaded (Reddit, X, Disqus, Instagram): skip to `/playwriter`
 - X/Twitter posts: read via `api.vxtwitter.com`
 - Auth-gated / paywalled (e.g. X Articles `x.com/i/article/...`, which vxtwitter and WebFetch cannot return): try an `archive.today` snapshot first - `https://archive.ph/newest/<url>` - then fall back to `/playwriter` on the live session
 
@@ -59,7 +59,8 @@ Fetch and read it fully, not just title/author/date.
 Present: a tight overview of what it says, the verified external signal, the coverage finding, then the one recommendation.
 
 ## Agent Mode
-- **team:** delegate each external-source lookup to a worker (Haiku). Brief each with the verification rules in step 3 - primary source, fetch + proof, drop rule. Synthesize in the main conversation.
+- **team:** delegate each external-source lookup to a **specialist-tier** sub-agent. Brief each with the verification rules in step 3 - primary source, fetch + proof, drop rule. Synthesize in the main conversation.
+- **Not worker tier.** Scout's output is verbatim quotes with permalinks. `WebFetch` caps quotes (~125 chars) and silently elides longer ones, so any source with long quotes needs the agent to notice the elision and climb the fetch ladder. That escalation is a judgment call the worker tier does not reliably make, and an elided quote returned as verbatim is worse than a dropped one.
 - **solo:** do all fetching and reading directly.
 
 ## Handoff
