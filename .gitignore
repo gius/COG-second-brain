@@ -55,3 +55,11 @@ Thumbs.db
 .github/SUBMISSION-CHECKLIST.md
 .github/SUBMISSION-TEMPLATES.md
 .github/MARKETPLACE.md
+
+# Gemini Scribe runtime state (per-user; the generated Skills/ mirror IS tracked)
+gemini-scribe/Agent-Sessions/
+gemini-scribe/History/
+gemini-scribe/Prompts/
+gemini-scribe/Scheduled-Tasks/
+gemini-scribe/Background-Tasks/
+gemini-scribe/Hooks/

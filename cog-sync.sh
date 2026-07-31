@@ -10,6 +10,7 @@
 # Generated (committed to git, never hand-edited):
 #   CLAUDE.md                    — Claude-specific header + AGENTS.md appended
 #   .claude/skills/*/SKILL.md   — Copy from .agents/skills/ (Claude Code native)
+#   gemini-scribe/Skills/*/SKILL.md — Copy for the Obsidian Gemini Scribe plugin
 #
 # Run this before releasing a new COG version.
 #
@@ -38,6 +39,11 @@ err()   { echo -e "${RED}x${RESET}  $*" >&2; }
 # ── Paths ───────────────────────────────────────────────────────────
 SOURCE_DIR=".agents/skills"
 CLAUDE_DIR=".claude/skills"
+
+# Gemini Scribe (Obsidian plugin) discovers skills only under its state folder,
+# and its discovery walks Obsidian's file index — which excludes dot-folders.
+# So .agents/skills is unreachable and this mirror is required.
+SCRIBE_DIR="gemini-scribe/Skills"
 
 # Skills maintained directly in the tool dirs (not generated from SOURCE_DIR).
 # cog-sync must never treat these as orphans and delete them.
@@ -75,6 +81,7 @@ Source of truth:
 Generated files (committed to git):
   CLAUDE.md                   Claude-specific header + AGENTS.md content
   .claude/skills/*/SKILL.md   Copies for Claude Code native discovery
+  gemini-scribe/Skills/       Copies for the Obsidian Gemini Scribe plugin
 
 Usage:
   ./cog-sync.sh               Sync all generated files
@@ -104,6 +111,7 @@ parity_check() {
     [[ -z "$name" ]] && continue
 
     [[ ! -f "${CLAUDE_DIR}/${name}/SKILL.md" ]] && warn "Missing: ${CLAUDE_DIR}/${name}/SKILL.md" && issues=$((issues + 1))
+    [[ ! -f "${SCRIBE_DIR}/${name}/SKILL.md" ]] && warn "Missing: ${SCRIBE_DIR}/${name}/SKILL.md" && issues=$((issues + 1))
   done
 
   # 3. Check context files contain AGENTS.md content
@@ -145,23 +153,34 @@ sync_skill() {
 
   info "Syncing: ${BOLD}${name}${RESET}"
 
-  # ── Claude Code: copy as-is ────────────────────────────────────
-  local claude_target="${CLAUDE_DIR}/${name}/SKILL.md"
-  if $dry_run; then
-    echo "    ${claude_target}"
-  else
-    mkdir -p "${CLAUDE_DIR}/${name}"
-    cp "$skill_file" "$claude_target"
+  # Gemini Scribe validates skill names and silently drops the ones it rejects,
+  # so a bad name would work in Claude Code and vanish in Obsidian.
+  if [[ ! "$name" =~ ^[a-z]([a-z0-9]|-[a-z0-9])*$ ]]; then
+    warn "  ${name} — Gemini Scribe will reject this name (lowercase, digits, single hyphens, must start with a letter)"
+  fi
+
+  # ── Copy as-is into each tool directory ────────────────────────
+  local skill_base
+  skill_base=$(dirname "$skill_file")
+
+  for tool_dir in "$CLAUDE_DIR" "$SCRIBE_DIR"; do
+    local target="${tool_dir}/${name}/SKILL.md"
+
+    if $dry_run; then
+      echo "    ${target}"
+      continue
+    fi
+
+    mkdir -p "${tool_dir}/${name}"
+    cp "$skill_file" "$target"
 
     # Also copy scripts/, references/, assets/ if they exist
-    local skill_base
-    skill_base=$(dirname "$skill_file")
     for subdir in scripts references assets; do
       if [[ -d "${skill_base}/${subdir}" ]]; then
-        cp -r "${skill_base}/${subdir}" "${CLAUDE_DIR}/${name}/"
+        cp -r "${skill_base}/${subdir}" "${tool_dir}/${name}/"
       fi
     done
-  fi
+  done
 
   return 0
 }
@@ -232,17 +251,19 @@ cleanup_orphans() {
     return 1
   }
 
-  # Claude skills
-  for d in "${CLAUDE_DIR}"/*/; do
-    [[ -d "$d" ]] || continue
-    local skill_name
-    skill_name=$(basename "$d")
-    is_external_skill "$skill_name" && continue
-    if ! is_source_skill "$skill_name"; then
-      warn "Orphaned: ${d}"
-      if ! $dry_run; then rm -rf "$d"; ok "  Removed: ${d}"; fi
-      removed=$((removed + 1))
-    fi
+  # Generated skill copies
+  for tool_dir in "$CLAUDE_DIR" "$SCRIBE_DIR"; do
+    for d in "${tool_dir}"/*/; do
+      [[ -d "$d" ]] || continue
+      local skill_name
+      skill_name=$(basename "$d")
+      is_external_skill "$skill_name" && continue
+      if ! is_source_skill "$skill_name"; then
+        warn "Orphaned: ${d}"
+        if ! $dry_run; then rm -rf "$d"; ok "  Removed: ${d}"; fi
+        removed=$((removed + 1))
+      fi
+    done
   done
 
   if [[ $removed -eq 0 ]]; then
@@ -334,7 +355,7 @@ main() {
   # ── Summary ────────────────────────────────────────────────────
   echo ""
   echo -e "${BOLD}Summary${RESET}"
-  ok "Synced ${synced} skills to Claude Code"
+  ok "Synced ${synced} skills to Claude Code and Gemini Scribe"
   ok "Synced CLAUDE.md from AGENTS.md"
   [[ $errors -gt 0 ]] && warn "${errors} skill(s) skipped due to errors"
 
