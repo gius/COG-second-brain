@@ -79,6 +79,7 @@ Each skill has a full playbook in `.agents/skills/[name]/SKILL.md`. When the use
 | `/onboarding` | Create profile, interests, and integrations files. **Run first.** | "setup COG", "get started", "setup my profile" |
 | `/braindump` | Capture raw thoughts with domain classification and competitive intelligence extraction | "braindump", "capture thoughts", "write down ideas" |
 | `/daily-brief` | Verified news intelligence from the last 7 days, personalized to user interests | "daily brief", "news", "morning brief" |
+| `/daily-journal` | Passive work journal the agent writes for you - appends after meaningful work, optional guided reflection | "log this to my journal", "reflect on today", or implicitly after finishing a piece of work |
 | `/weekly-checkin` | Cross-domain pattern analysis and strategic reflection | "weekly review", "reflect on my week" |
 | `/knowledge-consolidation` | Build frameworks from scattered insights, or run a lightweight vault health audit with freshness scoring | "consolidate knowledge", "extract patterns", "vault health", "vault audit" |
 | `/url-dump` | Save URLs with auto-extracted insights, categorized into knowledge booklets | "save this link", "bookmark this" |
@@ -88,6 +89,17 @@ Each skill has a full playbook in `.agents/skills/[name]/SKILL.md`. When the use
 | `/publish-to-confluence` | Publish any vault markdown file to Confluence (requires active integration) | "publish to Confluence" |
 | `/task-triage` | Clear overdue + due-today tasks from TASKS.md — evidence-based classification, batched approval, rulebook grows over time | "triage tasks", "what's overdue", "clear my tasks", "clean up TASKS.md" |
 | `/memory-hygiene` | Trust sweep of persistent memory — re-verify environment-dependent claims against the live environment, stamp `last_verified`, propose archiving drifted entries | "audit my memories", "check for stale memories" |
+
+## Output Styles
+
+Two response-voice styles ship with COG, authored in `.agents/output-styles/` and synced by `cog-sync.sh` to `.claude/output-styles/`:
+
+- **`pyramid`** - bottom line, then reasons, then evidence. Layered so the reader can stop at any depth. For reviews, investigations, and decisions.
+- **`terse`** - bottom line, then what changed and what is next. For status checks and quick questions.
+
+Both share one marker vocabulary (🎯 ✅ ❌ ⚠️ 🔍 ⏭️) and the same bullet grammar, so switching changes depth without changing how a response reads. Both respond to the in-band depth triggers `short`, `just the answer`, `expand`, `why`, `show me`.
+
+Select with `/output-style pyramid` in Claude Code. On runtimes without output-style support, paste the style body into the system prompt - the content has no tool-specific dependencies. See `.agents/output-styles/README.md`.
 
 ## User Configuration
 
@@ -167,6 +179,14 @@ Delegate large, genuinely independent tracks of work — a wide multi-file inves
 
 Sub-agents see only the prompt you write — not this file, not your skill, not the user's prior messages. Rules in your context do not cross to sub-agents automatically. Encode anything that matters in the briefing.
 
+### Fresh-context isolation — always apply when fanning out
+
+Pass each sub-agent only the digested context it needs. Never paste a prior sub-agent's raw output into the next one's prompt.
+
+Pasted context induces *narrativisation*: the sub-agent treats the preamble as "the orchestrator already framed the findings, I just classify them" instead of independently reading the source. The observed failure mode is a large speedup coupled with hallucinated findings and mis-cited references - fast and wrong reads as fast and right.
+
+Digest first, then brief. If two sub-agents genuinely need the same finding, state the finding as a fact in both briefings; do not forward one's transcript to the other.
+
 ### Research / fact-finding delegation (web search, releases, CVEs, funding, competitive intel)
 
 Sub-agents fabricate plausible items when real hits are sparse. "Verify carefully" is aspirational; structural proof is enforceable. Every research briefing must include:
@@ -187,6 +207,51 @@ Include: exact paths, what "done" looks like, constraints (tests must pass, do n
 "Medium confidence" from a sub-agent usually means "could not verify but sounds right." Treat as drop-or-re-verify, not as license to include with a softened label.
 
 **Check tool-call count against claim volume.** Eight fetched sources reported from one tool call is fabrication, however well the `Verification proof` fields are filled in. The briefing rules above are followed to the letter by agents that invent the results anyway — this check is what catches them.
+
+## Citation Discipline
+
+For any output making auditable claims about external sources - `/daily-brief`, `/auto-research`, `/scout`, `/url-dump`, `/meeting-transcript`.
+
+**Quote verbatim alongside the citation.** Every cited reference carries the actual line text in backticks, not just a link:
+
+```
+[<short label>](<link>) - `<verbatim quote from the source>`
+```
+
+If you cannot quote the source verbatim, drop the claim. A fabricated title is easy; a fabricated quote that survives a re-fetch is not. This is what makes the `Verification proof` rule above non-fakeable.
+
+**Adversarial verifier pass — opt in per skill, not a global rule.** Where being wrong costs the most, run one extra pass after the draft is assembled: a `worker`-tier sub-agent whose only job is re-fetching each cited URL and tagging every claim against its verbatim quote.
+
+```
+CLAIM <id> | Verified | Weakened | Falsified | <one-sentence justification with link>
+```
+
+Falsified claims are dropped. Weakened claims are demoted, not deleted - "blocker" becomes "heads up". The verifier never edits the draft; it returns tags and the lead applies them.
+
+Apply this where wrongness is expensive. Do not add it to every output.
+
+## Skill Post-Condition Rule
+
+Every skill run that **mutates external state** must end by observing the mutated artifact and confirming it matches intent, before reporting success. Mutations include: publishing a page, transitioning a ticket, posting to a channel, pushing commits, firing a webhook.
+
+- **Observe the artifact, not the return value.** Re-fetch the page, re-read the ticket, load the URL. A tool that returns `200` has told you it was called, not that the result is right.
+- **Read-only skills are exempt.** Nothing was changed, so there is nothing to check.
+- **If the check fails, say so plainly.** Never report success on the strength of the mutation call alone.
+- **New mutating skills ship a Verify step** in their `SKILL.md`.
+
+This prevents the *confident-but-unchecked* failure mode: a step returns plausible output that no downstream layer validates. It is verification of an external change, not a self-review pass over your own reasoning.
+
+## Single-File Deliverable Rule
+
+The user reviews **one file per run**. Staging files, per-sub-agent dumps, and split reports make review impossible.
+
+- **Default to a single file.** If the task fits in one, never split it.
+- **Fan-out is fine mid-run.** Parallel sub-agents write separate staging files to avoid write conflicts.
+- **The final step always consolidates:** one deliverable with the synthesis on top, then `## Appendix - sources` carrying each staging file's content (condensed plus a link if it is bulky raw data).
+- **Delete the staging files afterwards.** The run ends with exactly one new file, or zero if the deliverable belongs in an existing living doc.
+- Never hand over "see files A, B, C, D".
+
+Where that one file goes is decided by **Project File Placement** above.
 
 ## AI Task Endings
 

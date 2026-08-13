@@ -45,6 +45,11 @@ CLAUDE_DIR=".claude/skills"
 # So .agents/skills is unreachable and this mirror is required.
 SCRIBE_DIR="gemini-scribe/Skills"
 
+# Output styles replace the agent's response voice. Claude Code discovers them
+# under .claude/output-styles/; the source lives with the rest of the framework.
+STYLE_SOURCE_DIR=".agents/output-styles"
+CLAUDE_STYLE_DIR=".claude/output-styles"
+
 # Skills maintained directly in the tool dirs (not generated from SOURCE_DIR).
 # cog-sync must never treat these as orphans and delete them.
 EXTERNAL_SKILLS=("playwriter" "czech-ai-news")
@@ -77,10 +82,12 @@ COG Skill Sync — Generate tool-specific files from source of truth
 Source of truth:
   AGENTS.md                   Framework docs and skill descriptions
   .agents/skills/*/SKILL.md   Full skill playbooks (agentskills.io standard)
+  .agents/output-styles/*.md  Response-voice styles
 
 Generated files (committed to git):
   CLAUDE.md                   Claude-specific header + AGENTS.md content
   .claude/skills/*/SKILL.md   Copies for Claude Code native discovery
+  .claude/output-styles/*.md  Copies for Claude Code style discovery
   gemini-scribe/Skills/       Copies for the Obsidian Gemini Scribe plugin
 
 Usage:
@@ -112,6 +119,15 @@ parity_check() {
 
     [[ ! -f "${CLAUDE_DIR}/${name}/SKILL.md" ]] && warn "Missing: ${CLAUDE_DIR}/${name}/SKILL.md" && issues=$((issues + 1))
     [[ ! -f "${SCRIBE_DIR}/${name}/SKILL.md" ]] && warn "Missing: ${SCRIBE_DIR}/${name}/SKILL.md" && issues=$((issues + 1))
+  done
+
+  # 2. Check generated copies exist for each output style
+  for style_file in "${STYLE_SOURCE_DIR}"/*.md; do
+    [[ -f "$style_file" ]] || continue
+    local style_name
+    style_name=$(basename "$style_file")
+    [[ "$style_name" == "README.md" ]] && continue
+    [[ ! -f "${CLAUDE_STYLE_DIR}/${style_name}" ]] && warn "Missing: ${CLAUDE_STYLE_DIR}/${style_name}" && issues=$((issues + 1))
   done
 
   # 3. Check context files contain AGENTS.md content
@@ -181,6 +197,37 @@ sync_skill() {
       fi
     done
   done
+
+  return 0
+}
+
+# ── Sync output styles ────────────────────────────────────────────
+# Copies every style in STYLE_SOURCE_DIR into the Claude Code style dir.
+# README.md documents the styles for humans and is not itself a style.
+sync_output_styles() {
+  local dry_run="$1"
+  local synced=0
+
+  for style_file in "${STYLE_SOURCE_DIR}"/*.md; do
+    [[ -f "$style_file" ]] || continue
+
+    local style_name
+    style_name=$(basename "$style_file")
+    [[ "$style_name" == "README.md" ]] && continue
+
+    local target="${CLAUDE_STYLE_DIR}/${style_name}"
+
+    if $dry_run; then
+      echo "    ${target}"
+    else
+      mkdir -p "$CLAUDE_STYLE_DIR"
+      cp "$style_file" "$target"
+      ok "  ${target}"
+    fi
+    synced=$((synced + 1))
+  done
+
+  [[ $synced -eq 0 ]] && info "  No output styles found in ${STYLE_SOURCE_DIR}/"
 
   return 0
 }
@@ -266,6 +313,18 @@ cleanup_orphans() {
     done
   done
 
+  # Generated output-style copies
+  for f in "${CLAUDE_STYLE_DIR}"/*.md; do
+    [[ -f "$f" ]] || continue
+    local style_name
+    style_name=$(basename "$f")
+    if [[ ! -f "${STYLE_SOURCE_DIR}/${style_name}" ]]; then
+      warn "Orphaned: ${f}"
+      if ! $dry_run; then rm -f "$f"; ok "  Removed: ${f}"; fi
+      removed=$((removed + 1))
+    fi
+  done
+
   if [[ $removed -eq 0 ]]; then
     ok "No orphaned files found"
   else
@@ -348,6 +407,11 @@ main() {
     fi
   done
 
+  # ── Sync output styles ────────────────────────────────────────
+  echo ""
+  info "Output styles:"
+  sync_output_styles "$dry_run"
+
   # ── Clean up orphans ──────────────────────────────────────────
   echo ""
   cleanup_orphans "$dry_run"
@@ -356,6 +420,7 @@ main() {
   echo ""
   echo -e "${BOLD}Summary${RESET}"
   ok "Synced ${synced} skills to Claude Code and Gemini Scribe"
+  ok "Synced output styles to Claude Code"
   ok "Synced CLAUDE.md from AGENTS.md"
   [[ $errors -gt 0 ]] && warn "${errors} skill(s) skipped due to errors"
 

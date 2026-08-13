@@ -14,6 +14,17 @@ The fork and upstream have different architectures:
 
 A straight merge drags upstream's per-tool file layout on top of our single-source design, regressing it for no functional gain. The *value* in an upstream release is content and concepts, which port cleanly into `.agents/skills/`. The *conflict* is only the file layout.
 
+## Versioning — independent of upstream
+
+`COG-VERSION` tracks **this fork**, not upstream. It restarted at `1.0.0` on 2026-08-13, replacing the inherited `3.5.0`.
+
+Upstream's number describes a skill set this fork deliberately does not carry - matching it would claim a parity that does not exist, and inheriting it left the fork stuck at `3.5.0` while carrying ported 3.6-3.10 content. The two facts are separate and now recorded separately:
+
+- **`COG-VERSION`** - what this fork is at. Bump on any framework change: minor for new skills or protocols, patch for fixes.
+- **Last-reviewed upstream commit** (in the vault's `PROJECT-OVERVIEW.md`) - how far upstream has been reviewed. The only thing that says how current the fork is against upstream.
+
+Keep `COG-VERSION`, `.claude-plugin/plugin.json`, and `marketplace-entry.json` aligned on every bump.
+
 ## Remotes
 
 - `public-souce` → `huytieu/COG-second-brain` — upstream framework (review only, never merge)

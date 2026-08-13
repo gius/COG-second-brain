@@ -2,6 +2,31 @@
 
 All notable changes to COG (Cognition + Obsidian + Git) will be documented in this file.
 
+Versions from `1.0.0` onward are **this fork's own**, independent of upstream - see `UPSTREAM-SYNC.md`. Earlier entries carry the inherited upstream numbering.
+
+## [1.0.0] - 2026-08-13
+
+Curated adoption from upstream `1947147` (v3.10.0), plus the fork's own versioning reset. Reviewed 11 upstream commits (v3.7.0 through v3.10.0); most were skipped. Full pick-sheet in the vault at `04-projects/cog-customization/reports/upstream-review-v3.10.0-2026-08-13.md`.
+
+### Added
+- **`daily-journal` skill** — passive work journal the agent authors. Appends an entry to `01-daily/journal/YYYY-MM-DD.md` after meaningful work in any session, not only when invoked. Optional `reflect` mode reads the day plus recent days and drafts a reflection from the log before asking delta questions. Ported from upstream v3.8.0, rewritten against this fork's conventions and stripped of harness dependencies.
+- **Output styles (`.agents/output-styles/`)** — `pyramid` (bottom line, then reasons, then evidence, layered for stop-anywhere reading) and `terse` (bottom line, then what changed and what is next). Shared marker vocabulary and bullet grammar so switching changes depth, not voice. `cog-sync.sh` syncs them to `.claude/output-styles/`.
+- **Citation Discipline** (`AGENTS.md`) — every cited reference carries the source's verbatim line in backticks; if it cannot be quoted, the claim is dropped. Plus an opt-in adversarial verifier pass tagging claims `Verified | Weakened | Falsified` before publishing. Ported from upstream v3.7.0, retargeted from named agent files to this fork's model tiers.
+- **Fresh-context isolation** (`AGENTS.md → Briefing sub-agents`) — never paste a prior sub-agent's raw output into the next one's prompt; it induces narrativisation and produces fast, confidently wrong findings. Ported from upstream v3.7.0.
+- **Skill Post-Condition Rule** (`AGENTS.md`) — skills that mutate external state must end by observing the artifact, not the tool's return value. Read-only skills exempt. New mutating skills ship a Verify step. Ported from upstream v3.7.0.
+- **Single-File Deliverable Rule** (`AGENTS.md`) — one deliverable file per run; fan-out staging is allowed mid-run but the final step consolidates and deletes the staging files. Ported from upstream v3.7.0.
+
+### Changed
+- **Versioning is now independent of upstream.** `COG-VERSION` reset `3.5.0` → `1.0.0` across `COG-VERSION`, `.claude-plugin/plugin.json`, and `marketplace-entry.json`. Upstream's number describes a skill set this fork does not carry; how current the fork is against upstream is recorded by the last-reviewed commit pointer instead.
+- **`cog-sync.sh`** — output styles are now a synced surface: new `.agents/output-styles/` source, `sync_output_styles()`, parity check, and orphan cleanup for `.claude/output-styles/`.
+
+### Skipped from upstream (v3.7.0 - v3.10.0)
+- **Closed-loop harness** (v3.8.0: `closed-loop`, `ultragoal`, `retro`, `review-cockpit`, 4 verifier agents, `WORKFLOW.md`, `.claude/lib/`) — its premise that a separate verifier re-checks every unit of work reverses this fork's stance against added self-review passes.
+- **Craft and design skills** (v3.8.0 `editorial-illustrations`, `data-forms`, `museum-art`; v3.8.1 `taste-skill`, `product-ui-taste`) — ~4.7k lines duplicating capabilities the host tooling now provides natively.
+- **`content-factory`** (v3.7.0), **`no-ai-slop`** (v3.8.0), **Engineering Discipline protocol** (v3.7.1) — no matching workflow, or already covered elsewhere.
+- **Antigravity pointer stubs** (v3.9.0) — upstream made `.agents/skills/` stubs that delegate to `.claude/skills/`. This fork uses `.agents/skills/` as the source of truth; adopting the inversion would break the single-source design.
+- **Agent Plugins standard** (v3.10.0) — deferred, not rejected. Root `plugin.json` + `skills/` mirror is a real portability win but buys nothing for today's install path.
+
 ## [Unreleased] - 2026-07-02
 
 Curated upstream adoption (fork). Synced with `huytieu/COG-second-brain` at `5e9851c` (v3.6.0) by review-and-port, not merge — see `UPSTREAM-SYNC.md`.
