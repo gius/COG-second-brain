@@ -4,6 +4,24 @@ All notable changes to COG (Cognition + Obsidian + Git) will be documented in th
 
 Versions from `1.0.0` onward are **this fork's own**, independent of upstream - see `UPSTREAM-SYNC.md`. Earlier entries carry the inherited upstream numbering.
 
+## [1.1.0] - 2026-08-14
+
+Family-install pass: scripted setup, a people CRM, and doc corrections found while checking what the Obsidian Gemini Scribe runtime actually supports.
+
+### Added
+- **`people` skill** — evidence-based profiles in `05-knowledge/people/<firstname>-<lastname>.md`, built only from sources already in the vault. Two layers per file (rewritable Compiled Truth, append-only Timeline), a mandatory `[Source: … | date | confidence]` citation on every line, and tiering so a profile grows with evidence instead of being filled in speculatively. Adopted from upstream's people CRM, rebuilt as a skill: upstream's version was a worker-agent definition, a layout this fork does not carry, and family installs have no sub-agents at all. `06-templates/people-profile-template.md` and `05-knowledge/people/README.md` ship with it.
+- **`## People CRM` protocol** (`AGENTS.md`) — storage, citation format, tier thresholds, and the neutrality rule (only what you would show the person themselves).
+- **`/meeting-transcript` feeds it** — section 7 lists per-person observations and offers to append them. Offered, never automatic.
+- **`cog-install.ps1`** — one-line family install. Confirms the target folder on screen before touching the machine, then installs Git and Obsidian via winget, clones the vault with the git database outside OneDrive, downloads Gemini Scribe / Tasks / Calendar / Remotely Save from their GitHub releases, and enables them. Every step is idempotent. Target validation blocks paths git would reject (non-empty folder, missing parent, not a full path) and warns on ones that work but cost phone sync (outside personal OneDrive, or OneDrive for Business, which Remotely Save does not support). `COG_VAULT_PATH` preseeds a different default. Package presence is checked with `winget list` rather than a hardcoded install path, so a machine-wide install is not mistaken for a missing one, and installs are judged by re-querying the package instead of trusting winget's exit code.
+
+### Changed
+- **Claude Code `worker` tier now maps to Sonnet, not Haiku** (`CLAUDE.md` header, `SETUP.md`, `CONTRIBUTING.md`). No behavioural change today — no skill routes to `worker`; every delegating skill specifies `specialist`.
+- **`gemini-scribe/AGENTS.md` resolves the delegation conflict** — skills carry a "Delegation buckets" paragraph naming `agent_mode: team` and `specialist-tier` sub-agents, neither of which exists on that runtime. The no-sub-agents rule now names those strings explicitly, holds regardless of `agent_mode`, forbids narrating a fan-out that did not happen, and points wide research at the plugin's `deep_research` tool instead.
+- **`BFU-SETUP.md` rewritten to v4** — script-first setup (5 steps, down from 7) with the manual clone kept as a fallback, Git named as a hard prerequisite since `cog-update.bat` is `git pull`, `daily-journal` added to the cheat sheet, and section 9 corrected: Gemini Scribe now reaches Gemini, Ollama **and** OpenAI, with per-feature provider routing. The old "changing provider means changing plugin" claim is gone; Claudian is now recommended only for Claude.
+
+### Removed
+- **`AGENTS.override.md`** — and with it the stale claims in `CONTRIBUTING.md` and `SETUP.md` that Antigravity CLI and OpenAI Codex read model mappings from a file. Only Claude Code does; other runtimes take their model from their own settings. `CONTRIBUTING.md`'s generated-file table also still listed the retired `.gemini/` surfaces and `GEMINI.md`.
+
 ## [1.0.0] - 2026-08-13
 
 Curated adoption from upstream `1947147` (v3.10.0), plus the fork's own versioning reset. Reviewed 11 upstream commits (v3.7.0 through v3.10.0); most were skipped. Full pick-sheet in the vault at `04-projects/cog-customization/reports/upstream-review-v3.10.0-2026-08-13.md`.

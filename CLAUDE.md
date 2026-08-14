@@ -6,7 +6,7 @@ Skill playbooks are in `.claude/skills/`.
 
 | COG Tier | Model | Agent tool parameter |
 |----------|-------|---------------------|
-| `worker` | Haiku | `model: "haiku"` |
+| `worker` | Sonnet | `model: "sonnet"` |
 | `specialist` | Sonnet | `model: "sonnet"` |
 | `architect` | Opus | `model: "opus"` |
 
@@ -86,6 +86,7 @@ Each skill has a full playbook in `.agents/skills/[name]/SKILL.md`. When the use
 | `/scout` | Investigate a URL, library, or article in depth - read it, gather verified external signal, check vault coverage, recommend save / read-in-full / skip | "scout this", "is it worth reading?" |
 | `/auto-research` | Decompose strategic questions into parallel research threads with real sources | "research [topic]", "deep dive into [topic]" |
 | `/meeting-transcript` | Process meeting recordings into structured decisions, action items, and team dynamics | "process this meeting", "meeting notes" |
+| `/people` | Evidence-based profiles of people you work with - append observations, read back what's known before a conversation | "what do I know about X", "brief me on X", "who am I tracking" |
 | `/publish-to-confluence` | Publish any vault markdown file to Confluence (requires active integration) | "publish to Confluence" |
 | `/task-triage` | Clear overdue + due-today tasks from TASKS.md — evidence-based classification, batched approval, rulebook grows over time | "triage tasks", "what's overdue", "clear my tasks", "clean up TASKS.md" |
 | `/memory-hygiene` | Trust sweep of persistent memory — re-verify environment-dependent claims against the live environment, stamp `last_verified`, propose archiving drifted entries | "audit my memories", "check for stale memories" |
@@ -134,6 +135,18 @@ Available packs: Product Manager, Engineering Lead, Engineer, Designer, Founder,
 - Link consulted frameworks/patterns in outputs with `[[wiki-links]]`.
 - If new evidence contradicts a framework, append a line to the index's **Open Contradictions** section — only `/knowledge-consolidation` resolves and removes entries there.
 - If the index doesn't exist yet, fall back to scanning `05-knowledge/consolidated/` and `05-knowledge/patterns/` directly.
+
+## People CRM
+
+Profiles of the people the user works with live in `05-knowledge/people/<firstname>-<lastname>.md`, built only from evidence already in the vault. `/people` maintains them; conventions live in `05-knowledge/people/README.md`.
+
+- **Two layers per file:** Compiled Truth (current picture, rewritable) and Timeline (append-only, dated). Never rewrite a Timeline entry.
+- **Every line carries its source:** `[Source: [[path/to/source-note]] | YYYY-MM-DD | confidence: high|medium|low]`. An observation with no vault source does not get written.
+- **Tiered:** 1 mention → stub; 3+ → working style and strengths; 8+ or a direct meeting → full profile. Do not fill sections the evidence cannot support.
+- **Neutral by rule:** only what you would show the person themselves. No private-life detail, no judgment, no speculation about motive, no performance or compensation notes.
+- **Contradictions move, they don't overwrite** — a superseded claim goes to the profile's Open Threads with both sources.
+
+Skills that surface people observations (`/meeting-transcript`, `/braindump`) offer the update; they never write profiles silently.
 
 ## Task Format
 

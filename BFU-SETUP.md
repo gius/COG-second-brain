@@ -1,7 +1,7 @@
 ---
 type: guide
 created: 2026-02-23
-updated: 2026-07-31
+updated: 2026-08-14
 status: active
 audience: family
 ---
@@ -18,6 +18,14 @@ files on your computer - private, yours.
 **What is Gemini Scribe?** An Obsidian plugin that puts an AI assistant in a side
 panel next to your notes. It can read your whole vault, write and edit notes, search
 the web, and run on a schedule.
+
+**What changed (August 2026):**
+
+- **Setup is one PowerShell line.** `cog-install.ps1` installs Git and Obsidian,
+  clones the vault, and drops in all four plugins. See [One-Time Setup](#2-one-time-setup).
+- **Gemini Scribe reached three providers** - Gemini, Ollama, and OpenAI - and can
+  route each feature to a different one. See [Models & Alternatives](#9-models--alternatives).
+- New skill: **daily journal**, a short work log the assistant writes for you.
 
 **What changed (July 2026):**
 
@@ -75,9 +83,51 @@ A typical COG session costs well under a cent. **Gusta manages billing** - just 
 
 > Gusta does this for each family member's desktop. You don't do this yourself.
 
-### Step 1: Install the COG Vault into OneDrive
+### Step 1: Run the installer
 
-Open PowerShell and run these two lines:
+Open PowerShell and paste this one line:
+
+```powershell
+irm https://raw.githubusercontent.com/gius/COG-second-brain/feature/custom-changes/cog-install.ps1 | iex
+```
+
+It installs Git and Obsidian, clones the vault, and downloads the four Obsidian
+plugins. Every step skips itself if it is already done, so it is safe to re-run. The
+script is `cog-install.ps1` in the vault folder if you want to read it first.
+
+**It asks before it installs anything.** The first thing it prints is the folder it
+intends to use:
+
+```
+Vault folder:  C:\Users\jana\OneDrive\cog-second-brain
+
+Press Enter to use it, or type a different full path (or "q" to quit)
+```
+
+Press Enter to accept. Type a full path to put the vault somewhere else - it re-checks
+each time, and refuses paths that can't work (a folder that already has files in it, or
+one whose parent doesn't exist). It warns, but still allows, a folder outside personal
+OneDrive: that costs you phone sync. Nothing is installed until you answer.
+
+**What it sets up:**
+
+| Thing | Where it lands |
+|---|---|
+| Git, Obsidian | `winget install Git.Git`, `winget install Obsidian.Obsidian` |
+| Vault content | `%OneDrive%\cog-second-brain` by default, confirmed on screen first - OneDrive auto-syncs it to your phone and other desktops |
+| Git database | `%USERPROFILE%\.cog-git\cog.git` - **outside** OneDrive, so OneDrive doesn't sync git's thousands of tiny internal files (slow, and it breaks the repo) |
+| Plugins | Gemini Scribe, Tasks, Calendar, Remotely Save → `.obsidian\plugins\` |
+
+The vault is cloned from Gusta's family COG fork on the `feature/custom-changes`
+branch, public over HTTPS - no GitHub account, no SSH key, no login. A tiny `.git`
+pointer file stays inside the OneDrive folder. **Don't delete it** - it's how
+`cog-update.bat` finds the git data.
+
+<details>
+<summary>Manual install, if you would rather not run a script</summary>
+
+Install [Git](https://git-scm.com) and [Obsidian](https://obsidian.md) (both free),
+then:
 
 ```powershell
 New-Item -ItemType Directory -Force "$env:USERPROFILE\.cog-git" | Out-Null
@@ -86,32 +136,29 @@ git clone -b feature/custom-changes https://github.com/gius/COG-second-brain.git
   "$env:USERPROFILE\OneDrive\cog-second-brain"
 ```
 
-The first line creates the parent directory for the git database (git won't auto-create
-it). The second clones Gusta's family COG fork on the `feature/custom-changes` branch.
-The repo is public over HTTPS - no GitHub account, no SSH key, no login.
+Then install four plugins from Settings → **Community plugins** → **Browse**:
+**Gemini Scribe**, **Tasks**, **Calendar**, **Remotely Save**.
 
-**What this does:**
+</details>
 
-- Vault content goes into `OneDrive\cog-second-brain` - OneDrive auto-syncs it to your
-  phone and other desktops.
-- The git database lives at `~\.cog-git\cog.git` - **outside** OneDrive, so OneDrive
-  doesn't try to sync git's thousands of tiny internal files (that would be slow and
-  break the repo).
-- A tiny `.git` pointer file remains inside the OneDrive folder. **Don't delete it** -
-  it's how `cog-update.bat` finds the git data.
+> **Git is not optional.** `cog-update.bat` runs `git pull`, so a vault downloaded as
+> a ZIP instead of cloned can never be updated.
 
-### Step 2: Install Obsidian
+### Step 2: Open the vault
 
-1. Download from [obsidian.md](https://obsidian.md) (free)
-2. Open Obsidian → **Open folder as vault**
-3. Select `%USERPROFILE%\OneDrive\cog-second-brain`
+1. Open Obsidian → **Open folder as vault**
+2. Select `%USERPROFILE%\OneDrive\cog-second-brain`
+3. Settings → **Community plugins** → click **Turn on community plugins** if Obsidian
+   asks for it. The four plugins are already on disk; switch on any that show as off.
 
-### Step 3: Install Gemini Scribe
+| Plugin | What it does |
+|---|---|
+| **Gemini Scribe** | The AI assistant in the side panel |
+| **Tasks** | Track to-dos with due dates across all your notes |
+| **Calendar** | Visual calendar sidebar |
+| **Remotely Save** | Mobile sync via OneDrive (see Step 5) |
 
-1. Settings → **Community plugins** → **Browse**
-2. Search **"Gemini Scribe"** → Install → Enable
-
-### Step 4: Add the API Key
+### Step 3: Add the API key
 
 Gusta creates a key at [aistudio.google.com](https://aistudio.google.com/apikey) and
 links it to billing.
@@ -123,7 +170,7 @@ links it to billing.
 
 That's the whole connection. Nothing to install in a terminal, no login flow.
 
-### Step 5: Point the Plugin at COG's Skills
+### Step 4: Point the plugin at COG's skills
 
 COG ships its skills in the `gemini-scribe` folder inside the vault, which is where
 the plugin expects them.
@@ -138,17 +185,7 @@ see `braindump`, `daily-brief`, `weekly-checkin` and the rest in the list.
 > organized. It loads automatically. **Don't click "Initialize vault context"** - that
 > overwrites the tuned version with a generic one.
 
-### Step 6: Install the Supporting Plugins
-
-Settings → Community plugins → Browse:
-
-| Plugin | What it does |
-|---|---|
-| **Tasks** | Track to-dos with due dates across all your notes |
-| **Calendar** | Visual calendar sidebar |
-| **Remotely Save** | Mobile sync via OneDrive (see Step 7) |
-
-### Step 7: Mobile Setup (Optional)
+### Step 5: Mobile setup (optional)
 
 #### Vault sync
 
@@ -228,6 +265,7 @@ to `01-daily/briefs/`.
 | **Morning** | "Give me my daily brief" | Personalized news based on your interests |
 | **Anytime** | "I need to braindump" | Captures thoughts, extracts action items |
 | **Found a link** | "Save this URL: …" | Extracts content with key insights |
+| **After real work** | "Log this to my journal" | Short dated entry in your work journal, written for you |
 | **Friday** | "Weekly review" | Pattern analysis across your week |
 | **Monthly** | "Consolidate my knowledge" | Builds frameworks from scattered notes |
 | **Overdue to-dos** | "What's overdue?" | Sorts through your task list with you |
@@ -283,9 +321,26 @@ The script runs `git pull` to fetch the latest framework, including updated skil
 it reports a problem (usually because the update touches a file you've also edited
 locally), **don't panic** - your notes are safe on disk. Ask Gusta to resolve.
 
+**The plugins update separately.** `cog-update.bat` only updates COG itself. Obsidian
+tells you when Gemini Scribe or the others have a new version: Settings → **Community
+plugins** → **Check for updates** → **Update all**. Nothing breaks if you never do it,
+you just miss new plugin features.
+
+Re-running `cog-install.ps1` also refreshes all four plugins to their latest release.
+It skips whatever is already in place, so it is a safe repair step at any time.
+
 ---
 
 ## 7. Troubleshooting
+
+### "The install script failed"
+
+- **"winget is missing"** - install **App Installer** from the Microsoft Store, then
+  re-run the one-liner.
+- **"OneDrive folder not found"** - sign in to OneDrive first. The script needs the
+  folder to exist before it clones into it.
+- **Anything else** - the script is safe to re-run; it skips whatever already worked.
+  If it still fails, use the manual install in [Step 1](#step-1-run-the-installer).
 
 ### "I don't see the COG skills when I type /"
 
@@ -346,14 +401,14 @@ and the rest stays exactly where it is. Only the tool you talk to changes.
 
 1. **Update the vault** - double-click `cog-update.bat`. This brings in
    `gemini-scribe/Skills/` and `gemini-scribe/AGENTS.md`.
-2. **Install and configure Gemini Scribe** - follow [Steps 2-5](#2-one-time-setup)
+2. **Install and configure Gemini Scribe** - follow [Steps 2-4](#2-one-time-setup)
    above. Reuse your existing API key; it's the same Google key.
 3. **Delete the desktop shortcut** - `opencode-cog.bat`. You don't need it.
 4. **Uninstall OpenCode** (optional) - `winget uninstall SST.OpenCodeDesktop`.
 5. **Remove the old Obsidian plugin** if you had one - Settings → Community plugins →
    disable and remove **Claudian** and/or **OpenCode Obsidian**. Gemini Scribe replaces
-   both. Keep Claudian only if you are deliberately staying on a non-Gemini model - see
-   [If the model isn't Gemini](#if-the-model-isnt-gemini-use-claudian).
+   both. Keep Claudian only if you are deliberately staying on Claude - see
+   [If the model has to be Claude](#if-the-model-has-to-be-claude-use-claudian).
 
 **What's different day to day:**
 
@@ -388,27 +443,49 @@ Direct API access, no platform fee, you pay only for tokens used.
 
 ### Alternatives (for reference)
 
-If Google AI Studio ever becomes unsuitable, Gusta can switch. Note that unlike the old
-OpenCode setup, changing provider here means **changing plugin too** - Gemini Scribe
-speaks to Gemini and to a local Ollama server, nothing else.
+Gemini Scribe now speaks to **three** providers - Google Gemini, Ollama (local), and
+OpenAI, the last of which also covers any OpenAI-compatible server such as LM Studio.
+So switching away from Google AI Studio no longer means switching plugin, unless the
+model has to be Claude.
 
 | Alternative | Plugin | Trade-off |
 |---|---|---|
-| **Ollama (local)** | Gemini Scribe | Free and private; needs a powerful PC, and web search / deep research / image generation stop working |
-| **Claude, GPT, Grok, others** | **Claudian** | Wider model choice; requires a command-line tool installed on every machine (see below) |
+| **OpenAI** | Gemini Scribe | Just a provider switch and an OpenAI key; API-key billing only, no ChatGPT-subscription login |
+| **Ollama (local)** | Gemini Scribe | Free and private; needs a powerful PC |
+| **Claude, Grok, others** | **Claudian** | Wider model choice; requires a command-line tool installed on every machine (see below) |
 | **Any ACP agent** | **Agent Client** | Same idea, built on the open Agent Client Protocol; younger project (v0.11.0) |
 
-### If the model isn't Gemini: use Claudian
+**You don't have to move everything at once.** Settings → Gemini Scribe →
+**Per-feature provider** routes each capability separately, so chat can run locally on
+Ollama while Google still serves the tools only it has:
+
+| Feature | Gemini | Ollama | OpenAI |
+|---|:---:|:---:|:---:|
+| Chat, agent sessions, scheduled tasks | ✓ | ✓ | ✓ |
+| Summaries, completions, rewrite | ✓ | ✓ | ✓ |
+| Google Search, web fetch, Deep Research | ✓ | ✗ | ✗ |
+| Vault semantic search (RAG) | ✓ | ✗ | ✗ |
+| Image generation | ✓ | ✗ | ✗ |
+
+Two things worth knowing before mixing providers:
+
+- **Nothing goes to the cloud on your behalf.** If your provider can't serve a feature,
+  that feature stays off - the plugin never quietly substitutes another one.
+- **Vault semantic search is the broad one.** Turning it on uploads note content to a
+  cloud index, not just the text of a single request.
+
+### If the model has to be Claude: use Claudian
 
 **[Claudian](https://community.obsidian.md/plugins/realclaudian)** is the plugin to
-switch to when the model is not a Gemini one. It is the most widely used AI plugin in
+switch to for models Gemini Scribe cannot reach. It is the most widely used AI plugin in
 the Obsidian ecosystem, and it does the same job as Gemini Scribe - a chat sidebar with
 your vault as the working directory, file read/write, search, inline edit with diff
 preview, Plan Mode, and multi-tab conversations.
 
 **When it's the right call:**
 
-- The model has to be Claude, GPT/Codex, Grok, or anything OpenCode or Pi can reach
+- The model has to be Claude, Grok, or anything OpenCode or Pi can reach. **GPT no
+  longer belongs on this list** - Gemini Scribe has a native OpenAI provider.
 - You want one plugin that follows you across providers instead of one plugin per vendor
 
 **What it needs that Gemini Scribe doesn't:**
@@ -449,6 +526,7 @@ Scribe is the default for the family: it has no CLI to go wrong.
 cog-second-brain/
   .git                  Small pointer file - DON'T DELETE
   BFU-SETUP.md          This guide
+  cog-install.ps1       One-time setup script (Gusta runs this)
   cog-update.bat        Double-click to update COG
   00-inbox/             Your profile and settings
     MY-PROFILE.md         your name, role, projects
@@ -509,4 +587,4 @@ PROBLEMS:   Ask Gusta!
 
 ---
 
-*Setup guide v3 - July 2026 (Gusta)*
+*Setup guide v4 - August 2026 (Gusta)*

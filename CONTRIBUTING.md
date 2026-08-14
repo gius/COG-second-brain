@@ -148,18 +148,18 @@ Each AI tool discovers skills from its own native folder. `cog-sync.sh` generate
 | Generated file | What sync produces | How the tool uses it |
 |---|---|---|
 | `.claude/skills/[name]/SKILL.md` | Copy of source skill (as-is) | Claude Code loads skills from this folder natively |
-| `.gemini/skills/[name].md` | Skill body only (no frontmatter) | Referenced by `.gemini/commands/[name].toml` via `@{path}` |
-| `.gemini/commands/[name].toml` | Entry point with description + prompt | Gemini CLI registers these as `/commands` |
+| `gemini-scribe/Skills/[name]/SKILL.md` | Copy of source skill (as-is) | The Obsidian Gemini Scribe plugin discovers skills under its state folder only |
 | `CLAUDE.md` | Pure copy of AGENTS.md, or header + AGENTS.md if marker present | Claude Code reads as project instructions |
-| `GEMINI.md` | Pure copy of AGENTS.md, or header + AGENTS.md if marker present | Gemini CLI reads as project context |
 
-**When adding a new skill**, also add a row to the skill table in `AGENTS.md`. This table is the skill catalog for agents without native skill discovery (e.g., OpenAI Codex). Tools with native folders (Claude Code, Gemini CLI) discover skills automatically from their generated folders.
+**When adding a new skill**, also add a row to the skill table in `AGENTS.md`. This table is the skill catalog for agents without native skill discovery (e.g., OpenAI Codex). Tools with native folders discover skills automatically from their generated folders.
 
-**Context files (CLAUDE.md, GEMINI.md)** support two modes:
+**Context files** support two modes:
 - **Pure copy**: No marker — the file becomes an exact copy of AGENTS.md
-- **Header + AGENTS.md**: If the file contains a `<!-- AUTO-GENERATED -->` marker, content above it is preserved and AGENTS.md is appended below. Use this for tool-specific notes (e.g., Gemini's `.gemini/commands/` path hint).
+- **Header + AGENTS.md**: If the file contains a `<!-- AUTO-GENERATED -->` marker, content above it is preserved and AGENTS.md is appended below. Use this for tool-specific notes such as Claude Code's model tier mapping.
 
-**Never hand-edit** files in `.claude/skills/`, `.gemini/skills/`, or `.gemini/commands/` — they are overwritten on every sync. Also never edit content below the `<!-- AUTO-GENERATED -->` marker in context files.
+`gemini-scribe/AGENTS.md` is **not** generated - it is a hand-written, shorter context file for the plugin, and sync never touches it.
+
+**Never hand-edit** files in `.claude/skills/` or `gemini-scribe/Skills/` — they are overwritten on every sync. Also never edit content below the `<!-- AUTO-GENERATED -->` marker in context files.
 
 ### Model Tier System
 
@@ -171,10 +171,9 @@ When writing skills that spawn sub-agents (team skills, multi-source research, e
 
 The boundary is **source-count**, not analysis-presence. Delegation is orthogonal to tiers — any tier can run as a sub-agent for context management.
 
-**Provider model mappings** live in the header of each context file (above the `<!-- AUTO-GENERATED -->` marker):
-- `CLAUDE.md` — Claude Code (Haiku / Sonnet / Opus)
-- `GEMINI.md` — Gemini CLI (Flash Lite / Flash / Pro)
-- `AGENTS.override.md` — OpenAI Codex (o4-mini / o3). Codex reads `AGENTS.md` natively; the override file adds provider-specific config only.
+**Provider model mappings** live in the header of a context file, above the `<!-- AUTO-GENERATED -->` marker. Only Claude Code has one:
+- `CLAUDE.md` - Claude Code (Sonnet / Sonnet / Opus)
+- Antigravity CLI, OpenAI Codex and Obsidian Gemini Scribe read `AGENTS.md` natively and take their model from their own settings, so they carry no mapping table.
 
 **Adding a new provider**: create a context file with a model tier mapping table in the header, then add a `<!-- AUTO-GENERATED -->` marker so `cog-sync.sh` can append `AGENTS.md` below it.
 

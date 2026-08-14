@@ -113,6 +113,9 @@ status: [processed|needs-follow-up|action-required]
 - **Meeting Efficiency**: Time management and focus
 - **Areas for Improvement**: Suggestions for better meetings
 
+### 7. People Observations (offer, never automatic)
+After the meeting note is written, list the per-person observations worth keeping - role or ownership changes, working style, collaboration patterns, decisions they drove. Offer to append them to `05-knowledge/people/` via `/people`, citing this meeting note as the source. Apply that skill's neutrality rule before offering: anything you would not show the person themselves does not make the list. If the user declines, drop them - do not write profiles silently.
+
 ## Domain-Specific Processing
 
 ### Personal Domain Meetings

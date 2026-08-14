@@ -160,16 +160,16 @@ COG routes sub-agents to one of three tiers based on source count:
 
 | Tier | Role | Claude Code | Antigravity CLI | OpenAI Codex |
 |---|---|---|---|---|
-| `worker` | Single-source collection + first-pass analysis | Haiku | Flash Lite | o4-mini |
+| `worker` | Single-source collection + first-pass analysis | Sonnet | Flash | o4-mini |
 | `specialist` | Multi-source synthesis | Sonnet | Flash | o4-mini |
 | `architect` | Deep reasoning + orchestration | Opus | Pro | o3 |
 
-Tier definitions live in `AGENTS.md` under `## Model Tiers`. Provider mappings live in each context file's header (above the `<!-- AUTO-GENERATED -->` line):
+Tier definitions live in `AGENTS.md` under `## Model Tiers`. The only runtime that reads a concrete model mapping from a file is Claude Code:
 
-- **`CLAUDE.md`** — Claude Code mappings (edit to swap models)
-- **`AGENTS.md` / `AGENTS.override.md`** — Antigravity CLI & OpenAI Codex mappings (read `AGENTS.md` natively)
+- **`CLAUDE.md`** - the mapping table in its header, above the `<!-- AUTO-GENERATED -->` line. Edit it to swap models.
+- **Every other runtime** (Antigravity CLI, OpenAI Codex, Obsidian Gemini Scribe) reads `AGENTS.md` natively and takes its model from its own settings. The columns above are recommended equivalents, not configuration.
 
-To customize: edit the model mapping table in your provider's context file. Never edit below the `<!-- AUTO-GENERATED -->` marker.
+To customize on Claude Code: edit the table in `CLAUDE.md`'s header. Never edit below the `<!-- AUTO-GENERATED -->` marker - that half is generated from `AGENTS.md`.
 
 ### Git Version Control
 
