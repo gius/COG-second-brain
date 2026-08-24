@@ -30,16 +30,19 @@ $Plugins = @(
     @{ Id = 'gemini-scribe';         Repo = 'allenhutchison/obsidian-gemini';        Name = 'Gemini Scribe' }
     @{ Id = 'obsidian-tasks-plugin'; Repo = 'obsidian-tasks-group/obsidian-tasks';   Name = 'Tasks' }
     @{ Id = 'calendar';              Repo = 'liamcain/obsidian-calendar-plugin';     Name = 'Calendar' }
-    @{ Id = 'remotely-save';         Repo = 'remotely-save/remotely-save';           Name = 'Remotely Save' }
+    @{ Id = 'dataview';              Repo = 'blacksmithgu/obsidian-dataview';        Name = 'Dataview' }
 )
+# No sync plugin here on purpose. The desktop vault is synced by the OneDrive
+# client itself; a second syncer pointed at the same folder only adds conflicts.
+# Phones need one (OneDrive Sync) and install it by hand - see BFU-SETUP.md.
 
 function Write-Step($Message) { Write-Host "`n== $Message" -ForegroundColor Cyan }
 function Write-Skip($Message) { Write-Host "   skipped - $Message" -ForegroundColor DarkGray }
 
 # ── Where the vault goes ────────────────────────────────────────────
-# Personal OneDrive is the right home: it syncs to the phone, and Remotely Save
-# (the mobile sync plugin) only supports the consumer tier. Set COG_VAULT_PATH to
-# preseed a different target.
+# Personal OneDrive is the right home: the desktop client syncs it, and the mobile
+# sync plugin only supports the consumer tier. Set COG_VAULT_PATH to preseed a
+# different target.
 
 function Get-DefaultVaultPath {
     if ($env:COG_VAULT_PATH) { return $env:COG_VAULT_PATH }
@@ -65,7 +68,7 @@ function Get-PathIssues($Path) {
     $UnderPersonal = @($PersonalRoots | Where-Object { Test-UnderPath $Path $_ }).Count -gt 0
 
     if (Test-UnderPath $Path $env:OneDriveCommercial) {
-        $Issues += @{ Level = 'warn'; Text = 'this is OneDrive for Business - phone sync (Remotely Save) does not support it' }
+        $Issues += @{ Level = 'warn'; Text = 'this is OneDrive for Business - the mobile sync plugin does not support it' }
     } elseif (-not $UnderPersonal) {
         $Issues += @{ Level = 'warn'; Text = 'not inside personal OneDrive - no sync to the phone or to other PCs' }
     }
@@ -207,16 +210,47 @@ foreach ($Plugin in $Plugins) {
 $PluginList = Join-Path $VaultPath '.obsidian\community-plugins.json'
 $Enabled = @($Installed)
 if (Test-Path $PluginList) {
+    # Assign before wrapping in @(): Windows PowerShell 5.1's ConvertFrom-Json
+    # emits a JSON array as ONE object, so @(cmd | ConvertFrom-Json) yields a
+    # single nested element instead of the plugin ids.
     try {
-        $Existing = @(Get-Content $PluginList -Raw | ConvertFrom-Json)
+        $Parsed = Get-Content $PluginList -Raw | ConvertFrom-Json
     } catch {
-        $Existing = @()
+        $Parsed = @()
     }
-    $Enabled = @($Existing + $Enabled | Select-Object -Unique)
+    $Enabled = @(@($Parsed) + $Enabled | Select-Object -Unique)
 }
 # WriteAllText, not Set-Content: Windows PowerShell 5.1 would prepend a BOM and
 # Obsidian's JSON parser rejects it.
 [System.IO.File]::WriteAllText($PluginList, (ConvertTo-Json -InputObject $Enabled))
+
+Write-Step 'Excluding the assistant folder'
+# gemini-scribe/ holds chat sessions and the generated skills mirror, not notes.
+# Obsidian's "Excluded files" setting hides it from search, graph and unlinked
+# mentions, and demotes it in the quick switcher. It stays in the file tree.
+$ObsidianDir = Join-Path $VaultPath '.obsidian'
+New-Item -ItemType Directory -Force $ObsidianDir | Out-Null
+
+# Merge rather than overwrite: Obsidian owns this file and writes its own
+# preferences into it on every run.
+function Merge-ObsidianJson($Path, $Updates) {
+    $Config = @{}
+    if (Test-Path $Path) {
+        try {
+            $Existing = Get-Content $Path -Raw | ConvertFrom-Json
+            foreach ($Property in $Existing.PSObject.Properties) {
+                $Config[$Property.Name] = $Property.Value
+            }
+        } catch {
+            # Unreadable config: start clean rather than abort the install.
+        }
+    }
+    foreach ($Key in $Updates.Keys) { $Config[$Key] = $Updates[$Key] }
+    [System.IO.File]::WriteAllText($Path, (ConvertTo-Json -InputObject $Config -Depth 10))
+}
+
+Merge-ObsidianJson (Join-Path $ObsidianDir 'app.json') @{ userIgnoreFilters = @('gemini-scribe/') }
+Write-Host '   gemini-scribe excluded from search, graph and quick switcher'
 
 Write-Host @"
 

@@ -17,7 +17,7 @@ version below is tuned for COG and a regenerated one will be worse.
 
 | Folder | Holds |
 |---|---|
-| `00-inbox/` | `MY-PROFILE.md`, `MY-INTERESTS.md`, `MY-INTEGRATIONS.md`, `TASKS.md` |
+| `00-inbox/` | `MY-PROFILE.md`, `MY-INTERESTS.md`, `MY-INTEGRATIONS.md`, `TASKS.md`, `COG-DASHBOARD.md` |
 | `01-daily/briefs/` | Daily news briefings |
 | `01-daily/checkins/` | Weekly reflections |
 | `02-personal/` | Personal notes and braindumps |

@@ -22,7 +22,7 @@ the web, and run on a schedule.
 **What changed (August 2026):**
 
 - **Setup is one PowerShell line.** `cog-install.ps1` installs Git and Obsidian,
-  clones the vault, and drops in all four plugins. See [One-Time Setup](#2-one-time-setup).
+  clones the vault, and drops in the four plugins. See [One-Time Setup](#2-one-time-setup).
 - **Gemini Scribe reached three providers** - Gemini, Ollama, and OpenAI - and can
   route each feature to a different one. See [Models & Alternatives](#9-models--alternatives).
 - New skill: **daily journal**, a short work log the assistant writes for you.
@@ -75,7 +75,7 @@ A typical COG session costs well under a cent. **Gusta manages billing** - just 
 
 - Vault lives in your **OneDrive folder** on your desktop
 - OneDrive auto-syncs across all your desktops on the same Microsoft account
-- On Android/iOS, the **Remotely Save** Obsidian plugin pulls the vault on demand
+- On Android/iOS, the **OneDrive Sync** Obsidian plugin pulls the vault on demand
 
 ---
 
@@ -116,7 +116,8 @@ OneDrive: that costs you phone sync. Nothing is installed until you answer.
 | Git, Obsidian | `winget install Git.Git`, `winget install Obsidian.Obsidian` |
 | Vault content | `%OneDrive%\cog-second-brain` by default, confirmed on screen first - OneDrive auto-syncs it to your phone and other desktops |
 | Git database | `%USERPROFILE%\.cog-git\cog.git` - **outside** OneDrive, so OneDrive doesn't sync git's thousands of tiny internal files (slow, and it breaks the repo) |
-| Plugins | Gemini Scribe, Tasks, Calendar, Remotely Save → `.obsidian\plugins\` |
+| Plugins | Gemini Scribe, Tasks, Calendar, Dataview → `.obsidian\plugins\` |
+| Tidying | Excludes `gemini-scribe` from search and the graph - it holds the assistant's own files, not yours |
 
 The vault is cloned from Gusta's family COG fork on the `feature/custom-changes`
 branch, public over HTTPS - no GitHub account, no SSH key, no login. A tiny `.git`
@@ -137,7 +138,7 @@ git clone -b feature/custom-changes https://github.com/gius/COG-second-brain.git
 ```
 
 Then install four plugins from Settings → **Community plugins** → **Browse**:
-**Gemini Scribe**, **Tasks**, **Calendar**, **Remotely Save**.
+**Gemini Scribe**, **Tasks**, **Calendar**, **Dataview**.
 
 </details>
 
@@ -156,7 +157,11 @@ Then install four plugins from Settings → **Community plugins** → **Browse**
 | **Gemini Scribe** | The AI assistant in the side panel |
 | **Tasks** | Track to-dos with due dates across all your notes |
 | **Calendar** | Visual calendar sidebar |
-| **Remotely Save** | Mobile sync via OneDrive (see Step 5) |
+| **Dataview** | Powers the live queries on `COG-DASHBOARD.md` |
+
+No sync plugin on the desktop: OneDrive already syncs this folder, and a second
+syncer pointed at the same files only creates conflicts. Phones are different - see
+Step 5.
 
 ### Step 3: Add the API key
 
@@ -189,19 +194,27 @@ see `braindump`, `daily-brief`, `weekly-checkin` and the rest in the list.
 
 #### Vault sync
 
+Only phones need a sync plugin. The desktop is already handled by the OneDrive app.
+
 1. On Android/iOS, install **Obsidian** from the app store (free)
 2. Create a new vault with the **same name** as your desktop vault: `cog-second-brain`
-3. Install **Community plugins → Browse → "Remotely Save"**
-4. In Remotely Save settings:
-   - Remote Service: **OneDrive**
-   - Click **Auth**, log in with the same Microsoft account as desktop
-   - Tap the sync arrow in the sidebar for the first sync
+3. Install **Community plugins → Browse → "OneDrive Sync"** → Enable
+4. Settings → **OneDrive Sync** → **Access Mode** → switch to **Full Access**, then
+   connect and sign in with the same Microsoft account as the desktop
+5. ⚠️ **Set the sync folder to `/cog-second-brain`.** Pick it in the folder picker.
+   Do not leave it empty.
+
+> **Why step 5 matters.** In Full Access mode with no folder set, the plugin walks
+> your *entire* OneDrive instead of the vault. Setting the folder keeps every sync
+> scoped to that one directory. After the first sync, re-open the plugin settings and
+> confirm the folder still reads `/cog-second-brain`.
 
 **Caveats:**
 
 - Works with **OneDrive Personal** only - NOT OneDrive for Business
-- **No background sync** - you must open Obsidian and tap sync
 - First sync can take a while on a slow connection
+- The phone and desktop share one cloud copy, so a note edited in both places at once
+  can conflict. The plugin asks what to keep
 
 #### Mobile AI
 
@@ -326,7 +339,7 @@ tells you when Gemini Scribe or the others have a new version: Settings → **Co
 plugins** → **Check for updates** → **Update all**. Nothing breaks if you never do it,
 you just miss new plugin features.
 
-Re-running `cog-install.ps1` also refreshes all four plugins to their latest release.
+Re-running `cog-install.ps1` also refreshes the four plugins to their latest release.
 It skips whatever is already in place, so it is a safe repair step at any time.
 
 ---
@@ -379,9 +392,10 @@ It skips whatever is already in place, so it is a safe repair step at any time.
 
 ### "Mobile sync isn't working"
 
-- **Tap the sync button** in Remotely Save manually - there's no background sync
+- **Check the sync folder** - Settings → OneDrive Sync → it must read `/cog-second-brain`.
+  Empty means it is trying to sync your whole OneDrive; set it and sync again
+- Check **Access Mode** is **Full Access**, not App Folder
 - Check both devices use the same Microsoft account
-- Check the vault name matches (`cog-second-brain`) on both devices
 - OneDrive Personal only - not OneDrive for Business
 
 ### "I accidentally deleted a file"
@@ -529,8 +543,11 @@ cog-second-brain/
   cog-install.ps1       One-time setup script (Gusta runs this)
   cog-update.bat        Double-click to update COG
   00-inbox/             Your profile and settings
-    MY-PROFILE.md         your name, role, projects
-    MY-INTERESTS.md       topics for daily briefs
+    COG-DASHBOARD.md      live overview of everything in your vault
+    TASKS.md              every to-do from every note, in one place
+    MY-PROFILE.md         your name, role, projects (created by onboarding)
+    MY-INTERESTS.md       topics for daily briefs (created by onboarding)
+    MY-INTEGRATIONS.md    which services COG may use (created by onboarding)
   01-daily/             Daily outputs
     briefs/                morning news briefings
     checkins/              weekly reflections
@@ -542,13 +559,29 @@ cog-second-brain/
     patterns/              patterns the AI discovered
     booklets/              saved URLs and articles
   06-templates/         Markdown templates
-  gemini-scribe/        AI assistant's folder
+  gemini-scribe/        AI assistant's folder (excluded from search - see below)
     AGENTS.md             how the AI understands your vault
     Skills/               the COG skills
     Agent-Sessions/       your saved conversations
 ```
 
 Everything is plain text. Open any file with Notepad, Obsidian, or any text editor.
+
+**Two files you did not write are worth opening on day one:**
+
+- **`00-inbox/COG-DASHBOARD.md`** - counts of your projects, open braindumps and saved
+  links, plus tables of everything recent. It builds itself from your notes, so it is
+  empty at first and fills as you use COG.
+- **`00-inbox/TASKS.md`** - every `- [ ]` from every note, grouped into Overdue, Due
+  Today, This Week. Don't type tasks here; write them in the note they belong to and
+  they show up automatically.
+
+**Why `gemini-scribe/` looks greyed out.** The installer adds it to Obsidian's
+**Excluded files**, so it is hidden from search, the graph and unlinked mentions, and
+pushed to the bottom of the quick switcher and link suggestions - it holds the
+assistant's chat logs and skill files, which would otherwise bury your own notes. The
+folder still shows in the file list and you can still open anything in it. To undo:
+Settings → **Files and links** → **Excluded files**.
 
 ---
 
@@ -580,7 +613,7 @@ MONTHLY:    "Consolidate my knowledge"
 
 PIN A NOTE: type @ then pick the note
 UPDATE COG: Double-click cog-update.bat
-PHONE:      Open Obsidian -> tap Remotely Save sync
+PHONE:      Open Obsidian -> OneDrive Sync does the rest
 
 PROBLEMS:   Ask Gusta!
 ```
