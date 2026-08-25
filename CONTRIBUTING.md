@@ -151,6 +151,8 @@ Each AI tool discovers skills from its own native folder. `cog-sync.sh` generate
 | `gemini-scribe/Skills/[name]/SKILL.md` | Copy of source skill (as-is) | The Obsidian Gemini Scribe plugin discovers skills under its state folder only |
 | `CLAUDE.md` | Pure copy of AGENTS.md, or header + AGENTS.md if marker present | Claude Code reads as project instructions |
 
+**OpenCode needs no generated surface.** It discovers `.agents/skills/*/SKILL.md` and the root `AGENTS.md` directly, so the canonical source is already the thing it reads. Do not add a mirror for it.
+
 **When adding a new skill**, also add a row to the skill table in `AGENTS.md`. This table is the skill catalog for agents without native skill discovery (e.g., OpenAI Codex). Tools with native folders discover skills automatically from their generated folders.
 
 **Context files** support two modes:
@@ -173,7 +175,7 @@ The boundary is **source-count**, not analysis-presence. Delegation is orthogona
 
 **Provider model mappings** live in the header of a context file, above the `<!-- AUTO-GENERATED -->` marker. Only Claude Code has one:
 - `CLAUDE.md` - Claude Code (Sonnet / Sonnet / Opus)
-- Antigravity CLI, OpenAI Codex and Obsidian Gemini Scribe read `AGENTS.md` natively and take their model from their own settings, so they carry no mapping table.
+- OpenCode, Antigravity CLI, OpenAI Codex and Obsidian Gemini Scribe read `AGENTS.md` natively and take their model from their own settings, so they carry no mapping table. OpenCode's lives in `opencode.json` at the vault root, which also carries the family installs' permission rules.
 
 **Adding a new provider**: create a context file with a model tier mapping table in the header, then add a `<!-- AUTO-GENERATED -->` marker so `cog-sync.sh` can append `AGENTS.md` below it.
 

@@ -12,6 +12,10 @@
 #   .claude/skills/*/SKILL.md   — Copy from .agents/skills/ (Claude Code native)
 #   gemini-scribe/Skills/*/SKILL.md — Copy for the Obsidian Gemini Scribe plugin
 #
+# Deliberately NOT generated — do not add a surface for these:
+#   OpenCode (and Claudian, which drives it) reads .agents/skills/*/SKILL.md and
+#   the root AGENTS.md directly. A mirror would only create drift.
+#
 # Run this before releasing a new COG version.
 #
 # Usage:

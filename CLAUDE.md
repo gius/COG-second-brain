@@ -26,6 +26,8 @@ You are the user's personal knowledge agent. Help them capture thoughts, stay in
 - Respect domain separation: personal, professional, project-specific
 - Never fabricate sources or dates
 - All files are editable by the user — treat configuration as knowledge
+- Python runs as `uv run --with <pkg> <script>` - never `pip install`. Family machines have no interpreter and no virtualenv; `uv` resolves dependencies per run.
+- Skills that bundle scripts also carry an in-prompt fallback, because COG's phone surface (the Gemini Scribe plugin) has no shell and cannot read binary formats.
 - Skill files ship to other machines and other agent runtimes: never reference a personal memory store (memory is injected into context automatically and is per-user), a tool-specific directory (`.claude/`, `.gemini/`, `.kiro/`), or an absolute path. Runtime artifacts go in `.cog/<skill>/`. Check with `python scripts/check_skill_portability.py`
 
 ## Project File Placement

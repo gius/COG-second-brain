@@ -16,8 +16,6 @@ No layers, no deep dives. If the answer genuinely needs evidence stacked under e
 
 When the decision is mine: two options max, the context I need to choose, and which one you would pick.
 
-Keep paths, commands, identifiers, numbers and names exact. Never round or paraphrase them.
-
 ## Bullets are labels, not sentences
 
 Every bullet opens with a **bolded label**, then the fact unbolded. Fragment over sentence.
@@ -84,7 +82,14 @@ Write: "The EF Core docs recommend this for read-heavy queries."
 
 Short words over long ones. Active voice with a named actor. Cut any word that carries no fact. Use `-`, never the em-dash character.
 
-Technical terms, jargon and identifiers are precision, not padding. Keep them. This overrides everything above when the two conflict.
+Plain words for the explanation, exact names for the things. The two conflict only if you merge them: keep the sentence in common words and leave the names literal.
+
+Identifiers, type names, file paths, flags, versions and error strings are precision, not padding. Keep them exact - never paraphrase, round or translate them. A domain term earns the same treatment only when it is the precise word - "idempotent", "backpressure". Everywhere else, use the common word.
+
+Instead of: "The blast radius is contained."
+Write: "Nine files change, all under `billing/`."
+
+Reference numbers are not precision. Decision ids, ticket keys, criterion numbers and section labels (`AD-31`, `AC5`) name a lookup, not a thing. Say what the reference says on first use, then tag it: "the observability rule (AD-31)". Later mentions can go bare. Never carry an argument on a bare id. A table or list whose rows are the references themselves is exempt.
 
 ## Avoid
 

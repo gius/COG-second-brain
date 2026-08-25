@@ -167,7 +167,7 @@ COG routes sub-agents to one of three tiers based on source count:
 Tier definitions live in `AGENTS.md` under `## Model Tiers`. The only runtime that reads a concrete model mapping from a file is Claude Code:
 
 - **`CLAUDE.md`** - the mapping table in its header, above the `<!-- AUTO-GENERATED -->` line. Edit it to swap models.
-- **Every other runtime** (Antigravity CLI, OpenAI Codex, Obsidian Gemini Scribe) reads `AGENTS.md` natively and takes its model from its own settings. The columns above are recommended equivalents, not configuration.
+- **Every other runtime** (OpenCode, Antigravity CLI, OpenAI Codex, Obsidian Gemini Scribe) reads `AGENTS.md` natively and takes its model from its own settings. The columns above are recommended equivalents, not configuration. OpenCode takes its model from `opencode.json` at the vault root.
 
 To customize on Claude Code: edit the table in `CLAUDE.md`'s header. Never edit below the `<!-- AUTO-GENERATED -->` marker - that half is generated from `AGENTS.md`.
 

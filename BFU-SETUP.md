@@ -1,7 +1,7 @@
 ---
 type: guide
 created: 2026-02-23
-updated: 2026-08-14
+updated: 2026-08-25
 status: active
 audience: family
 ---
@@ -15,26 +15,31 @@ older one saved anywhere, throw it away.
 reflect on your week, and build knowledge over time. Everything is stored as text
 files on your computer - private, yours.
 
-**What is Gemini Scribe?** An Obsidian plugin that puts an AI assistant in a side
-panel next to your notes. It can read your whole vault, write and edit notes, search
-the web, and run on a schedule.
+**You get two assistants, and they are good at different things.**
+
+| | **Claudian** (desktop) | **Gemini Scribe** (phone) |
+|---|---|---|
+| Where | Obsidian on your PC | Obsidian on your phone or tablet |
+| Reads your notes | yes | yes |
+| Writes and edits notes | yes | yes |
+| Opens files outside the vault | yes - Downloads, Documents, Desktop | no |
+| Reads a spreadsheet, runs a calculation, builds a chart | **yes** | no |
+| Runs on a schedule, autocompletes as you type | no | yes |
+| Default state | **on** | **off** - turn on only if you use the phone |
+
+Claudian is the one you talk to day to day on the computer. Gemini Scribe stays
+installed but switched off on the desktop, because two AI assistants in one sidebar is
+just confusing. On the phone it is the only one that works, so that is where it earns
+its place.
 
 **What changed (August 2026):**
 
-- **Setup is one PowerShell line.** `cog-install.ps1` installs Git and Obsidian,
-  clones the vault, and drops in the four plugins. See [One-Time Setup](#2-one-time-setup).
-- **Gemini Scribe reached three providers** - Gemini, Ollama, and OpenAI - and can
-  route each feature to a different one. See [Models & Alternatives](#9-models--alternatives).
-- New skill: **daily journal**, a short work log the assistant writes for you.
-
-**What changed (July 2026):**
-
-- **Obsidian + Gemini Scribe replaces OpenCode.** One app instead of two, no black
-  terminal window, no browser tab. See [Migrating from OpenCode](#8-migrating-from-opencode)
-  if you already had the old setup.
-- The vault clone is now a plain **HTTPS** link - no GitHub account, no SSH key.
-- Gemini Scribe works on **phones and tablets** with the same setup as the desktop.
-- COG skills ship pre-installed in `gemini-scribe/Skills/`.
+- **Claudian is the new desktop assistant.** It can open a spreadsheet from your
+  Downloads folder, do the maths, and hand you back a chart. Gemini Scribe could not do
+  any of that - it can only see plain text inside the vault.
+- **Gemini Scribe is now the mobile assistant.** Installed but off on the desktop.
+- The skills COG ships (`braindump`, `daily-brief`, and the rest) work in both.
+- See [Migrating](#8-migrating-from-the-old-setup) if you were set up before this.
 
 ---
 
@@ -47,15 +52,27 @@ the web, and run on a schedule.
 5. [Working With Context](#5-working-with-context)
 6. [Updating COG](#6-updating-cog)
 7. [Troubleshooting](#7-troubleshooting)
-8. [Migrating from OpenCode](#8-migrating-from-opencode)
+8. [Migrating From the Old Setup](#8-migrating-from-the-old-setup)
 9. [Models & Alternatives](#9-models--alternatives)
 
 ---
 
 ## 1. Quick Overview
 
-COG uses **Google AI Studio** with **Gemini 3 Flash**. Gusta creates an API key linked
-to billing. Each family member gets their own key.
+Both assistants talk to **Google Gemini Flash** using an API key Gusta creates and pays
+for. Same key, same bill as before - only the desktop app around it changed.
+
+**How the desktop one is put together:**
+
+```
+You type in Obsidian
+   -> Claudian          the chat panel, part of Obsidian
+      -> OpenCode       a small program that does the actual work: reads
+         |              files, runs commands, writes your notes
+         -> Google      Gemini Flash, using Gusta's API key
+```
+
+You never see OpenCode. It has no window. Claudian starts it and talks to it for you.
 
 **Costs:**
 
@@ -91,9 +108,10 @@ Open PowerShell and paste this one line:
 irm https://raw.githubusercontent.com/gius/COG-second-brain/feature/custom-changes/cog-install.ps1 | iex
 ```
 
-It installs Git and Obsidian, clones the vault, and downloads the four Obsidian
-plugins. Every step skips itself if it is already done, so it is safe to re-run. The
-script is `cog-install.ps1` in the vault folder if you want to read it first.
+It installs Git, Obsidian, OpenCode and uv, clones the vault, and downloads the
+Obsidian plugins. Every step skips itself if it is already done, so it is safe to
+re-run. The script is `cog-install.ps1` in the vault folder if you want to read it
+first.
 
 **It asks before it installs anything.** The first thing it prints is the folder it
 intends to use:
@@ -114,9 +132,11 @@ OneDrive: that costs you phone sync. Nothing is installed until you answer.
 | Thing | Where it lands |
 |---|---|
 | Git, Obsidian | `winget install Git.Git`, `winget install Obsidian.Obsidian` |
+| **OpenCode** | `%LOCALAPPDATA%\opencode\opencode.exe`, added to your PATH - the agent behind Claudian |
+| **uv** | `winget install astral-sh.uv` - runs Python for spreadsheet and chart work |
 | Vault content | `%OneDrive%\cog-second-brain` by default, confirmed on screen first - OneDrive auto-syncs it to your phone and other desktops |
 | Git database | `%USERPROFILE%\.cog-git\cog.git` - **outside** OneDrive, so OneDrive doesn't sync git's thousands of tiny internal files (slow, and it breaks the repo) |
-| Plugins | Gemini Scribe, Tasks, Calendar, Dataview → `.obsidian\plugins\` |
+| Plugins | Claudian, Tasks, Calendar, Dataview enabled; Gemini Scribe installed but left off |
 | Tidying | Excludes `gemini-scribe` from search and the graph - it holds the assistant's own files, not yours |
 
 The vault is cloned from Gusta's family COG fork on the `feature/custom-changes`
@@ -135,10 +155,21 @@ New-Item -ItemType Directory -Force "$env:USERPROFILE\.cog-git" | Out-Null
 git clone -b feature/custom-changes https://github.com/gius/COG-second-brain.git `
   --separate-git-dir="$env:USERPROFILE\.cog-git\cog.git" `
   "$env:USERPROFILE\OneDrive\cog-second-brain"
+winget install astral-sh.uv
 ```
 
-Then install four plugins from Settings → **Community plugins** → **Browse**:
-**Gemini Scribe**, **Tasks**, **Calendar**, **Dataview**.
+Then install OpenCode. Download `opencode-windows-x64.zip` from the
+[OpenCode releases page](https://github.com/anomalyco/opencode/releases/latest),
+unzip it to `%LOCALAPPDATA%\opencode`, and add that folder to your PATH.
+
+> **Don't install OpenCode with npm.** `npm install -g opencode-ai` gives you a
+> `.cmd` wrapper instead of a real `.exe`, and Claudian frequently fails to start it.
+> `scoop install opencode` or `choco install opencode` also give you a proper binary
+> if you already have one of those.
+
+Then install five plugins from Settings -> **Community plugins** -> **Browse**:
+**Claudian**, **Tasks**, **Calendar**, **Dataview**, and **Gemini Scribe** (install
+it, then switch it off).
 
 </details>
 
@@ -147,48 +178,66 @@ Then install four plugins from Settings → **Community plugins** → **Browse**
 
 ### Step 2: Open the vault
 
-1. Open Obsidian → **Open folder as vault**
+1. Open Obsidian -> **Open folder as vault**
 2. Select `%USERPROFILE%\OneDrive\cog-second-brain`
-3. Settings → **Community plugins** → click **Turn on community plugins** if Obsidian
-   asks for it. The four plugins are already on disk; switch on any that show as off.
+3. Settings -> **Community plugins** -> click **Turn on community plugins** if Obsidian
+   asks for it.
 
-| Plugin | What it does |
-|---|---|
-| **Gemini Scribe** | The AI assistant in the side panel |
-| **Tasks** | Track to-dos with due dates across all your notes |
-| **Calendar** | Visual calendar sidebar |
-| **Dataview** | Powers the live queries on `COG-DASHBOARD.md` |
+| Plugin | State | What it does |
+|---|---|---|
+| **Claudian** | on | The AI assistant in the side panel |
+| **Tasks** | on | Track to-dos with due dates across all your notes |
+| **Calendar** | on | Visual calendar sidebar |
+| **Dataview** | on | Powers the live queries on `COG-DASHBOARD.md` |
+| **Gemini Scribe** | **off** | The phone assistant. Leave it off here |
+
+> Claudian needs **Obsidian 1.13.0 or newer**. If Obsidian was already installed and is
+> older, update it: Settings -> **About** -> **Check for updates**.
 
 No sync plugin on the desktop: OneDrive already syncs this folder, and a second
 syncer pointed at the same files only creates conflicts. Phones are different - see
 Step 5.
 
-### Step 3: Add the API key
+### Step 3: Connect the API key
 
-Gusta creates a key at [aistudio.google.com](https://aistudio.google.com/apikey) and
-links it to billing.
+This is the one step that needs a terminal, and it happens once.
 
-1. Settings → **Gemini Scribe** → **General**
-2. **Provider**: `Google Gemini (cloud)`
-3. Paste the API key
-4. **Chat model**: `gemini-3-flash-preview`
+1. Open PowerShell
+2. Type `opencode` and press Enter
+3. Type `/connect` and pick **Google** from the list
+4. Paste the API key Gusta made for you
 
-That's the whole connection. Nothing to install in a terminal, no login flow.
+The key is saved in `~/.local/share/opencode/auth.json` and OpenCode uses it from then
+on. Press `Ctrl+C` twice to leave.
 
-### Step 4: Point the plugin at COG's skills
+To check it worked, still in that terminal:
 
-COG ships its skills in the `gemini-scribe` folder inside the vault, which is where
-the plugin expects them.
+```powershell
+opencode run "say hello in five words"
+```
 
-1. Settings → **Gemini Scribe** → **General** → **Plugin state folder**
-2. Click the field and pick **`gemini-scribe`** from the dropdown
+If you get a sentence back, the connection is good.
 
-To confirm it worked: open the chat panel and type `/` on an empty input. You should
-see `braindump`, `daily-brief`, `weekly-checkin` and the rest in the list.
+### Step 4: Point Claudian at OpenCode
 
-> The vault ships `gemini-scribe/AGENTS.md`, which tells the assistant how COG is
-> organized. It loads automatically. **Don't click "Initialize vault context"** - that
-> overwrites the tuned version with a generic one.
+1. Settings -> **Claudian** -> pick **OpenCode** as the provider
+2. Leave the CLI path **empty** - Claudian finds `opencode.exe` on the PATH by itself
+
+To confirm it all works: click the Claudian icon in the left ribbon (or `Ctrl+P` and
+type "Claudian") and ask it:
+
+```
+What COG skills do you have?
+```
+
+It should list `braindump`, `daily-brief`, `weekly-checkin` and the rest.
+
+> **Nothing to configure for skills.** OpenCode reads them straight out of
+> `.agents/skills/` in the vault, and reads `AGENTS.md` at the vault root to learn how
+> COG is organised. Both ship with the vault.
+
+> **The vault also ships `opencode.json`**, which picks the model and says the assistant
+> must ask before running any command. Don't edit it; `cog-update.bat` keeps it current.
 
 ### Step 5: Mobile setup (optional)
 
@@ -198,10 +247,10 @@ Only phones need a sync plugin. The desktop is already handled by the OneDrive a
 
 1. On Android/iOS, install **Obsidian** from the app store (free)
 2. Create a new vault with the **same name** as your desktop vault: `cog-second-brain`
-3. Install **Community plugins → Browse → "OneDrive Sync"** → Enable
-4. Settings → **OneDrive Sync** → **Access Mode** → switch to **Full Access**, then
+3. Install **Community plugins -> Browse -> "OneDrive Sync"** -> Enable
+4. Settings -> **OneDrive Sync** -> **Access Mode** -> switch to **Full Access**, then
    connect and sign in with the same Microsoft account as the desktop
-5. ⚠️ **Set the sync folder to `/cog-second-brain`.** Pick it in the folder picker.
+5. **Set the sync folder to `/cog-second-brain`.** Pick it in the folder picker.
    Do not leave it empty.
 
 > **Why step 5 matters.** In Full Access mode with no folder set, the plugin walks
@@ -218,13 +267,22 @@ Only phones need a sync plugin. The desktop is already handled by the OneDrive a
 
 #### Mobile AI
 
-Install **Gemini Scribe** on mobile too and paste the same API key. Unlike the old
-setup, the phone gets the *same* assistant as the desktop - it can write notes and run
-skills, not just answer questions.
+**Claudian does not work on phones** - it drives a real program on your computer, and
+phones can't run one. Gemini Scribe is the phone assistant.
 
-> On mobile, consider turning on confirmation for `write_file` and `delete_file`
-> (Settings → Gemini Scribe → Tool permissions) so a mistyped request can't quietly
-> change a note.
+1. Install **Gemini Scribe** from Community plugins and **enable** it
+2. Settings -> Gemini Scribe -> **General** -> Provider `Google Gemini (cloud)`, paste
+   the same API key, Chat model `gemini-flash-latest`
+3. Settings -> Gemini Scribe -> **General** -> **Plugin state folder** -> pick
+   `gemini-scribe`
+4. Turn on confirmation for `write_file` and `delete_file` under **Tool permissions**,
+   so a mistyped request can't quietly change a note
+
+> Don't click "Initialize vault context" - that overwrites the tuned COG version of
+> `gemini-scribe/AGENTS.md` with a generic one.
+
+**On the desktop, leave Gemini Scribe off.** Everything it does, Claudian does, plus
+things it can't.
 
 ---
 
@@ -232,8 +290,8 @@ skills, not just answer questions.
 
 ### Opening the assistant
 
-Click the **sparkles icon (✨)** in the left ribbon, or use the command palette
-(`Ctrl+P`) → "Gemini Scribe: Open Gemini chat".
+Click the **Claudian icon** in the left ribbon, or use the command palette (`Ctrl+P`)
+and type "Claudian".
 
 ### Run Onboarding
 
@@ -269,6 +327,19 @@ Give me my daily brief
 The AI finds recent news matching your interests, verifies sources, and saves a briefing
 to `01-daily/briefs/`.
 
+### Try the thing the phone can't do
+
+Put any spreadsheet in your Downloads folder, then ask:
+
+```
+Read C:\Users\jana\Downloads\rozpocet.xlsx, summarize the spending by month,
+and make me an HTML chart I can open in a browser.
+```
+
+It will write a small Python script, run it, and save an `.html` file you can
+double-click. **It will ask permission before running the script** - that prompt is
+normal, read it and click approve.
+
 ---
 
 ## 4. Daily Cheat Sheet
@@ -277,29 +348,29 @@ to `01-daily/briefs/`.
 |---|---|---|
 | **Morning** | "Give me my daily brief" | Personalized news based on your interests |
 | **Anytime** | "I need to braindump" | Captures thoughts, extracts action items |
-| **Found a link** | "Save this URL: …" | Extracts content with key insights |
+| **Found a link** | "Save this URL: ..." | Extracts content with key insights |
 | **After real work** | "Log this to my journal" | Short dated entry in your work journal, written for you |
 | **Friday** | "Weekly review" | Pattern analysis across your week |
 | **Monthly** | "Consolidate my knowledge" | Builds frameworks from scattered notes |
 | **Overdue to-dos** | "What's overdue?" | Sorts through your task list with you |
+| **A spreadsheet, a folder of files** | "Read this file and ..." | Opens it, calculates, charts, writes the result into your vault |
 
-**Beyond chat** - things Gemini Scribe adds that are worth knowing about:
+**Beyond chat** - things Claudian adds that are worth knowing about:
 
-- **Right-click selected text** → Rewrite, Explain, or Ask a question about it
-- **Summarize a note** - command palette → "Summarize active file", drops a one-line
-  summary into the note's frontmatter
-- **Autocomplete** - suggestions appear as you type; `Tab` accepts, any other key
-  dismisses
-- **Ask by meaning** - "what did I write about the school project?" works even if you
-  never used those exact words
+- **Inline edit** - select text in a note, press the hotkey, and edit it in place with a
+  word-by-word preview of what changes
+- **Plan mode** - press `Shift+Tab`. The assistant works out what it intends to do and
+  shows you the plan before touching anything. Good for a big or scary request
+- **`@` a file** - type `@` to point at a note, or a file anywhere on your computer
+- **Tabs** - several conversations at once, each on its own topic
 
 **Tips:**
 
 - **Be natural.** "I have some thoughts" works as well as "braindump".
 - **Braindump often.** More input = better weekly reviews.
 - **Don't worry about organization.** The AI files everything.
-- **You don't need to attach files.** The assistant searches and reads the vault by
-  itself. Attaching is only for pinning something you'll refer to repeatedly.
+- **Read the permission prompts.** When it asks to run something, the command is right
+  there in the box. If you don't recognise it, reject it and ask Gusta.
 
 ---
 
@@ -308,17 +379,14 @@ to `01-daily/briefs/`.
 "Context" is what the assistant is currently holding in its head. Two things to know:
 
 **Starting fresh.** Long conversations get expensive and muddled. When you switch to a
-new topic, start a new session: command palette → **"New agent session"**. Old sessions
-are saved under `gemini-scribe/Agent-Sessions/` and you can reopen them with
-**"Browse agent sessions"**.
+new topic, open a new tab in the Claudian panel. Old conversations stay in the session
+manager beside the chat.
 
-**Pinning a file.** Type `@` and pick a note to keep it in front of the assistant for
-the whole session. Pinned files show in the strip above the input box - click the `×`
-to unpin. Use this for a document you're actively working on. For everything else, just
-ask; the assistant will find it.
+**Pointing at a file.** Type `@` and pick a note to put it in front of the assistant.
+For everything else, just ask - it will find it.
 
-There is a token counter under the input. Green is fine. When it turns orange or red the
-conversation is getting long - that's a good moment to start a new session.
+When a conversation starts feeling slow or forgetful, that's the moment to start a new
+tab.
 
 ---
 
@@ -330,17 +398,21 @@ When Gusta releases new COG features:
 2. Double-click `cog-update.bat`
 3. Wait for **"COG updated successfully"**
 
-The script runs `git pull` to fetch the latest framework, including updated skills. If
-it reports a problem (usually because the update touches a file you've also edited
-locally), **don't panic** - your notes are safe on disk. Ask Gusta to resolve.
+The script runs `git pull` to fetch the latest framework, including updated skills and
+`opencode.json`. If it reports a problem (usually because the update touches a file
+you've also edited locally), **don't panic** - your notes are safe on disk. Ask Gusta to
+resolve.
 
-**The plugins update separately.** `cog-update.bat` only updates COG itself. Obsidian
-tells you when Gemini Scribe or the others have a new version: Settings → **Community
-plugins** → **Check for updates** → **Update all**. Nothing breaks if you never do it,
-you just miss new plugin features.
+**Three things update separately:**
 
-Re-running `cog-install.ps1` also refreshes the four plugins to their latest release.
-It skips whatever is already in place, so it is a safe repair step at any time.
+| What | How |
+|---|---|
+| COG itself | `cog-update.bat` |
+| Obsidian plugins | Settings -> Community plugins -> Check for updates -> Update all |
+| OpenCode | Updates itself - `opencode.json` sets `autoupdate` |
+
+Only the middle row needs you. Nothing breaks if you skip it, you just miss new
+plugin features.
 
 ---
 
@@ -355,21 +427,40 @@ It skips whatever is already in place, so it is a safe repair step at any time.
 - **Anything else** - the script is safe to re-run; it skips whatever already worked.
   If it still fails, use the manual install in [Step 1](#step-1-run-the-installer).
 
-### "I don't see the COG skills when I type /"
+### "Claudian says it can't find OpenCode"
 
-- Settings → Gemini Scribe → General → **Plugin state folder** must be `gemini-scribe`
-- Check the folder `gemini-scribe/Skills/` exists in your vault. If it doesn't, run
+This is the most common problem, and it is almost always PATH.
+
+1. Open a **new** PowerShell window and type `opencode --version`. A version number
+   means OpenCode is installed and on the PATH.
+2. If that works but Claudian still fails, Obsidian was started before the PATH changed.
+   **Close Obsidian completely and reopen it.**
+3. If it still fails, find the exact path with `where.exe opencode` and paste it into
+   Settings -> Claudian -> Advanced -> CLI path. Use the `.exe`, never a `.cmd` file.
+
+### "It asks permission for everything"
+
+That's the safety config doing its job. Reading and writing your notes never asks;
+running a program does. Click approve on the ones you asked for.
+
+If it asks about something you did **not** ask for, reject it and tell Gusta.
+
+### "It says it can't open my Excel file"
+
+- On the **phone**, that is expected - Gemini Scribe cannot read spreadsheets. Ask on
+  the desktop instead, or save the sheet as CSV and try again.
+- On the **desktop**, check the file is in Downloads, Documents or Desktop. Anywhere
+  else and the assistant asks permission first - approve the prompt.
+
+### "I don't see the COG skills"
+
+- Ask it directly: "what COG skills do you have?"
+- If the list is empty, check `.agents/skills/` exists in the vault. If it doesn't, run
   `cog-update.bat`.
-
-### "The AI doesn't know about COG"
-
-- Check that `gemini-scribe/AGENTS.md` exists. If it doesn't, run `cog-update.bat`.
-- Don't click "Initialize vault context" - that replaces it with a generic version.
 
 ### "I got a rate limit error"
 
 - Wait a minute and try again
-- Or switch model: Settings → Gemini Scribe → Chat model → `gemini-2.5-flash`
 - Or ask Gusta to check the Google AI Studio quota
 
 ### "My daily brief has no news"
@@ -385,14 +476,13 @@ It skips whatever is already in place, so it is a safe repair step at any time.
 ### "The AI changed a note and I didn't want it to"
 
 - `Ctrl+Z` in the note usually undoes it
-- Turn on confirmations: Settings → Gemini Scribe → **Tool permissions** → enable
-  `write_file` and `delete_file`. You'll get an approve/reject prompt before each change.
-- Deletions follow your Obsidian "Deleted files" setting, so they land in `.trash` or the
-  system trash rather than disappearing
+- Use **Plan mode** (`Shift+Tab`) for anything big - it shows you the plan first
+- Deletions land in `.trash` or the system trash, following your Obsidian "Deleted
+  files" setting, rather than disappearing
 
 ### "Mobile sync isn't working"
 
-- **Check the sync folder** - Settings → OneDrive Sync → it must read `/cog-second-brain`.
+- **Check the sync folder** - Settings -> OneDrive Sync -> it must read `/cog-second-brain`.
   Empty means it is trying to sync your whole OneDrive; set it and sync again
 - Check **Access Mode** is **Full Access**, not App Folder
 - Check both devices use the same Microsoft account
@@ -405,36 +495,47 @@ It skips whatever is already in place, so it is a safe repair step at any time.
 
 ---
 
-## 8. Migrating from OpenCode
+## 8. Migrating From the Old Setup
 
-If you were set up before July 2026, you had OpenCode - a chat interface in a browser
-tab, started from a black terminal window. Here's how to move.
+If you were set up before August 2026, Gemini Scribe was your desktop assistant. Here
+is how to move.
 
 **Your notes are unaffected.** Everything in `00-inbox/`, `01-daily/`, `02-personal/`
-and the rest stays exactly where it is. Only the tool you talk to changes.
+and the rest stays exactly where it is. Only the panel you type into changes.
 
-1. **Update the vault** - double-click `cog-update.bat`. This brings in
-   `gemini-scribe/Skills/` and `gemini-scribe/AGENTS.md`.
-2. **Install and configure Gemini Scribe** - follow [Steps 2-4](#2-one-time-setup)
-   above. Reuse your existing API key; it's the same Google key.
-3. **Delete the desktop shortcut** - `opencode-cog.bat`. You don't need it.
-4. **Uninstall OpenCode** (optional) - `winget uninstall SST.OpenCodeDesktop`.
-5. **Remove the old Obsidian plugin** if you had one - Settings → Community plugins →
-   disable and remove **Claudian** and/or **OpenCode Obsidian**. Gemini Scribe replaces
-   both. Keep Claudian only if you are deliberately staying on Claude - see
-   [If the model has to be Claude](#if-the-model-has-to-be-claude-use-claudian).
+1. **Update the vault** - double-click `cog-update.bat`. This brings in `opencode.json`
+   and the updated guide.
+2. **Re-run the installer** - paste the one-liner from
+   [Step 1](#step-1-run-the-installer) again. It adds OpenCode, uv and Claudian, and
+   skips everything you already have.
+3. **Connect the key** - [Step 3](#step-3-connect-the-api-key). It is the same key you
+   already have; you are just telling OpenCode about it.
+4. **Point Claudian at OpenCode** - [Step 4](#step-4-point-claudian-at-opencode).
+5. **Switch Gemini Scribe off on the desktop** - Settings -> Community plugins ->
+   toggle it off. Don't uninstall it; your phone still uses it.
+6. **Leave your phone alone.** It keeps working exactly as before.
+
+**Your old conversations** stay in `gemini-scribe/Agent-Sessions/` and remain readable
+as ordinary notes. Claudian starts with a clean history.
 
 **What's different day to day:**
 
-| Before (OpenCode) | Now (Gemini Scribe) |
+| Before (Gemini Scribe) | Now (Claudian) |
 |---|---|
-| Double-click a `.bat`, wait for a browser tab | Click ✨ in Obsidian |
-| Terminal window must stay open | Nothing to keep open |
-| Chat only | Chat + right-click rewrite + autocomplete + summaries |
-| Desktop only | Desktop and phone |
-| `/braindump` typed as a command | Same, or just say "I need to braindump" |
+| Sparkles icon | Claudian icon |
+| Vault files only | Vault plus Downloads, Documents, Desktop |
+| Could not open a spreadsheet | Opens it, calculates, charts it |
+| Never asked before acting | Asks before running a program |
+| Autocomplete while typing, scheduled runs | Not available - this is the real loss |
 
-**What you lose:** nothing you were using. All 15 COG skills carry over.
+**What you lose:** autocomplete as you type, the automatic note summaries, semantic
+"ask by meaning" search, and scheduled tasks. Those were Gemini Scribe features and
+have no Claudian equivalent. If you used them daily, tell Gusta - you can run both
+plugins side by side, it is only turned off by default to keep things simple.
+
+> Set up before July 2026, with a `.bat` file and a browser tab? That was the original
+> OpenCode desktop app. Delete the `opencode-cog.bat` shortcut, run
+> `winget uninstall SST.OpenCodeDesktop`, then follow the steps above.
 
 ---
 
@@ -442,95 +543,31 @@ and the rest stays exactly where it is. Only the tool you talk to changes.
 
 ### Switching models
 
-Settings → Gemini Scribe → **General**. Separate models can be set for chat,
-summarization and autocomplete.
+The vault ships `opencode.json` set to `google/gemini-flash-latest`. That is an alias,
+not a fixed version - Google points it at whatever the current Flash model is, so the
+setup keeps up on its own and nobody edits a config when a new model ships.
 
-| Model | Best for |
-|---|---|
-| `gemini-3-flash-preview` | **Recommended.** Best balance of speed, quality, price. |
-| `gemini-2.5-flash` | Stable fallback if Gemini 3 misbehaves. |
-| `gemini-2.5-pro` | Higher quality, costs more. |
+To try something else for one conversation, use the model picker in the Claudian input
+bar. Pro models cost several times more per message, so don't leave one selected by
+accident.
 
-### Why Google AI Studio?
+### Why this stack?
 
-Direct API access, no platform fee, you pay only for tokens used.
+- **OpenCode** speaks to 75+ providers, so if Google ever becomes unsuitable, the model
+  changes and nothing else does.
+- **Claudian** is the most installed AI plugin in Obsidian by a wide margin, which
+  matters for a tool the family depends on.
+- **OpenCode reads `.agents/skills/` and `AGENTS.md` natively**, which is exactly where
+  COG already keeps them. No copies, no sync step, no drift.
 
 ### Alternatives (for reference)
 
-Gemini Scribe now speaks to **three** providers - Google Gemini, Ollama (local), and
-OpenAI, the last of which also covers any OpenAI-compatible server such as LM Studio.
-So switching away from Google AI Studio no longer means switching plugin, unless the
-model has to be Claude.
-
-| Alternative | Plugin | Trade-off |
+| Alternative | How | Trade-off |
 |---|---|---|
-| **OpenAI** | Gemini Scribe | Just a provider switch and an OpenAI key; API-key billing only, no ChatGPT-subscription login |
-| **Ollama (local)** | Gemini Scribe | Free and private; needs a powerful PC |
-| **Claude, Grok, others** | **Claudian** | Wider model choice; requires a command-line tool installed on every machine (see below) |
-| **Any ACP agent** | **Agent Client** | Same idea, built on the open Agent Client Protocol; younger project (v0.11.0) |
-
-**You don't have to move everything at once.** Settings → Gemini Scribe →
-**Per-feature provider** routes each capability separately, so chat can run locally on
-Ollama while Google still serves the tools only it has:
-
-| Feature | Gemini | Ollama | OpenAI |
-|---|:---:|:---:|:---:|
-| Chat, agent sessions, scheduled tasks | ✓ | ✓ | ✓ |
-| Summaries, completions, rewrite | ✓ | ✓ | ✓ |
-| Google Search, web fetch, Deep Research | ✓ | ✗ | ✗ |
-| Vault semantic search (RAG) | ✓ | ✗ | ✗ |
-| Image generation | ✓ | ✗ | ✗ |
-
-Two things worth knowing before mixing providers:
-
-- **Nothing goes to the cloud on your behalf.** If your provider can't serve a feature,
-  that feature stays off - the plugin never quietly substitutes another one.
-- **Vault semantic search is the broad one.** Turning it on uploads note content to a
-  cloud index, not just the text of a single request.
-
-### If the model has to be Claude: use Claudian
-
-**[Claudian](https://community.obsidian.md/plugins/realclaudian)** is the plugin to
-switch to for models Gemini Scribe cannot reach. It is the most widely used AI plugin in
-the Obsidian ecosystem, and it does the same job as Gemini Scribe - a chat sidebar with
-your vault as the working directory, file read/write, search, inline edit with diff
-preview, Plan Mode, and multi-tab conversations.
-
-**When it's the right call:**
-
-- The model has to be Claude, Grok, or anything OpenCode or Pi can reach. **GPT no
-  longer belongs on this list** - Gemini Scribe has a native OpenAI provider.
-- You want one plugin that follows you across providers instead of one plugin per vendor
-
-**What it needs that Gemini Scribe doesn't:**
-
-- A **command-line agent installed and logged in** on every machine - Claude Code,
-  Codex CLI, Grok Build, OpenCode, or Pi. That's a terminal install plus an auth step
-  per person, per device.
-- **Desktop only.** No iOS or Android; the plugin drives a local process and phones
-  can't run one. Mobile would go back to read-only.
-- Obsidian v1.7.2 or newer.
-
-**One genuine advantage:** Claudian reads skills straight from `.agents/skills/`, which
-is where COG already keeps them. The `gemini-scribe/Skills/` copy exists only because
-Gemini Scribe can't see into dot-folders - with Claudian that mirror is unnecessary and
-skills work with no extra step.
-
-**Known rough edges** (as of July 2026, from the plugin's issue tracker):
-
-- Windows setups regularly fail with `Claude Code process exited with code 1` even when
-  the same CLI works fine in a terminal - usually a `PATH` or environment-variable
-  problem that Obsidian can't see
-- Obsidian can freeze for a minute or more during very long responses, and
-  [one report of it hanging after extended sessions](https://github.com/YishenTu/claudian/issues/538)
-  is still open
-- The plugin can break when the underlying CLI updates independently of it
-
-None of these are dealbreakers for a technical user, but they are the reason Gemini
-Scribe is the default for the family: it has no CLI to go wrong.
-
-> If Claudian misbehaves specifically on its OpenCode backend, the older
-> `mtymek/opencode-obsidian` plugin still works, installed via the **BRAT** plugin.
+| **A different model** | `/connect` another provider in OpenCode, change `model` in `opencode.json` | Anything OpenCode supports: Claude, GPT, Grok, local models |
+| **Fully local, private** | Run Ollama, point OpenCode at it | Free and nothing leaves the machine; needs a powerful PC and quality drops |
+| **Agent Client plugin** | Replaces Claudian, same OpenCode underneath | Adds WSL support and chats embedded in notes; much smaller project |
+| **Gemini Scribe on desktop too** | Just switch it on | Gets autocomplete and scheduled tasks back, at the cost of two assistants in one sidebar |
 
 ---
 
@@ -539,9 +576,12 @@ Scribe is the default for the family: it has no CLI to go wrong.
 ```
 cog-second-brain/
   .git                  Small pointer file - DON'T DELETE
+  AGENTS.md             How the AI understands your vault
+  opencode.json         Model and safety rules for the desktop assistant
   BFU-SETUP.md          This guide
   cog-install.ps1       One-time setup script (Gusta runs this)
   cog-update.bat        Double-click to update COG
+  .agents/skills/       The COG skills, read by the desktop assistant
   00-inbox/             Your profile and settings
     COG-DASHBOARD.md      live overview of everything in your vault
     TASKS.md              every to-do from every note, in one place
@@ -559,10 +599,10 @@ cog-second-brain/
     patterns/              patterns the AI discovered
     booklets/              saved URLs and articles
   06-templates/         Markdown templates
-  gemini-scribe/        AI assistant's folder (excluded from search - see below)
-    AGENTS.md             how the AI understands your vault
-    Skills/               the COG skills
-    Agent-Sessions/       your saved conversations
+  gemini-scribe/        The phone assistant's folder (excluded from search)
+    AGENTS.md             how the phone assistant understands your vault
+    Skills/               a copy of the skills, for the phone
+    Agent-Sessions/       saved phone conversations
 ```
 
 Everything is plain text. Open any file with Notepad, Obsidian, or any text editor.
@@ -578,10 +618,9 @@ Everything is plain text. Open any file with Notepad, Obsidian, or any text edit
 
 **Why `gemini-scribe/` looks greyed out.** The installer adds it to Obsidian's
 **Excluded files**, so it is hidden from search, the graph and unlinked mentions, and
-pushed to the bottom of the quick switcher and link suggestions - it holds the
-assistant's chat logs and skill files, which would otherwise bury your own notes. The
-folder still shows in the file list and you can still open anything in it. To undo:
-Settings → **Files and links** → **Excluded files**.
+pushed to the bottom of the quick switcher and link suggestions. The folder still shows
+in the file list and you can still open anything in it. To undo: Settings -> **Files and
+links** -> **Excluded files**.
 
 ---
 
@@ -589,10 +628,15 @@ Settings → **Files and links** → **Excluded files**.
 
 - All notes stay on YOUR computer + YOUR OneDrive
 - Requests go from your machine straight to Google's API - no third-party server in
-  between, and your data is not used for model training on the paid tier
+  between, and **your data is not used for model training**, because the family key is
+  on Google's paid tier. That is a real difference from the free tier, where Google's
+  terms allow both training on your content and human review of it
 - Conversations are saved in your vault as markdown, so you can read and delete them
 - Attached files are sent to Google for analysis - don't attach anything you wouldn't
   want processed
+- **The desktop assistant can run programs on your computer.** That is what makes the
+  spreadsheet work possible, and it is why it asks permission every single time before
+  running anything. The command is shown in the prompt. Read it
 - For maximum privacy: ask Gusta about Ollama (local models, requires a powerful PC)
 
 ---
@@ -602,22 +646,25 @@ Settings → **Files and links** → **Excluded files**.
 Print this and keep it near your computer:
 
 ```
-START:      Open Obsidian, click the sparkles icon
-NEW TOPIC:  Ctrl+P -> "New agent session"
+START:      Open Obsidian, click the Claudian icon
+NEW TOPIC:  New tab in the Claudian panel
+PLAN FIRST: Shift+Tab before a big request
 
 BRAINDUMP:  "I need to braindump"
 NEWS:       "Give me my daily brief"
 SAVE LINK:  "Save this URL: [paste link]"
 WEEKLY:     "Weekly review"
 MONTHLY:    "Consolidate my knowledge"
+SPREADSHEET:"Read <file> and chart it for me"
 
-PIN A NOTE: type @ then pick the note
+POINT AT A FILE: type @ then pick it
 UPDATE COG: Double-click cog-update.bat
-PHONE:      Open Obsidian -> OneDrive Sync does the rest
+PHONE:      Obsidian -> Gemini Scribe (Claudian is desktop only)
 
+IF IT ASKS PERMISSION: read the command, approve what you asked for
 PROBLEMS:   Ask Gusta!
 ```
 
 ---
 
-*Setup guide v4 - August 2026 (Gusta)*
+*Setup guide v5 - August 2026 (Gusta)*

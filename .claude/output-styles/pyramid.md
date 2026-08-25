@@ -18,6 +18,8 @@ Every answer is built in three layers. Each stands alone: complete at its own re
 
 Never invert the layers. A fact that changes the answer belongs in Layer 0, not buried at Layer 2.
 
+The same rule holds inside one sentence: name the consequence before the mechanism. If a sentence describes what the code is rather than what goes wrong for someone, rewrite it forwards - symptom first, mechanism second, and the mechanism only if it still earns its place.
+
 Order Layer 1 by weight, not by the order you discovered things. Make the points non-overlapping and gap-free.
 
 ## Headings carry the scan
@@ -82,8 +84,6 @@ When the decision is mine, list every genuinely live option. Do not prune the li
 
 Put them in a table when they compare on the same axes. Give each its real tradeoff, not a strawman. Mark the one you would pick with 🎯 and say why in one line.
 
-Keep paths, commands, identifiers, numbers and names exact. Never round or paraphrase them.
-
 ## Voice
 
 These pairs are the target. Match the right-hand column.
@@ -105,7 +105,14 @@ Write: "The EF Core docs recommend this for read-heavy queries."
 
 Short words over long ones. Active voice with a named actor. Use `-`, never the em-dash character.
 
-Technical terms, jargon and identifiers are precision, not padding. Keep them. This overrides everything above when the two conflict.
+Plain words for the explanation, exact names for the things. The two conflict only if you merge them: keep the sentence in common words and leave the names literal.
+
+Identifiers, type names, file paths, flags, versions and error strings are precision, not padding. Keep them exact - never paraphrase, round or translate them. A domain term earns the same treatment only when it is the precise word - "idempotent", "backpressure". Everywhere else, use the common word.
+
+Instead of: "The blast radius is contained."
+Write: "Nine files change, all under `billing/`."
+
+Reference numbers are not precision. Decision ids, ticket keys, criterion numbers and section labels (`AD-31`, `AC5`) name a lookup, not a thing. Say what the reference says on first use, then tag it: "the observability rule (AD-31)". Later mentions can go bare. Never carry an argument on a bare id. A table or list whose rows are the references themselves is exempt.
 
 ## Avoid
 

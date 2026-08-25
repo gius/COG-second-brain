@@ -4,6 +4,28 @@ All notable changes to COG (Cognition + Obsidian + Git) will be documented in th
 
 Versions from `1.0.0` onward are **this fork's own**, independent of upstream - see `UPSTREAM-SYNC.md`. Earlier entries carry the inherited upstream numbering.
 
+## [1.2.0] - 2026-08-25
+
+Desktop family installs move to Claudian driving OpenCode. Gemini Scribe stays, demoted to the mobile surface.
+
+**Why.** Gemini Scribe cannot run code and cannot read anything outside the vault, and its file tools go through Obsidian's Vault API, so no setting can grant either. Its inline-binary allowlist (`GEMINI_INLINE_BINARY_MIMES`) covers images, audio, video and PDF only, which means a spreadsheet cannot be read at all — `.xlsx` falls through to the text branch and the model is handed the raw zip container. The family use case that forced the change is "read this spreadsheet, work something out, give me an HTML chart", and every step of it needs code execution over a binary file.
+
+### Added
+- **`opencode.json`** at the vault root — model and permission defaults for the desktop surface. Pins `google/gemini-flash-latest`, an alias that always resolves to the current Flash, so the config does not rot as models ship. `bash` asks before every command; `external_directory` pre-allows `~/Downloads`, `~/Documents` and `~/Desktop` (where the spreadsheets are) and asks everywhere else. Sets `autoupdate: true` so the binary keeps itself current - the installer skips OpenCode when it is already on PATH, so re-running it is not an upgrade path. Everything else uses OpenCode's own defaults.
+- **Two rules in `AGENTS.md`** — Python runs as `uv run --with <pkg>`, never `pip install`, because family machines have no interpreter and no virtualenv; and skills that bundle scripts also carry an in-prompt fallback, because the phone surface has no shell and cannot read binary formats.
+- **`cog-install.ps1` installs OpenCode and uv.** OpenCode comes from the release zip into `%LOCALAPPDATA%\opencode` with a persisted user PATH entry, **not** from npm: a global npm install leaves a `.cmd` shim that Claudian regularly fails to spawn. `uv` via winget, so Python work needs no interpreter install and no virtualenv.
+
+### Changed
+- **Claudian (`realclaudian`) replaces Gemini Scribe as the enabled desktop plugin.** Chosen over the Agent Client plugin on adoption and integration depth: 1,893,369 Obsidian installs against 245,340, and a dedicated OpenCode provider (command catalog, agent-mention provider, history service, settings reconciler) rather than a generic ACP preset. Neither ships a Czech locale, so that axis did not decide it.
+- **Gemini Scribe is installed but not enabled** on fresh installs. It remains the only assistant that runs on phones, since Claudian drives a local process. The installer never toggles a plugin off, so a deliberate choice to run both survives a re-run; migrating users switch it off by hand.
+- **`gemini-scribe/AGENTS.md` now states its scope in three lines** — it is the phone and tablet assistant; when a request needs a tool it lacks, say so and send the user to the computer, and never describe a file it could not read.
+- **`BFU-SETUP.md` rewritten to v5** — two assistants with an explicit capability table, the desktop chain drawn out (Obsidian → Claudian → OpenCode → Google), a `/connect` step for the API key, a worked spreadsheet-to-chart example, and a migration section that is honest about what is lost (autocomplete, note summaries, semantic search, scheduled tasks — all Gemini Scribe features with no Claudian equivalent).
+- **Section 9 corrected.** The previous text claimed Claudian reads `.agents/skills/` itself and required Obsidian v1.7.2. Skill discovery is OpenCode's, not Claudian's, and the current requirement is **v1.13.0**.
+
+### Notes
+- **No new `cog-sync.sh` surface, on purpose.** OpenCode reads `.agents/skills/*/SKILL.md` and the root `AGENTS.md` natively — both are documented discovery tiers — so COG's canonical layout works with zero porting. A mirror would only create drift. The script's header now says so, to stop someone adding one.
+- **Billing and privacy are unchanged.** Same paid Gemini API key, same model, same bill. The paid tier matters: Google's unpaid API terms permit training on submitted content and human review of it, the paid terms do not.
+
 ## [1.1.0] - 2026-08-14
 
 Family-install pass: scripted setup, a people CRM, and doc corrections found while checking what the Obsidian Gemini Scribe runtime actually supports.

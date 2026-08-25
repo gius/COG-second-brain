@@ -4,13 +4,19 @@
         irm https://raw.githubusercontent.com/gius/COG-second-brain/feature/custom-changes/cog-install.ps1 | iex
 
     Shows the vault folder it intends to use and lets you change it, then installs
-    Git and Obsidian (winget), clones the COG vault there, and drops the four
+    Git, Obsidian, uv and OpenCode, clones the COG vault there, and drops the
     community plugins in. Safe to re-run: every step skips work already done.
 
     Set COG_VAULT_PATH beforehand to preseed a different target folder.
 
-    What it deliberately does NOT do: paste the Gemini API key, or set the plugin
-    state folder. Both are per-person and take ten seconds in the Obsidian UI.
+    What it deliberately does NOT do: connect the Gemini API key. That is one
+    `/connect` inside OpenCode, it is per-person, and a key does not belong in a
+    script that gets pasted into a terminal.
+
+    It also never switches a plugin off. Gemini Scribe is installed but not added
+    to the enabled list on a fresh install; someone migrating who wants it off on
+    the desktop toggles it in the Obsidian UI, so a deliberate choice to keep it
+    on survives a re-run.
 #>
 
 $ErrorActionPreference = 'Stop'
@@ -27,11 +33,23 @@ $GitDirParent = Join-Path $env:USERPROFILE '.cog-git'
 $GitDir       = Join-Path $GitDirParent 'cog.git'
 
 $Plugins = @(
-    @{ Id = 'gemini-scribe';         Repo = 'allenhutchison/obsidian-gemini';        Name = 'Gemini Scribe' }
+    @{ Id = 'realclaudian';          Repo = 'YishenTu/claudian';                     Name = 'Claudian' }
     @{ Id = 'obsidian-tasks-plugin'; Repo = 'obsidian-tasks-group/obsidian-tasks';   Name = 'Tasks' }
     @{ Id = 'calendar';              Repo = 'liamcain/obsidian-calendar-plugin';     Name = 'Calendar' }
     @{ Id = 'dataview';              Repo = 'blacksmithgu/obsidian-dataview';        Name = 'Dataview' }
 )
+# Downloaded but deliberately left switched off. Gemini Scribe is the phone
+# assistant: on the desktop Claudian does everything it does and more, and two
+# chat panels in one sidebar only confuses people. Enabling it is one toggle for
+# anyone who wants its autocomplete and scheduled tasks back.
+$PluginsInstalledOff = @(
+    @{ Id = 'gemini-scribe';         Repo = 'allenhutchison/obsidian-gemini';        Name = 'Gemini Scribe (phone assistant, left off)' }
+)
+
+# OpenCode is the agent behind Claudian. Take the release zip, not npm: a global
+# npm install leaves a .cmd shim that Claudian regularly fails to spawn.
+$OpenCodeHome = Join-Path $env:LOCALAPPDATA 'opencode'
+$OpenCodeZip  = 'https://github.com/anomalyco/opencode/releases/latest/download/opencode-windows-x64.zip'
 # No sync plugin here on purpose. The desktop vault is synced by the OneDrive
 # client itself; a second syncer pointed at the same folder only adds conflicts.
 # Phones need one (OneDrive Sync) and install it by hand - see BFU-SETUP.md.
@@ -170,6 +188,33 @@ if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
 Write-Step 'Obsidian'
 Install-WingetPackage 'Obsidian.Obsidian' 'Obsidian'
 
+Write-Step 'uv (runs Python for spreadsheet and chart work)'
+Install-WingetPackage 'astral-sh.uv' 'uv'
+
+Write-Step 'OpenCode (the agent behind Claudian)'
+if (Get-Command opencode -ErrorAction SilentlyContinue) {
+    Write-Skip 'opencode already on PATH (it keeps itself updated)'
+} else {
+    New-Item -ItemType Directory -Force $OpenCodeHome | Out-Null
+    $Zip = Join-Path $env:TEMP 'opencode-windows-x64.zip'
+    Invoke-WebRequest -Uri $OpenCodeZip -OutFile $Zip -UseBasicParsing
+    Expand-Archive -Path $Zip -DestinationPath $OpenCodeHome -Force
+    Remove-Item $Zip -Force
+
+    if (-not (Test-Path (Join-Path $OpenCodeHome 'opencode.exe'))) {
+        throw "OpenCode unzipped but opencode.exe is not in $OpenCodeHome. Install it by hand and re-run."
+    }
+
+    # Persist to the user PATH, then mirror it into this session so the
+    # verification below and any later step can see it without a new window.
+    $UserPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+    if ($UserPath -notlike "*$OpenCodeHome*") {
+        [Environment]::SetEnvironmentVariable('Path', "$UserPath;$OpenCodeHome", 'User')
+    }
+    Update-SessionPath
+    Write-Host "   $OpenCodeHome added to PATH"
+}
+
 Write-Step "Vault -> $VaultPath"
 if (Test-Path (Join-Path $VaultPath '.git')) {
     Write-Skip 'vault already cloned'
@@ -181,7 +226,8 @@ if (Test-Path (Join-Path $VaultPath '.git')) {
 
 Write-Step 'Obsidian plugins'
 $Installed = @()
-foreach ($Plugin in $Plugins) {
+$EnableIds = $Plugins | ForEach-Object { $_.Id }
+foreach ($Plugin in ($Plugins + $PluginsInstalledOff)) {
     $Dest = Join-Path $VaultPath ".obsidian\plugins\$($Plugin.Id)"
     New-Item -ItemType Directory -Force $Dest | Out-Null
 
@@ -197,7 +243,7 @@ foreach ($Plugin in $Plugins) {
     }
 
     if ($Complete) {
-        $Installed += $Plugin.Id
+        if ($EnableIds -contains $Plugin.Id) { $Installed += $Plugin.Id }
         Write-Host "   $($Plugin.Name)"
     } else {
         Write-Host "   $($Plugin.Name) - download incomplete, leaving it off. Install it from" -ForegroundColor Yellow
@@ -256,20 +302,28 @@ Write-Host @"
 
 Done. Vault: $VaultPath
 
-Finish in Obsidian (about two minutes):
+Two steps left (about three minutes):
 
-  1. Open Obsidian -> "Open folder as vault" -> pick the folder above.
-  2. Settings -> Community plugins -> "Turn on community plugins" if Obsidian
-     asks. The four plugins are already on disk.
-  3. Settings -> Gemini Scribe -> General:
-       Provider    Google Gemini (cloud)
-       API key     paste the key Gusta made for you
-       Chat model  gemini-3-flash-preview
-  4. Same screen -> "Plugin state folder" -> pick "gemini-scribe".
-     Check it worked: open the chat panel and type "/" - you should see
-     braindump, daily-brief, weekly-checkin and the rest.
-  5. Click the sparkles icon and type: Run onboarding
+  1. Connect the API key. In THIS window:
 
-Do not click "Initialize vault context" - it overwrites the tuned COG version.
+         opencode
+
+     Type "/connect", pick Google, paste the key Gusta made for you.
+     Ctrl+C twice to leave. Check it took:
+
+         opencode run "say hello in five words"
+
+  2. Open Obsidian -> "Open folder as vault" -> pick the folder above.
+     Settings -> Community plugins -> "Turn on community plugins" if asked.
+     Settings -> Claudian -> provider "OpenCode". Leave the CLI path empty.
+
+     Click the Claudian icon and ask: What COG skills do you have?
+
+Skills need no setup - OpenCode reads .agents/skills/ and AGENTS.md from the
+vault by itself. The vault's opencode.json sets the model and the safety rules.
+
+Gemini Scribe is installed but off. It is the PHONE assistant - Claudian does
+not run on phones. Leave it off here.
+
 Full guide: BFU-SETUP.md in the vault folder.
 "@ -ForegroundColor Green
