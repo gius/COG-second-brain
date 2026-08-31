@@ -31,7 +31,9 @@ This is not `/braindump` and not `/weekly-checkin`. Braindump captures *thinking
 ## Mode: log
 
 ### When to log
-This trigger applies in **any session**, not only when the skill is invoked by name. After finishing a meaningful unit of work, append one entry. Meaningful means it would matter to future-you, or it shows how the day was spent:
+The trigger itself lives in `AGENTS.md` § Daily Journal, on the always-loaded surface - a skill body is read only once the skill is invoked, so it cannot fire itself. This section is the procedure that trigger runs.
+
+After finishing a meaningful unit of work, append one entry. Meaningful means it would matter to future-you, or it shows how the day was spent:
 
 - Shipped or committed something, published a note or report, filed or moved tracker issues
 - Made a decision, changed direction, or hit a notable blocker

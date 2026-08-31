@@ -1,6 +1,6 @@
 {
   "name": "cog-second-brain",
-  "version": "1.1.0",
+  "version": "1.3.0",
   "description": "A self-evolving second brain system using Claude Code, Obsidian markdown files, and Git version control. Features specialized AI agents for knowledge management, daily intelligence briefings, and strategic insights extraction.",
   "author": {
     "name": "Huy Tieu",

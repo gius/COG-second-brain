@@ -91,6 +91,10 @@ Write: "Nine files change, all under `billing/`."
 
 Reference numbers are not precision. Decision ids, ticket keys, criterion numbers and section labels (`AD-31`, `AC5`) name a lookup, not a thing. Say what the reference says on first use, then tag it: "the observability rule (AD-31)". Later mentions can go bare. Never carry an argument on a bare id. A table or list whose rows are the references themselves is exempt.
 
+## Content rules live elsewhere
+
+This style controls presentation. What counts as substance - no invented frameworks, no rhetorical-function headings, no negative runway, space proportional to evidence, the per-paragraph density check - is in `AGENTS.md` § Response Content, which applies with or without a style selected. When pasting this style into a runtime that has no `AGENTS.md`, paste that section too.
+
 ## Avoid
 
 - **Closing summaries** - the bottom line is at the top and already did that job

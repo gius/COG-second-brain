@@ -4,6 +4,31 @@ All notable changes to COG (Cognition + Obsidian + Git) will be documented in th
 
 Versions from `1.0.0` onward are **this fork's own**, independent of upstream - see `UPSTREAM-SYNC.md`. Earlier entries carry the inherited upstream numbering.
 
+## [1.3.0] - 2026-08-31
+
+Upstream review pass over `1947147..623ed00` (upstream v3.10.1 - v3.12.0), plus a roster review that ported three skills from earlier upstream releases. Full pick sheet in the vault at `04-projects/cog-customization/reports/upstream-review-v3.12.0-2026-08-31.md`.
+
+### Added
+- **Three skills ported from upstream.** `no-ai-slop` edits a draft you supply into sharper writing while preserving your voice, or audits one for slop patterns without rewriting, self-checked against a bundled `references/eval.md`. `museum-art` sources public-domain artwork from eight museum open-access APIs, keyless, for heroes and decks. `data-forms` is a catalog of 20+ chart and diagram forms with when-to-use notes and failure modes. All three were skipped in the August pass as "craft skills the host covers natively" - true for the design skills, wrong for these: nothing in the host edits prose, and family OpenCode installs get no host skills at all.
+- **`AGENTS.md` gains `## Response Content`** - composition rules for everything the agent writes: no invented frameworks, headings that name subject matter rather than rhetorical function, no negative runway, no straw-man corrections, space proportional to evidence, no scaffolding over thin content, stop when the information runs out, and a per-paragraph density check. Ported from upstream v3.11.0's structural-slop rules and adapted. Upstream's composition order (`finding -> evidence -> reasoning -> decision`) was dropped rather than copied: it puts the decision last and contradicts the bottom-line-first shape both output styles use. The mechanism it was there to explain is kept in plain terms.
+- **`AGENTS.md` gains `## Daily Journal`** - the ambient trigger, moved out of the skill body onto the always-loaded surface. Ported from upstream v3.10.1, whose diagnosis reproduced here exactly: `01-daily/journal/` held one file eighteen days after the skill shipped, because a skill body is read only once the skill is invoked, so the instruction telling the agent to act ambiently was itself locked behind the manual trigger.
+- **`01-daily/journal/.gitkeep`** so the destination exists on a fresh family clone.
+- **`onboarding` and `url-dump` split into `references/`.** Document templates loaded on every invocation whether or not the run reached the step that needed them. `onboarding` drops from 508 lines / 19 KB to 279 / 12 KB (`references/profile-templates.md`, `references/welcome-guide.md`); `url-dump` from 365 / 13 KB to 234 / 10 KB (`references/output-templates.md`). The moves are verbatim apart from 10 em-dashes swept to `-`, which the templates would otherwise write into every generated profile and bookmark. `knowledge-consolidation` and `obsidian` were left alone on purpose: their bulk is live instruction and lookup material respectively, so splitting would be an editorial rewrite rather than a mechanical move.
+- **Seven missing rows added to the `## Available Skills` table** - the three new skills plus `czech-ai-news`, `playwriter`, and the two shared references `obsidian` and `loop-engineering`, which the table had never listed.
+
+### Changed
+- **Content and presentation are now split by surface.** `AGENTS.md` § Response Content governs substance and loads in every session; the `pyramid` and `terse` output styles govern layering, bullet grammar, markers and depth triggers, and only apply when selected. Each style gains a short section naming the split and telling anyone pasting it into another runtime to bring § Response Content along. This matters because output styles are optional - a session on the default Claude style, an OpenCode session on a family machine, and every sub-agent all still get the content rules.
+- **`daily-journal/SKILL.md`** stops claiming to be its own trigger and points at where the trigger lives.
+- **Version files realigned.** `.claude-plugin/plugin.json` and `marketplace-entry.json` had been left at `1.1.0` when `COG-VERSION` went to `1.2.0`. All three now read `1.3.0`.
+
+### Fixed
+- **A bundled file at a skill root never shipped.** `cog-sync.sh` mirrors `scripts/`, `references/` and `assets/` next to `SKILL.md`, so `no-ai-slop`'s `eval.md` reached neither `.claude/skills/` nor `gemini-scribe/Skills/` on its first sync. Moved to `references/eval.md` rather than widening the script - the subdirectory convention is already what every other bundled file uses. Same class of bug as upstream's 3.10.2, found by checking the mirror instead of the sync exit code.
+- **Dangling reference in `AGENTS.md` § Model Tiers.** It told the reader to look above "the AUTOGEN_MARKER", a shell variable name in `cog-sync.sh` that appears nowhere in the file being read. Now names the Model tier mapping table and the marker comment in plain words.
+- **38 em-dashes swept from `AGENTS.md`**, closing the mechanical half of the 2026-07-30 audit.
+
+### Notes
+- **Skipped from this delta:** upstream's README link fixes and `update-cog` doc correction (both upstream-specific); the v3.10.2 split of five oversized `SKILL.md` bodies into `references/` (the fork trimmed those same skills independently, so upstream's moves are of bodies that no longer match ours, and the shipping bug behind that release does not apply - family installs update by `git pull`, not by an enumerated file list); and v3.12.0's rework making the verification harness opt-in (the fork never adopted the harness). That last one retroactively supports the 2026-08-13 decision to skip it: upstream found its own mandate was ceremony no session honored. Both rules it kept as always-on already exist here as `## Skill Post-Condition Rule` and `## Briefing sub-agents`.
+
 ## [1.2.0] - 2026-08-25
 
 Desktop family installs move to Claudian driving OpenCode. Gemini Scribe stays, demoted to the mobile surface.
