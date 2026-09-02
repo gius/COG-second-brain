@@ -70,6 +70,10 @@ Ladder. Try in order; fall through on error, empty body, or truncated/elided con
 2. **`WebFetch`** - when defuddle is absent, errors, or returns an empty body. Note it caps quotes at ~125 chars and elides silently, so verbatim quoting needs rung 3.
 3. **`/playwriter`** - JS-heavy, login-walled, lazy-loaded, or infinite-scroll pages. Rungs 1-2 return an empty shell on SPAs (X, Reddit, Instagram) - start here when the domain is known to be JS-rendered.
 
+**Medium** (`medium.com`, `*.medium.com`, and Medium-hosted custom domains) 403s on all three rungs. Prepend a reader mirror to the full article URL:
+1. `https://r.jina.ai/<url>` - returns markdown with `Title:`, `URL Source:` and `Published Time:` headers, which double as citation proof
+2. `https://freedium-mirror.cfd/<url>` - fallback; returns HTML, strip tags
+
 Skip the ladder for `.md` URLs and raw API endpoints; fetch those directly.
 
 ## Available Skills
@@ -85,7 +89,7 @@ Each skill has a full playbook in `.agents/skills/[name]/SKILL.md`. When the use
 | `/weekly-checkin` | Cross-domain pattern analysis and strategic reflection | "weekly review", "reflect on my week" |
 | `/knowledge-consolidation` | Build frameworks from scattered insights, or run a lightweight vault health audit with freshness scoring | "consolidate knowledge", "extract patterns", "vault health", "vault audit" |
 | `/url-dump` | Save URLs with auto-extracted insights, categorized into knowledge booklets | "save this link", "bookmark this" |
-| `/scout` | Investigate a URL, library, or article in depth - read it, gather verified external signal, check vault coverage, recommend save / read-in-full / skip | "scout this", "is it worth reading?" |
+| `/scout` | Investigate a URL, library, or article in depth - read it, gather verified external signal, check vault coverage, refresh notes it proves stale, flag what it offers your other projects, recommend save / read-in-full / skip | "scout this", "is it worth reading?" |
 | `/auto-research` | Decompose strategic questions into parallel research threads with real sources | "research [topic]", "deep dive into [topic]" |
 | `/meeting-transcript` | Process meeting recordings into structured decisions, action items, and team dynamics | "process this meeting", "meeting notes" |
 | `/people` | Evidence-based profiles of people you work with - append observations, read back what's known before a conversation | "what do I know about X", "brief me on X", "who am I tracking" |
