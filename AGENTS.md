@@ -121,14 +121,11 @@ Applies to chat answers, vault notes, reports, briefs, and every sub-agent outpu
 
 ## Output Styles
 
-Two response-voice styles ship with COG, authored in `.agents/output-styles/` and synced by `cog-sync.sh` to `.claude/output-styles/`. They govern **presentation** - layering, headings, bullet grammar, markers, depth triggers. **Substance** is governed by `## Response Content` above, which holds whether or not a style is active:
+One response-voice style ships with COG, `clear`, authored in `.agents/output-styles/` and synced by `cog-sync.sh` to `.claude/output-styles/`. It governs **presentation** - answer shape, sentence rules, drawn shapes, markers, depth triggers. **Substance** is governed by `## Response Content` above, which holds whether or not a style is active.
 
-- **`pyramid`** - bottom line, then reasons, then evidence. Layered so the reader can stop at any depth. For reviews, investigations, and decisions.
-- **`terse`** - bottom line, then what changed and what is next. For status checks and quick questions.
+`clear` is padding-free rather than short: a mechanism-first answer line, what matters next, one drawn shape per point that has structure, headings only above about 25 lines and each behind a `---` rule so a terminal shows them, options as blocks unless every cell is a few words, and the `⏭️ Waiting on you` ending. Length follows content. Depth comes on demand through the in-band triggers `just the answer`, `expand`, `why`, `show me`, `draw it`. The earlier `pyramid` and `terse` styles were folded into it on 2026-09-06.
 
-Both share one marker vocabulary (🎯 ✅ ❌ ⚠️ 🔍 ⏭️) and the same bullet grammar, so switching changes depth without changing how a response reads. Both respond to the in-band depth triggers `short`, `just the answer`, `expand`, `why`, `show me`.
-
-Select with `/output-style pyramid` in Claude Code. On runtimes without output-style support, paste the style body into the system prompt - the content has no tool-specific dependencies. See `.agents/output-styles/README.md`.
+Select by setting `outputStyle` to `Clear` in Claude Code settings. On runtimes without output-style support, paste the style body into the system prompt - the content has no tool-specific dependencies. See `.agents/output-styles/README.md`.
 
 ## User Configuration
 
@@ -296,7 +293,9 @@ Where that one file goes is decided by **Project File Placement** above.
 
 ## AI Task Endings
 
-After completing any big task, offer a "Let me take more off your plate" section with three categories:
+End every answer that leaves something with the user with a `⏭️ Waiting on you` list: one line per item, each an open question, a decision, or a task, with the default assumed if it stays unanswered. An item stays on the list in later answers until the user answers it or says drop it. Silence is never an answer.
+
+After completing any big task, also offer a "Let me take more off your plate" section with three categories:
 1. **Next actions you can do right now** - specific follow-ups you can knock out immediately
 2. **Automations you can set up** - recurring tasks or workflows the user would otherwise do manually
 3. **Draft messages for the user's team** - ready-to-send delegation messages the user can review and forward
