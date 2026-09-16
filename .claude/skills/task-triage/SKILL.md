@@ -42,6 +42,7 @@ Read `.agents/skills/obsidian/SKILL.md` §1 to classify CLI status (`ok` / `disa
 
 ### 2. Profile and rulebook
 - Read `00-inbox/MY-PROFILE.md` for active projects (used to weight project-scoped tasks).
+- Read `00-inbox/FOCUS.md` if present. A task under a Focus stream's links, tags or path is never auto-postponed; it goes to `needs-user` when unclear.
 - Read `.cog/task-triage/rules.md` — **the live rulebook**. If it doesn't exist, copy the skill's bundled `references/rules.md` to that path first, then read it.
 - Every rule's hit count starts at zero for this run; it's incremented when an agent cites the rule in its classification.
 

@@ -30,6 +30,13 @@ tags: ["profile", "config", "cog"]
 [If no projects:]
 *No active projects yet. Add them anytime by editing this file or running onboarding again.*
 
+[Only when the interview (SKILL.md step 4.5) ran - omit both sections otherwise:]
+## How I work
+- [Short lines in the user's own words: rhythm, energy, what "done" means, what they avoid]
+
+## Decision defaults
+- [What they choose when nobody asks: tools, trade-offs, who decides what, what never to ask again]
+
 ## Related
 - [[MY-INTERESTS|My Interests & News Sources]]
 - [[03-professional/COMPETITIVE-WATCHLIST|Competitive Watchlist]] *(if applicable)*

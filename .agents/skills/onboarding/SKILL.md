@@ -3,7 +3,7 @@ name: onboarding
 description: Personalize COG for your workflow - creates profile, interests, and watchlist files with guided setup (run this first!)
 metadata:
   roles: all
-  keywords: onboarding,setup COG,setup profile,get started,configure COG,personalize,my profile
+  keywords: onboarding,setup COG,setup profile,get started,configure COG,personalize,my profile,interview me
   display-name: COG Onboarding
 ---
 
@@ -39,9 +39,11 @@ Welcome to COG - your self-evolving second brain powered by Claude + Obsidian + 
 COG helps you capture thoughts, get daily intelligence briefings, and build knowledge over time - all stored as simple markdown files you own.
 
 Let's get you set up. Tell me a bit about yourself - your name, what you do, and what topics or areas you're most interested in staying sharp on. Feel free to share as much or as little as you'd like.
+
+Or, if you'd rather answer questions than write, say "interview me" and I'll ask one at a time. You can stop whenever you like by saying "that's enough" - I'll build your profile from whatever we covered.
 ```
 
-**This single open-ended prompt replaces the old sequential questions.** The user can naturally mention their name, role, interests, sources, projects, and competitors all at once - or just share a few things.
+**This single open-ended prompt replaces the old sequential questions.** The user can naturally mention their name, role, interests, sources, projects, and competitors all at once - or just share a few things. The interview offer is made here and nowhere else; if the user takes it, go to step 4.5.
 
 ### 2. Check for Existing Profile
 
@@ -50,7 +52,7 @@ Look for `00-inbox/MY-PROFILE.md`. If it exists:
 I found an existing COG profile! What would you like to update? Just tell me what you'd like to change - your interests, projects, profile info, or anything else.
 ```
 
-**Don't present a numbered menu.** Let them describe what they want in natural language.
+**Don't present a numbered menu.** Let them describe what they want in natural language. "Interview me" on an existing profile runs step 4.5 and appends to the two interview sections.
 
 ### 3. Intelligent Information Extraction
 
@@ -78,6 +80,23 @@ Thanks! I got your name and role. What topics are you most interested in staying
 ```
 
 **Optional fields** (news sources, projects, competitive watch) should NEVER generate follow-up questions. If the user didn't mention them, skip them. They can always add them later by editing the files or running onboarding again.
+
+### 4.5. Interview Mode (opt-in)
+
+Entered only when the user says "interview me" - at the welcome, or later on an existing profile. Never on the agent's initiative.
+
+**Rules:**
+- One question per turn. Wait for the answer before asking the next.
+- Required fields first (name, role, 2-3 interests), skipping any already given, so an early exit still completes onboarding.
+- Then depth, one area per question, each shaped by earlier answers: current projects and customers · how they decide and what they avoid · work rhythm and energy · what "done" and "good" mean to them · people and companies they track · what they never want to be asked again.
+- Open questions only. No option lists. Never re-ask what they already said.
+- Cap: 12 questions. On every 4th question, add one clause reminding them they can stop.
+- Plain chat is the default and always works. If the runtime offers a structured-question tool, it may carry the depth questions; never depend on it.
+
+**Exit - the user always has one:**
+- Exit on "that's enough", "enough", "done", "stop", "let's finish", or any answer that asks to wrap up. Also exit on the cap, and after two one-word answers in a row ask "Shall we finish here?" and exit on anything but a clear no.
+- On exit: summarise what was captured in 5-8 lines, then continue to step 5. Depth answers go into `MY-PROFILE.md` under `## How I work` and `## Decision defaults` as short lines in the user's own words; everything else lands in the usual files. Nothing is written anywhere a skill does not read.
+- A finished interview is never restarted. A later "interview me" appends to the two sections.
 
 ### 5. Confirm and Create
 
@@ -255,6 +274,7 @@ Onboarding is successful when:
 5. Project directories and overviews created (if applicable)
 6. `WELCOME-TO-COG.md` guide created with role-specific skill ordering
 7. User understands next steps and where their profile is stored
+8. If the interview ran, it ended on the user's word or the cap, and steps 5-9 still ran
 
 ## Error Handling
 

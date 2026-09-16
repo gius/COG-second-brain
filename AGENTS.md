@@ -22,6 +22,8 @@ Inside a project folder (`04-projects/<project>/` or `04-projects/<customer>/<pr
 
 **Undated = living.** Continuously updated, no date suffix, lives at the project root. `PROJECT-OVERVIEW.md`, `build-plan.md`, `architecture.md`, `docs-portal.md`. Update these in place; never fork a dated copy.
 
+**Rewrite in place, never annotate the rewrite.** Living docs and undelivered drafts: no "second version", "earlier this said", "corrected from", "v2", no comparison with the file's own past. State current facts, method, check dates. History goes to git, the journal, or a dated `PROJECT-OVERVIEW.md` status paragraph. Exempt: dated logs (status sections, journal, timelines) - a later entry may correct an earlier one. Delivered dated docs are never edited; a superseded one gets one pointer line to its successor at the top.
+
 **Dated = point-in-time.** Named `<slug>-YYYY-MM-DD.md`, never at the project root - always in a subfolder:
 
 | Subfolder | Holds | Examples |
@@ -99,6 +101,14 @@ Ambient behavior, not a command. The trigger lives here because it must load in 
 - **Do not log** trivial reads, one-line lookups, mid-task scratch work, the journal's own writes, or anything the user asked to keep out.
 - Read the skill body for the entry format, `reflect` mode, and the full guardrails before the session's first write.
 - Do not announce the write. If the user says to stop journaling, stop for the rest of the session and do not re-ask.
+
+## Focus
+
+Ambient behavior, active only when `00-inbox/FOCUS.md` exists. The file holds the few hand-picked streams the user pushes every day; `00-inbox/TASKS.md` holds everything else.
+
+- **Read it at session start.** When the user asks what to push, or names a stream, follow the stream's links and answer from the linked files' open items.
+- **Offer the parallel work.** Propose what an agent can run for a stream without the user, as sub-agents under the Model Tiers rules; one agent per stream, only for streams the user named unless they asked for all.
+- **Keep it a list of links.** Never copy tasks, status or sub-items into FOCUS.md; detail stays in the linked files. Do not add, reorder or remove streams - that is the user's call, or `/weekly-checkin`'s. Fix a link only when its target moved.
 
 ## Response Content
 

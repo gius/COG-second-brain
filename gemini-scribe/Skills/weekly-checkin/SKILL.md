@@ -42,6 +42,7 @@ Scan recent files from the past week:
 - Daily briefs in `01-daily/briefs/`
 - Braindumps in `02-personal/braindumps/`, `03-professional/braindumps/`, `04-projects/*/braindumps/`
 - Previous check-ins in `01-daily/checkins/`
+- `00-inbox/FOCUS.md` if present - the streams the user pushes daily; check each stream's linked files for the week's movement
 - Knowledge index `05-knowledge/_index.md` — note frameworks/patterns relevant to this week's themes (fallback if missing: scan `05-knowledge/consolidated/` and `05-knowledge/patterns/` directly)
 
 If `MY-PROFILE.md` available:
@@ -129,6 +130,8 @@ Before asking, check this week's themes against the knowledge index (`05-knowled
 - Being specific about goals
 - Identifying experiments to try
 - Setting measurable outcomes
+
+**If `00-inbox/FOCUS.md` exists:** present its streams and ask which stay, which drop, which are new. Rewrite the list from the answers: one bold line per stream with links to where the detail lives, grouped by customer or project, at most ~8 streams, no copied tasks or status. The check-in document keeps its own Forward Planning copy as history.
 
 ### 3. Generate Weekly Check-in Document
 
