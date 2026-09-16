@@ -108,13 +108,16 @@ COG-second-brain/
 │   Hand-edited:
 ├── .cog/user-roles/      # User role packs (7) — personalized recommendations
 ├── AGENTS.md                # Framework docs (vault structure, rules, philosophy)
-├── 00-inbox/                # Profiles, interests, integrations
-├── 01-daily/                # Briefs & check-ins
+├── 00-inbox/                # Profiles, interests, integrations; HOW-TO-USE-COG, dashboard, TASKS, optional FOCUS
+├── 01-daily/                # Briefs, check-ins, the agent-written journal
 ├── 02-personal/             # Personal braindumps (private)
 ├── 03-professional/         # Professional braindumps & strategy
 ├── 04-projects/             # Per-project tracking
-└── 05-knowledge/            # Consolidated insights & patterns
+├── 05-knowledge/            # Consolidated insights, patterns, people, saved links
+└── 06-templates/            # Note templates (focus, people profile)
 ```
+
+Onboarding writes `00-inbox/HOW-TO-USE-COG.md`, the one-page vault tour, in your language, and links it from your personal welcome page.
 
 > **Real-world results:** 120+ braindumps processed, daily briefs with 95%+ source accuracy, 5 major strategic insights discovered — zero maintenance required.
 

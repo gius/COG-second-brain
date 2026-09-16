@@ -32,7 +32,7 @@ Key rules:
 ## Process Flow
 
 ### 1. Welcome Message
-Greet the user warmly and explain what COG is:
+Greet the user warmly and explain what COG is. The block is the English source; deliver it in the language the user invoked with.
 ```
 Welcome to COG - your self-evolving second brain powered by Claude + Obsidian + Git!
 
@@ -66,6 +66,7 @@ After the user responds, extract as much as possible from their natural language
 | **News Sources** | Look for source mentions ("I read HN", "follow on Twitter"). If not mentioned, skip - it's optional. |
 | **Projects** | Look for project mentions ("working on a SaaS app", "building..."). If not mentioned, skip. |
 | **Competitive Watch** | Look for company/person mentions ("tracking Stripe", "watching what OpenAI does"). If not mentioned, skip. |
+| **Language** | The language they wrote in, unless they name one ("talk to me in Czech"). Store as ISO 639-1 code. Ask only when the message mixes languages or the profile field is empty and the message is too short to tell. |
 
 ### 4. Smart Follow-Up (Only If Needed)
 
@@ -73,6 +74,7 @@ After extracting what you can, check what's missing from the **required** fields
 - **Name** (required)
 - **Role** (required)
 - **Interests** (required - need at least 2-3 topics)
+- **Language** (required; almost always taken from the message, so it rarely needs the question)
 
 If any required field is missing, ask ONE follow-up that covers all gaps. For example:
 ```
@@ -87,7 +89,7 @@ Entered only when the user says "interview me" - at the welcome, or later on an 
 
 **Rules:**
 - One question per turn. Wait for the answer before asking the next.
-- Required fields first (name, role, 2-3 interests), skipping any already given, so an early exit still completes onboarding.
+- Required fields first (name, role, 2-3 interests, language), skipping any already given, so an early exit still completes onboarding.
 - Then depth, one area per question, each shaped by earlier answers: current projects and customers · how they decide and what they avoid · work rhythm and energy · what "done" and "good" mean to them · people and companies they track · what they never want to be asked again.
 - Open questions only. No option lists. Never re-ask what they already said.
 - Cap: 12 questions. On every 4th question, add one clause reminding them they can stop.
@@ -109,6 +111,7 @@ Here's what I've got:
 - **Interests**: AI/ML, fintech trends, product strategy, UX design
 - **Projects**: Payments dashboard revamp
 - **Tracking**: Stripe, Plaid
+- **Language**: English (say so if you want another)
 
 One more thing - COG can run in two modes:
 - **Solo mode** (default): I handle everything directly in our conversation.
@@ -200,6 +203,8 @@ After role pack matching, set up the user's integration preferences:
 
 Templates for all four documents are in `references/profile-templates.md`: `00-inbox/MY-PROFILE.md`, `00-inbox/MY-INTERESTS.md`, `03-professional/COMPETITIVE-WATCHLIST.md` (only when they named companies or people to track), and one `04-projects/<slug>/PROJECT-OVERVIEW.md` per active project. Read that file now, then write the documents.
 
+**Language.** Write every generated file (steps 6 and 8) in `language`; generate in it, do not draft English and translate. Never translated: file names, paths, frontmatter keys and values that skills match on (`type`, `status`, `role_pack`, `agent_mode`), wikilink targets, skill names, the task format `- [ ] ... 📅 YYYY-MM-DD`.
+
 ### 7. Create Directory Structure
 Based on configuration, create personalized structure:
 
@@ -209,6 +214,7 @@ Based on configuration, create personalized structure:
 01-daily/
   briefs/
   checkins/
+  journal/
 02-personal/
   braindumps/
   development/
@@ -232,21 +238,19 @@ Based on configuration, create personalized structure:
 04-projects/[project-slug]/
   PROJECT-OVERVIEW.md
   braindumps/
-  competitive/
-  content/
-  planning/
-  resources/
 ```
 
-### 8. Create Welcome Guide
+Only `braindumps/` up front. `research/`, `planning/`, `reports/`, `archive/` are created on first use, per Project File Placement in `AGENTS.md`. Do not create `FOCUS.md`; Focus is opt-in and the user creates it from `06-templates/focus-template.md`.
 
-Generate `00-inbox/WELCOME-TO-COG.md` from the template in `references/welcome-guide.md`. Fill the role-specific skill list from the matched role pack, and drop the sections the user's answers do not support rather than leaving placeholders.
+### 8. Create the Vault Guide and the Welcome Guide
+
+First `00-inbox/HOW-TO-USE-COG.md` from `references/how-to-use-cog.md`: the vault tour, same for every user, generated in `language`. Then `00-inbox/WELCOME-TO-COG.md` from `references/welcome-guide.md`: per-user content only (settings, role skills, projects, integrations, first week), linking the tour. Fill the role-specific skill list from the matched role pack; drop sections the user's answers do not support rather than leaving placeholders.
 
 ### 9. Wrap-Up (No Menu!)
 After setup, summarize what was created and suggest a natural next action:
 
 ```
-You're all set! I've created your profile, interests, and project files. Everything is in your vault and editable anytime.
+You're all set! I've created your profile, interests, and project files. Everything is in your vault and editable anytime. WELCOME-TO-COG.md in 00-inbox has your setup on one page, and HOW-TO-USE-COG.md next to it explains the vault: where files go, the dashboards that fill themselves, and the optional Focus list.
 
 If you want to jump right in, try a braindump - just tell me what's on your mind and I'll capture it. Or ask for your daily brief to see what's happening in your interest areas today.
 ```
@@ -262,7 +266,7 @@ Don't show a menu. Just ask:
 You've already completed onboarding! What would you like to update? Just tell me what needs changing.
 ```
 
-Then intelligently handle whatever they say - whether it's adding projects, changing interests, updating their role, etc.
+Then intelligently handle whatever they say - whether it's adding projects, changing interests, updating their role, etc. "Change my language": set `language` in `MY-PROFILE.md`, regenerate both step 8 files in it. "Regenerate the vault guide", or a vault without `HOW-TO-USE-COG.md` (set up before the guide existed): run the first half of step 8. A profile without `language`: add it from the user's message without asking.
 
 ## Success Criteria
 
@@ -273,6 +277,7 @@ Onboarding is successful when:
 4. Role pack matched (or set to `custom`) and recommendations presented
 5. Project directories and overviews created (if applicable)
 6. `WELCOME-TO-COG.md` guide created with role-specific skill ordering
+6a. `language` set in `MY-PROFILE.md`; `HOW-TO-USE-COG.md` and every generated file are in it
 7. User understands next steps and where their profile is stored
 8. If the interview ran, it ended on the user's word or the cap, and steps 5-9 still ran
 

@@ -309,6 +309,12 @@ Answer naturally:
 The AI creates `00-inbox/MY-PROFILE.md`, `00-inbox/MY-INTERESTS.md`, and project
 folders if you mentioned any. Takes about 2 minutes.
 
+### Your language
+
+Onboarding notes the language you write in and uses it from then on: answers, notes,
+the welcome page and the vault guide. Already set up and want to switch? Say "change
+my language to Czech".
+
 ### Try Your First Braindump
 
 ```
@@ -583,14 +589,17 @@ cog-second-brain/
   cog-update.bat        Double-click to update COG
   .agents/skills/       The COG skills, read by the desktop assistant
   00-inbox/             Your profile and settings
+    HOW-TO-USE-COG.md     the vault explained, written by onboarding in your language
     COG-DASHBOARD.md      live overview of everything in your vault
     TASKS.md              every to-do from every note, in one place
+    FOCUS.md              optional: the few streams you push daily (you create it)
     MY-PROFILE.md         your name, role, projects (created by onboarding)
     MY-INTERESTS.md       topics for daily briefs (created by onboarding)
     MY-INTEGRATIONS.md    which services COG may use (created by onboarding)
   01-daily/             Daily outputs
     briefs/                morning news briefings
     checkins/              weekly reflections
+    journal/               work log the assistant writes after real work
   02-personal/          Personal thoughts (braindumps)
   03-professional/      Work/school-related
   04-projects/          Project-specific notes
@@ -607,7 +616,11 @@ cog-second-brain/
 
 Everything is plain text. Open any file with Notepad, Obsidian, or any text editor.
 
-**Two files you did not write are worth opening on day one:**
+**Three files you did not write are worth opening on day one:**
+
+- **`00-inbox/HOW-TO-USE-COG.md`** - one page on the whole vault: where files go, the
+  files that build themselves, the optional Focus list, how knowledge compounds. Read
+  this first. Set up before it existed? Say "create the vault guide".
 
 - **`00-inbox/COG-DASHBOARD.md`** - counts of your projects, open braindumps and saved
   links, plus tables of everything recent. It builds itself from your notes, so it is
@@ -615,6 +628,10 @@ Everything is plain text. Open any file with Notepad, Obsidian, or any text edit
 - **`00-inbox/TASKS.md`** - every `- [ ]` from every note, grouped into Overdue, Due
   Today, This Week. Don't type tasks here; write them in the note they belong to and
   they show up automatically.
+
+**Optional, when a few things matter more than the rest:** create `00-inbox/FOCUS.md`
+from `06-templates/focus-template.md` - one link per line to the streams you push
+daily. Then "what should I push today" answers from those files' open items.
 
 **Why `gemini-scribe/` looks greyed out.** The installer adds it to Obsidian's
 **Excluded files**, so it is hidden from search, the graph and unlinked mentions, and

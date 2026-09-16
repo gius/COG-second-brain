@@ -9,6 +9,7 @@ created: YYYY-MM-DD
 onboarding_completed: true
 role_pack: [matched role_id or "custom"]
 agent_mode: [solo or team, based on role pack suggestion]
+language: [ISO 639-1 code, e.g. en, cs]
 tags: ["profile", "config", "cog"]
 
 # My COG Profile
@@ -21,6 +22,7 @@ tags: ["profile", "config", "cog"]
 
 ## Settings
 - **Agent Mode**: [solo/team] *(solo = handle everything directly; team = delegate to specialist sub-agents for deeper results)*
+- **Language**: [language name] *(the assistant talks and writes notes for you in it)*
 
 ## Active Projects
 [If they mentioned projects:]

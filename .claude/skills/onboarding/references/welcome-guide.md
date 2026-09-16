@@ -2,111 +2,57 @@
 
 The guide step 8 of `SKILL.md` generates. Read this file when you reach that step.
 
-Generate: `00-inbox/WELCOME-TO-COG.md`
+Generate: `00-inbox/WELCOME-TO-COG.md` in the profile `language`. Per-user content only; the vault tour, the self-building files, Focus, knowledge and people are in `00-inbox/HOW-TO-USE-COG.md`, generated just before this file - link it, do not repeat it. The Focus anchor `#Focus (optional)` uses that heading as generated in `language`. Drop any section the user's answers do not support; never leave a placeholder.
 
 ```markdown
+---
 type: guide
 created: YYYY-MM-DD
-tags: ["welcome", "getting-started", "cog"]
+tags: [welcome, getting-started, cog]
+---
 
-# Welcome to Your COG Second Brain, [Name]!
+# Welcome, [Name]
 
-Your COG is now personalized and ready to use. Here's how to get started:
+Your COG is set up. [[HOW-TO-USE-COG]] explains the vault: where files go, the dashboards that build themselves, the optional Focus list, and how knowledge compounds. This page holds what is yours.
 
-## Your Profile Documents
+## Your settings
 
-I've created these documents to store your preferences:
+- [[MY-PROFILE]] - name, role, projects, how you work
+- [[MY-INTERESTS]] - topics and sources for your briefs
+- [[MY-INTEGRATIONS]] - services COG may use
+- [[03-professional/COMPETITIVE-WATCHLIST|COMPETITIVE-WATCHLIST]] - companies and people you track *(only if named)*
 
-- **[[MY-PROFILE]]** - Your basic info, role pack, and workflow preferences
-- **[[MY-INTERESTS]]** - Topics for your daily briefs
-- **[[MY-INTEGRATIONS]]** - Your active and disabled integrations
-- **[[03-professional/COMPETITIVE-WATCHLIST]]** - Companies you're tracking *(if applicable)*
+Edit them any time; skills read them when they run:
+- daily brief reads [[MY-INTERESTS]] for topics and sources
+- braindump offers the projects listed in [[MY-PROFILE]] as filing targets
+- braindump and meeting notes flag anyone on the [[03-professional/COMPETITIVE-WATCHLIST|watchlist]]
+- every skill checks [[MY-INTEGRATIONS]] before touching an outside service
 
-**You can edit these files anytime.** COG reads them when you use skills, so your changes take effect immediately.
+## Skills for a [Role Display Name]
 
-## Skills for Your Role
+[If a role pack matched: the pack's skills in its order, one line each: **skill** - the pack's role-specific reason.]
+[If none matched:]
+- **daily-brief** - verified news in your interest areas, last 7 days
+- **braindump** - capture a thought, classified into your domains and projects
+- **url-dump** - save a link with extracted insights
+- **weekly-checkin** - patterns across the week
+- **knowledge-consolidation** - frameworks from scattered notes
 
-[If role pack was matched:]
-As a **[Role Display Name]**, these skills are ordered by relevance for you:
+## Your projects
 
-[List skills from role pack in order, with brief "why it matters" from the role pack. Format as:]
-1. **[skill-name]** - [Role-specific explanation]
-2. **[skill-name]** - [Role-specific explanation]
-[...continue for all recommended skills]
+[One line per project: [[04-projects/<slug>/PROJECT-OVERVIEW|Name]] - one phrase from the profile. Braindumps offer these as filing targets.]
 
-[If no role pack match:]
-Here are COG's core skills available to everyone:
+## Integrations
 
-1. **daily-brief** - Personalized news intelligence
-2. **braindump** - Capture and classify thoughts
-3. **weekly-checkin** - Weekly pattern analysis
-4. **knowledge-consolidation** - Build frameworks from scattered notes
-5. **url-dump** - Save URLs with auto-extracted insights
+[Active: list. Disabled: list. If none: "None yet; add them in [[MY-INTEGRATIONS]]."]
 
-## Your Integrations
+## First week
 
-[If integrations were configured:]
-**Active**: [List active integrations]
-**Disabled**: [List disabled integrations]
+- Morning: "daily brief" - covers [interest areas].
+- During the day: "capture this: ..." - filed into [domains].
+- End of week: "reflect on my week".
+- When the overdue list in [[TASKS]] grows: "triage tasks".
+- If a few streams matter more than the rest: create `FOCUS.md` from the template ([[HOW-TO-USE-COG#Focus (optional)|how]]).
 
-You can change these anytime by editing [[MY-INTEGRATIONS]].
-
-[If no integrations configured:]
-No integrations configured yet. COG works great standalone - add integrations anytime by editing `00-inbox/MY-INTEGRATIONS.md`.
-
-## Quick Start
-
-### 1. Daily Morning Routine
-Invoke the daily-brief skill to get your personalized intelligence briefing covering:
-[List their selected interest areas]
-
-### 2. Capture Your Thoughts
-Use the braindump skill to quickly capture ideas, insights, and thoughts. Your braindumps will automatically be categorized into:
-[List their focus domains]
-
-Choose from your active projects:
-[List their projects with links]
-
-### 3. Weekly Reflection
-Every week, use the weekly-checkin skill to review your week's insights and patterns.
-
-## Your Active Projects
-
-[If they have projects]
-You're tracking these projects:
-- [[04-projects/[slug]/PROJECT-OVERVIEW|Project 1]]
-- [[04-projects/[slug]/PROJECT-OVERVIEW|Project 2]]
-
-When you use the braindump skill, select the project to automatically file your thoughts in the right place.
-
-## How COG Uses Your Profile
-
-**Daily Briefs**: Uses [[MY-INTERESTS]] to curate relevant news
-**Braindumps**: Offers your projects from [[MY-PROFILE]] as options
-**Competitive Intel**: Auto-extracts mentions of companies in [[COMPETITIVE-WATCHLIST]]
-**Weekly Check-ins**: Reviews progress across your domains
-
-## Next Steps
-
-1. **Try your first braindump**: Use the braindump skill and start writing
-2. **Get your daily brief**: Invoke the daily-brief skill to see curated intelligence
-3. **Explore your vault**: All your files are organized in the sidebar
-4. **Edit your profile**: Open [[MY-PROFILE]] and customize anytime
-
-## Tips for Success
-
-- **Don't overthink it**: Just dump your thoughts, COG will help organize
-- **Be consistent**: Daily briefs and braindumps work best as habits
-- **Review weekly**: Use the weekly-checkin skill to see patterns emerge
-- **Evolve your setup**: Edit your profile files anytime or run onboarding again to add projects
-
-## Getting Help
-
-- Check `SETUP.md` for detailed guides
-- Visit the GitHub repo for documentation
-
-**Your second brain is learning about you. Let's begin!**
-
-
-*You can archive or delete this welcome guide once you're comfortable with COG.*
+*Delete this page when you no longer need it; [[HOW-TO-USE-COG]] stays.*
 ```

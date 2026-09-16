@@ -118,7 +118,7 @@ Ambient behavior, not a command. The trigger lives here because it must load in 
 
 ## Focus
 
-Ambient behavior, active only when `00-inbox/FOCUS.md` exists. The file holds the few hand-picked streams the user pushes every day; `00-inbox/TASKS.md` holds everything else.
+Ambient behavior, active only when `00-inbox/FOCUS.md` exists. The file holds the few hand-picked streams the user pushes every day; `00-inbox/TASKS.md` holds everything else. Never create it unasked; the user starts it from `06-templates/focus-template.md`.
 
 - **Read it at session start.** When the user asks what to push, or names a stream, follow the stream's links and answer from the linked files' open items.
 - **Offer the parallel work.** Propose what an agent can run for a stream without the user, as sub-agents under the Model Tiers rules; one agent per stream, only for streams the user named unless they asked for all.
@@ -155,9 +155,11 @@ Select by setting `outputStyle` to `Clear` in Claude Code settings. On runtimes 
 
 Read these files to understand the user's context:
 
-- `00-inbox/MY-PROFILE.md` - Name, role, role pack, agent mode, active projects
+- `00-inbox/MY-PROFILE.md` - Name, role, role pack, agent mode, language, active projects
 - `00-inbox/MY-INTERESTS.md` - Topics and preferred news sources for daily briefs
 - `00-inbox/MY-INTEGRATIONS.md` - Active/disabled external service integrations
+
+**Language.** Talk and write user-facing notes in `language` from `MY-PROFILE.md`. Field absent: match the user's message language, do not ask. Never translated: paths, file names, frontmatter keys and matched values, wikilink targets, skill names, the task format. Framework files (`AGENTS.md`, skills, templates) stay English; files onboarding generates (`HOW-TO-USE-COG.md`, `WELCOME-TO-COG.md`, profile docs) are written in `language`.
 - `03-professional/COMPETITIVE-WATCHLIST.md` - Companies/people being tracked
 
 ### Role Packs
