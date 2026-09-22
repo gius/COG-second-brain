@@ -143,14 +143,6 @@ Lead with the finding and keep its evidence next to it. That order makes rhetori
 
 Applies to chat answers, vault notes, reports, briefs, and every sub-agent output.
 
-## Output Styles
-
-One response-voice style ships with COG, `clear`, authored in `.agents/output-styles/` and synced by `cog-sync.sh` to `.claude/output-styles/`. It governs **presentation** - answer shape, sentence rules, drawn shapes, markers, depth triggers. **Substance** is governed by `## Response Content` above, which holds whether or not a style is active.
-
-`clear` is padding-free rather than short: a mechanism-first answer line, what matters next, one drawn shape per point that has structure, headings only above about 25 lines and each behind a `---` rule so a terminal shows them, options as blocks unless every cell is a few words, and the `⏭️ Waiting on you` ending. Length follows content. Depth comes on demand through the in-band triggers `just the answer`, `expand`, `why`, `show me`, `draw it`. The earlier `pyramid` and `terse` styles were folded into it on 2026-09-06.
-
-Select by setting `outputStyle` to `Clear` in Claude Code settings. On runtimes without output-style support, paste the style body into the system prompt - the content has no tool-specific dependencies. See `.agents/output-styles/README.md`.
-
 ## User Configuration
 
 Read these files to understand the user's context:
@@ -164,19 +156,7 @@ Read these files to understand the user's context:
 
 ### Role Packs
 
-COG uses role packs (`.cog/user-roles/*.md`) to personalize skill recommendations and integration suggestions per user role.
-
-**How role matching works:**
-1. During onboarding, the user's role text is matched against `role_id` and `aliases` in each role pack's YAML frontmatter.
-2. The matched role pack is stored as `role_pack` in `00-inbox/MY-PROFILE.md` frontmatter.
-3. When suggesting skills or workflows, check the user's `role_pack` and order recommendations by role relevance.
-
-**Role-aware behavior:**
-- **Skill suggestions**: Prioritize skills listed in the user's role pack. Show role-specific explanations.
-- **Integration prompts**: Check the role pack for role-specific context on why an integration matters.
-- **No role pack match**: Recommend core skills (`roles: [all]`) and let them discover others organically.
-
-Available packs: Product Manager, Engineering Lead, Engineer, Designer, Founder, Marketer. Create custom packs from `_template.md`.
+`role_pack` in `MY-PROFILE.md` names a pack in `.cog/user-roles/*.md`. When suggesting skills or integrations, order by that pack's list and use its "why it matters" text; `custom` or no match: core skills (`roles: [all]`) only. Matching happens in `/onboarding`.
 
 ## Knowledge Reuse
 
@@ -213,31 +193,17 @@ All skills generate tasks with [Obsidian Tasks emoji format](https://publish.obs
 - "Today/This Week" → today or end of week
 - "Next Steps" → next Monday/Friday
 
-## Philosophy
-
-- **Verification-first:** All information sourced and verified
-- **Transparency:** Confidence levels explicitly stated
-- **Configuration as knowledge:** Preferences stored as editable notes
-- **Self-evolving:** Patterns and frameworks grow over time
-- **Low friction:** Quick capture, systematic organization
-
 ## Model Tiers
 
-`agent_mode` is read from `00-inbox/MY-PROFILE.md` frontmatter and gates delegation globally: `team` enables it per each skill's own bucket rules; `solo` means never spawn sub-agents. Skills define only their buckets - mode check and tier selection live here.
+`agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter gates delegation: `solo` - never spawn sub-agents; `team` - delegate per each skill's own bucket rules. Skills define only their buckets; mode check and tier selection live here.
 
-When spawning sub-agents in `agent_mode: team`, always set the model tier explicitly. Look up the concrete model name for each tier in the Model tier mapping table at the top of your provider-specific context file, above the auto-generated marker comment.
+In `team` mode set the tier explicitly, using the Model tier mapping table at the top of the provider-specific context file, above the auto-generated marker:
 
-**How to choose the tier:**
+- `worker` - reads or queries a single source (file reads, web searches, API calls, dedup, classification), even with analysis on top.
+- `specialist` - combines outputs from multiple sources or agents (cross-reference synthesis, report generation, cross-domain scoring).
+- `architect` - multi-factor reasoning with no clear right answer (scenario modeling, architecture and strategy decisions). The main conversation runs at this tier.
 
-- **`worker`** - the sub-agent reads from or queries a single source. Use for: file reads, web searches, API calls, dedup scans, classification, trend detection, anomaly flagging - even if the agent does analysis on what it collects, as long as it works with one data source.
-- **`specialist`** - the sub-agent combines or synthesizes outputs from multiple sources or agents. Use for: cross-reference synthesis, report generation, relevance scoring across domains, combining findings from multiple workers.
-- **`architect`** - the sub-agent needs complex multi-factor reasoning with no clear right answer. Use for: scenario modeling, architecture decisions, strategic analysis across many inputs. The main conversation itself runs at this tier.
-
-**When to delegate vs keep in main conversation:** The sub-agent's working context is discarded after it returns - only the result enters your context, which keeps the main conversation lean. But spawn cost is real, not negligible: a sub-agent that reads a handful of files can burn 30K+ tokens.
-
-Delegate large, genuinely independent tracks of work - a wide multi-file investigation, 3+ parallel source lookups. Do not delegate what you can finish in a handful of tool calls, and never spawn a sub-agent to verify or double-check your own work. Prefer one sub-agent over several.
-
-**When `agent_mode: solo`:** Do not spawn sub-agents. Handle all work directly.
+Delegate only large, independent tracks: a wide multi-file investigation, 3+ parallel source lookups. Do not delegate what a handful of tool calls finishes; never spawn a sub-agent to check your own work; prefer one sub-agent over several.
 
 ## Briefing sub-agents
 
@@ -247,13 +213,13 @@ Sub-agents see only the prompt you write - not this file, not your skill, not th
 
 Pass each sub-agent only the digested context it needs. Never paste a prior sub-agent's raw output into the next one's prompt.
 
-Pasted context induces *narrativisation*: the sub-agent treats the preamble as "the orchestrator already framed the findings, I just classify them" instead of independently reading the source. The observed failure mode is a large speedup coupled with hallucinated findings and mis-cited references - fast and wrong reads as fast and right.
+Pasted context induces *narrativisation*: the sub-agent treats the preamble as "the orchestrator already framed the findings, I just classify them" instead of independently reading the source. The observed failure mode is a large speedup coupled with hallucinated findings and mis-cited references.
 
 Digest first, then brief. If two sub-agents genuinely need the same finding, state the finding as a fact in both briefings; do not forward one's transcript to the other.
 
 ### Research / fact-finding delegation (web search, releases, CVEs, funding, competitive intel)
 
-Sub-agents fabricate plausible items when real hits are sparse. "Verify carefully" is aspirational; structural proof is enforceable. Every research briefing must include:
+Sub-agents fabricate plausible items when real hits are sparse. Every research briefing must include:
 
 1. **Primary source definition for the domain.** GitHub releases for code, GHSA/CVE for security, vendor advisory for product issues, company press release for funding, government notice for regulatory. Aggregators (newsletters, Medium, "top X" roundups, releasebot.io, personal blogs) are discovery paths only - chase them back to the primary and cite that.
 2. **Fetch + proof:** "Call WebFetch on the primary URL. Return the fetched title and publication date as a `Verification proof` field."
@@ -270,7 +236,7 @@ Include: exact paths, what "done" looks like, constraints (tests must pass, do n
 
 "Medium confidence" from a sub-agent usually means "could not verify but sounds right." Treat as drop-or-re-verify, not as license to include with a softened label.
 
-**Check tool-call count against claim volume.** Eight fetched sources reported from one tool call is fabrication, however well the `Verification proof` fields are filled in. The briefing rules above are followed to the letter by agents that invent the results anyway - this check is what catches them.
+**Check tool-call count against claim volume.** Eight fetched sources reported from one tool call is fabrication, however well the `Verification proof` fields are filled in.
 
 ## Citation Discipline
 

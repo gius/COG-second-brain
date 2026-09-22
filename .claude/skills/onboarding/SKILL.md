@@ -124,7 +124,7 @@ Which do you prefer? (Solo is great for most people - team mode is for power use
 
 ### 5.5. Role Pack Matching
 
-After extracting the user's role text in Step 3, scan `.cog/user-roles/*.md` for a matching role pack:
+After extracting the user's role text in Step 3, scan `.cog/user-roles/*.md` for a matching role pack (shipped: product-manager, engineering-lead, engineer, designer, founder, marketer; custom packs copy `_template.md`):
 
 1. Read each role pack file's YAML frontmatter (`role_id` and `aliases`)
 2. Compare the user's extracted role text (case-insensitive) against:
