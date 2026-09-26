@@ -4,6 +4,14 @@ All notable changes to COG (Cognition + Obsidian + Git) will be documented in th
 
 Versions from `1.0.0` onward are **this fork's own**, independent of upstream - see `UPSTREAM-SYNC.md`. Earlier entries carry the inherited upstream numbering.
 
+## [Unreleased]
+
+### Removed
+- **The `clear` output style.** On Opus 5.5, Claude Code's built-in `Concise` style (2.1.237+) leads with the result and drops preamble and recaps, which was most of what `clear` added; a side-by-side run of the same prompts under Default, `Concise` and `clear` showed plain answers on all three. Set `"outputStyle": "Concise"` in `~/.claude/settings.json`. Personal answer rules (decision format, markers, drawn shapes) belong in your own global `CLAUDE.md`.
+
+### Changed
+- **`## AI Task Endings` carries the `⏭️ Waiting on you` rule itself** and scopes it to replies: an item stays on the list in later replies, so a turn opened by a background task no longer reprints it.
+
 ## [1.3.0] - 2026-08-31
 
 Upstream review pass over `1947147..623ed00` (upstream v3.10.1 - v3.12.0), plus a roster review that ported three skills from earlier upstream releases. Full pick sheet in the vault at `04-projects/cog-customization/reports/upstream-review-v3.12.0-2026-08-31.md`.

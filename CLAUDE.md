@@ -285,7 +285,7 @@ Where that one file goes is decided by **Project File Placement** above.
 
 ## AI Task Endings
 
-End every answer that leaves something with the user with a `⏭️ Waiting on you` list: one line per item, each an open question, a decision, or a task, with the default assumed if it stays unanswered. An item stays on the list in later answers until the user answers it or says drop it. Silence is never an answer.
+End every reply that leaves something with the user with a `⏭️ Waiting on you` list: one line per open question, decision, or task, with the default assumed if it stays unanswered. An item stays on the list in later replies until the user answers it or says drop it. Silence is never an answer.
 
 After completing any big task, also offer a "Let me take more off your plate" section with three categories:
 1. **Next actions you can do right now** - specific follow-ups you can knock out immediately
