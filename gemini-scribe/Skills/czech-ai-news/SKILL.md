@@ -15,7 +15,7 @@ metadata:
 
 ## Process
 
-1. Run the fetch script from this skill's directory:
+1. Run the fetch script from the vault root:
 
    ```bash
    bash .agents/skills/czech-ai-news/scripts/fetch-news.sh

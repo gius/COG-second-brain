@@ -7,7 +7,7 @@ Generate: `00-inbox/HOW-TO-USE-COG.md`, in the profile `language` (English users
 ```markdown
 ---
 type: guide
-created: YYYY-MM-DD
+created: "YYYY-MM-DD HH:MM"
 language: <ISO 639-1 code>
 tags: [cog, config, getting-started]
 ---

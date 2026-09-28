@@ -38,7 +38,7 @@ A quick vault health report without framework synthesis. Use when the user says 
 
 ## Agent Mode Awareness
 
-**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): at most 3 specialist-tier sub-agents, grouped by provenance not by domain:
+**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): at most 3 sub-agents, grouped by provenance not by domain:
 1. **Raw-thinking scan** — all braindumps (personal + professional + project + inbox)
 2. **Curated-artifacts scan** — daily/team briefs, weekly check-ins, meeting notes, PRDs, release notes
 3. **Knowledge-base scan** — research, booklets, existing frameworks/patterns (for staleness + cross-references)
@@ -59,7 +59,7 @@ The scope the user chooses determines how deep to go. Not every run should produ
 | **Monthly** (~15-60 docs) | Full pattern recognition. Create new frameworks if evidence is strong (≥ 5 supporting sources). | Yes, if well-evidenced | Yes |
 | **Quarterly / All time** (60+ docs) | Deep synthesis. Create frameworks and cross-domain patterns. Challenge and retire stale frameworks. | Yes | Yes |
 
-Thinking shifts over time are recorded in the affected framework's **Evolution & History** section — do not create separate timeline files. (Standalone `05-knowledge/timeline/` entries are retired: they accumulated no readers. Existing files stay as archive.)
+Thinking shifts over time are recorded in the affected framework's **Evolution & History** section — do not create separate timeline files. `05-knowledge/timeline/` is a read-only archive.
 
 When in doubt, err toward lighter output. A framework created too early from thin evidence wastes more effort than one created a month later from solid evidence.
 
@@ -72,7 +72,7 @@ When in doubt, err toward lighter output. A framework created too early from thi
 - **Braindumps** (all domains):
   - `02-personal/braindumps/`
   - `03-professional/braindumps/`
-  - `04-projects/*/braindumps/`
+  - `04-projects/**/braindumps/`
   - `00-inbox/braindump-*.md` (mixed domain)
   - **Processing note:** Primary raw material. Extract themes, decisions, recurring questions, and emotional patterns. These are the user's unfiltered thinking — treat every braindump as potentially containing framework-worthy insights.
 
@@ -95,20 +95,19 @@ When in doubt, err toward lighter output. A framework created too early from thi
     - `## Confirms` sections: harvest wiki-link targets that resolve to `05-knowledge/consolidated/` or `05-knowledge/patterns/`. These feed the index's External Corroborations section (Step 4) and evidence depth (Step 3). Ignore Confirms links to anything else (braindumps, other booklets).
 
 - **Project artifacts:**
-  - `04-projects/*/planning/` (meeting transcripts, planning docs)
-  - `04-projects/*/resources/` (project resources)
-  - `04-projects/*/PRDs/` (product requirements)
-  - `04-projects/*/releases/` (release notes)
-  - `04-projects/*/stories/` (user stories)
-  - `04-projects/*/audits/` (issue audits)
+  - Every project folder at any depth (`04-projects/**/`, which covers `04-projects/<customer>/<project>/`):
+    - `planning/` (meeting notes, requirement extractions, scoping)
+    - `research/` (investigation input gathered for a decision)
+    - `reports/` (finished deliverables: audits, reviews, plans, handoffs)
+    - living docs at the project root (`PROJECT-OVERVIEW.md`, `architecture.md`, `build-plan.md`)
   - **Processing note:** Different artifact types serve different purposes:
     - *Meeting notes* — extract decisions made, action items, and recurring blockers. Decision patterns across meetings are high-value.
-    - *PRDs* — extract product direction, scope decisions, and trade-offs. Useful for tracking how product thinking evolves.
-    - *Release notes* — extract shipping cadence and feature evolution patterns. Individual releases are low-value; trends across releases are high-value.
-    - *Stories & audits* — mostly skip for consolidation unless they reveal recurring themes (e.g., same type of bug keeps appearing).
+    - *Research* — extract the options weighed and why one won. Useful for tracking how thinking evolves.
+    - *Reports* — extract the conclusions delivered and any recurring findings across audits and reviews.
+    - *Living docs* — read the current state and the dated status paragraphs; trends across status paragraphs are high-value.
 
 - **Competitive intelligence:**
-  - `04-projects/*/competitive/` (per-project competitive intel)
+  - `04-projects/**/competitive/` (per-project competitive intel)
   - `03-professional/COMPETITIVE-WATCHLIST.md`
   - **Processing note:** Extract competitor strategy trends and market position shifts. Individual data points matter less than trajectories — is a competitor consistently moving in a direction? Cross-reference with braindumps where the user reacted to competitive moves.
 
@@ -141,11 +140,11 @@ Score each document on freshness using category-weighted decay. Content types th
 | Category | Weight | Decay Threshold | Examples |
 |----------|--------|-----------------|----------|
 | Frameworks & patterns | 1.5x | 90 days | `05-knowledge/consolidated/`, `05-knowledge/patterns/` |
-| Decisions & PRDs | 1.3x | 60 days | `04-projects/*/PRDs/`, meeting decisions |
+| Decisions & research | 1.3x | 60 days | `04-projects/**/research/`, `04-projects/**/planning/`, meeting decisions |
 | Strategic research | 1.2x | 45 days | `05-knowledge/research/` |
 | Braindumps | 1.0x | 30 days | All braindump locations |
 | Bookmarks & URLs | 1.0x | 60 days | `05-knowledge/booklets/` |
-| Release notes & audits | 0.8x | 90 days | `04-projects/*/releases/`, `04-projects/*/audits/` |
+| Reports & audits | 0.8x | 90 days | `04-projects/**/reports/` |
 | Daily briefs & news | 0.5x | 14 days | `01-daily/briefs/` |
 
 **Decay threshold** = the age after which content is flagged as potentially stale (needs review, not necessarily outdated). Use the `created:` or `last_updated:` frontmatter date, falling back to file modification time.
@@ -365,7 +364,7 @@ consolidated_date: "YYYY-MM-DD"
 
 **Archive outdated content:**
 Move superseded frameworks or insights to:
-`00-inbox/archive/[filename]-archived-YYYY-MM-DD.md`
+an `archive/` subfolder beside the file (e.g. `05-knowledge/consolidated/archive/[filename].md`)
 
 Add note explaining why archived and what supersedes it.
 

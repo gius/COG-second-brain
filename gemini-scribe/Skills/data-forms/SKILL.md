@@ -38,7 +38,7 @@ takes* - the layer above color.
 | A named segmentation from clustering | Persona cards | 15 |
 | Two dimensions, few labeled points | Named-quadrant scatter | 21 |
 
-Full catalog with mockups and failure modes: `references/forms.md`.
+The picker table above is the catalog.
 
 ## Six decisions that matter more than the form
 
@@ -101,11 +101,9 @@ otherwise miss. Zero is fine. Two is clutter.
 1. State the takeaway in one sentence.
 2. Classify what the data does (distribution / ranking / comparison / trend /
    correlation / composition / qualitative) and pick from the picker table.
-3. Read that form's entry in `references/forms.md` - especially its failure mode. If your
-   data triggers the failure mode, take the alternative listed there.
-4. Apply the six decisions and the encoding rules.
-5. Build it in whatever the destination uses.
-6. **Render it and look at the image.** Not the DOM, not the spec - the pixels. Run the
+3. Apply the six decisions and the encoding rules.
+4. Build it in whatever the destination uses.
+5. **Render it and look at the image.** Not the DOM, not the spec - the pixels. Run the
    checklist. Fix what you see and re-render.
 
 ## Pre-ship checklist
@@ -121,9 +119,3 @@ Read the rendered image and answer each. A "no" is a fix, not a note.
 - [ ] ≤1 annotation
 - [ ] Squint test: at 25% zoom the shape of the answer still reads
 - [ ] Caveats (n, margin of error, multi-select) visible in-frame
-- [ ] The form's own failure mode from `references/forms.md` does not apply
-
-## Reference
-
-`references/forms.md` - 21 forms, each with an ASCII mockup, when to use it, and the
-condition under which it stops working.

@@ -363,7 +363,7 @@ Tags categorize vault content and enable filtered views in Obsidian.
 ### Format
 
 - Tags use the `#` prefix: `#braindump`, `#competitive`, `#project-name`
-- In frontmatter arrays: `tags: ["braindump", "architecture"]`
+- In frontmatter arrays: `tags: [braindump, architecture]`
 - Inline in text: `#tag` anywhere in the document body
 - Use kebab-case for multi-word tags: `#weekly-checkin`, `#auto-research`
 - Nested tags use `/`: `#project/saas-product`
@@ -452,28 +452,26 @@ The standard COG vault layout (created by `/onboarding`):
 
 02-personal/           # Personal domain
   braindumps/
+  meetings/
   development/
   wellness/
 
 03-professional/       # Professional domain
   braindumps/
+  meetings/
   leadership/
   strategy/
   COMPETITIVE-WATCHLIST.md
 
 04-projects/           # Project-specific content
-  [project-slug]/
-    PROJECT-OVERVIEW.md
-    braindumps/
+  [project-slug]/       # or [customer]/[project-slug]/
+    PROJECT-OVERVIEW.md # living docs (undated) at the project root
+    braindumps/         # raw capture
+    research/           # dated investigation input
+    planning/           # dated pre-build input, meeting notes
+    reports/            # dated deliverables
+    archive/            # superseded docs
     competitive/
-    content/
-    planning/
-    resources/
-    stories/
-    PRDs/
-    release-notes/
-    audits/
-    meetings/
 
 05-knowledge/          # Knowledge base
   consolidated/        # Frameworks and consolidations

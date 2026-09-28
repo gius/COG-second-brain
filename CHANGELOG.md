@@ -10,7 +10,20 @@ Versions from `1.0.0` onward are **this fork's own**, independent of upstream - 
 - **The `clear` output style.** On Opus 5.5, Claude Code's built-in `Concise` style (2.1.237+) leads with the result and drops preamble and recaps, which was most of what `clear` added; a side-by-side run of the same prompts under Default, `Concise` and `clear` showed plain answers on all three. Set `"outputStyle": "Concise"` in `~/.claude/settings.json`. Personal answer rules (decision format, markers, drawn shapes) belong in your own global `CLAUDE.md`.
 
 ### Changed
+- **Two model tiers instead of three.** `worker` (reading, fetching, classification, synthesis) and `architect` (judgment with no clear right answer). `specialist` mapped to the same model as `worker` on every runtime (`SETUP.md`), so the split changed nothing but produced conflicting tier picks across skills. A skill may name `architect` for its sub-agents when it says why.
+- **Citation proof needs a word-for-word quote.** The sub-agent briefing template in `AGENTS.md`, `daily-brief` and `auto-research` now ask for title, date and a quote in backticks, fetched with `defuddle` first, matching `## Citation Discipline`. WebFetch cuts quotes over ~125 chars.
+- **`publish-to-confluence` publishes through the Atlassian connector and verifies.** WebFetch cannot POST or authenticate, so the skill could not publish. It now creates and updates pages with the connector, edits sections on pages with macros instead of replacing the body, and re-reads the page before reporting success.
+- **Skills stop annotating rewrites.** `scout` and `braindump` no longer add dated changelog lines to living docs, and `scout` gives a superseded dated doc only a pointer line, per `AGENTS.md` § Project File Placement.
+- **Project scans reach every depth and the current folders.** `knowledge-consolidation`, `daily-brief`, `weekly-checkin` and `task-triage` use `04-projects/**/`, so `04-projects/<customer>/<project>/` is covered; consolidation reads `research/`, `reports/` and `planning/`; the `obsidian` folder tree matches `AGENTS.md`.
+- **`auto-research`** writes one file (no separate `-summary.md`) and uses 3-7 agents.
+- **`created:` includes the time** in onboarding templates, matching the `obsidian` timestamp rule.
+- **`task-triage` is desktop-only**: without a shell it says so and stops. Large runs apply edits with `apply_edits.py`.
+- **`people`** writes an observation only with a vault note as its source.
+- **Tone:** caps and backstory sentences written for older models restated plainly in `AGENTS.md`, `auto-research`, `onboarding`, `daily-brief`, `publish-to-confluence`, `knowledge-consolidation`, `museum-art`, `task-triage` and `weekly-checkin`.
 - **`## AI Task Endings` carries the `⏭️ Waiting on you` rule itself** and scopes it to replies: an item stays on the list in later replies, so a turn opened by a background task no longer reprints it.
+
+### Fixed
+- **Stale paths and commands** found by a `/doctor prompt-audit` run: `task-triage` script paths, `python` calls where `AGENTS.md` requires `uv run`, missing `references/` in `data-forms` and `museum-art`, non-existent skills and `browser-harness` in `museum-art`, the `00-inbox/archive` path in `knowledge-consolidation`, `[CUSTOMIZE:]` meeting paths in `meeting-transcript`, `resources/` in `url-dump`, the `competitive-watchlist` type in onboarding, an absolute path in `task-triage`'s edit shapes. `czech-ai-news`'s fetch script now fails loudly on a network error.
 
 ## [1.3.0] - 2026-08-31
 

@@ -36,7 +36,7 @@ Wiki-link precision: prefer `[[file#section]]` or `[[file#^block-id]]` when the 
 
 ## cancelled
 
-User committed to this task, then decided not to do it. Use the Obsidian Tasks plugin's cancelled marker `[-]`. Origin folder: `01-daily/checkins/` or `04-projects/*/PROJECT-OVERVIEW.md`.
+User committed to this task, then decided not to do it. Use the Obsidian Tasks plugin's cancelled marker `[-]`. Origin folder: `01-daily/checkins/` or `04-projects/**/PROJECT-OVERVIEW.md`.
 
 **Before:**
 ```
@@ -107,12 +107,10 @@ Use `Edit` with `old_string` = the full original task line (as returned by the O
 Example call:
 ```
 Edit(
-  file_path = "D:/private/COG-second-brain/01-daily/checkins/weekly-checkin-2026-04-11.md",
+  file_path = "01-daily/checkins/weekly-checkin-2026-04-11.md",
   old_string = "- [ ] Explore Codex/Gemini/Copilot hybrid dev workflow 📅 2026-04-22",
   new_string = "- [x] Explore Codex/Gemini/Copilot hybrid dev workflow 📅 2026-04-22 ✅ 2026-04-24",
 )
 ```
 
-One Edit call per task. Do not batch edits across files — if a file has multiple classified tasks, still call Edit once per task (the CLI's file+line gives you the exact match).
-
-Why not a bulk script: visibility. Each Edit surfaces in the transcript so the user can see the actual change. Bulk scripts hide errors.
+For a handful of tasks, one Edit call per task (the CLI's file+line gives you the exact match). For larger runs use `scripts/apply_edits.py` (SKILL.md §8), which prints every before/after and skips any line that is not an open task.

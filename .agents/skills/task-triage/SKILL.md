@@ -17,6 +17,9 @@ metadata:
 ## Purpose
 Clear the backlog in `00-inbox/TASKS.md` without making the user answer the same judgment questions every run. Each pass classifies every overdue/due-today task with vault evidence, batches the auto-classifiable ones for one-keystroke approval, and grows a rulebook that silently handles routine cases on future runs. Review friction goes down over time; human judgment is preserved where it matters (subjective decisions, external execution).
 
+## Requires a shell
+This skill runs bundled scripts. On a runtime without a shell (the phone), say that triage runs on the computer and stop.
+
 ## When to Invoke
 - User says: "triage tasks", "task triage", "task review", "what's overdue", "clear my tasks", "clean up TASKS.md", "help me deal with my tasks"
 - User is about to open `00-inbox/TASKS.md` and mentions wanting to clear it
@@ -24,7 +27,7 @@ Clear the backlog in `00-inbox/TASKS.md` without making the user answer the same
 
 ## Agent Mode Awareness
 Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:
-- `agent_mode: team` (default for this skill's design) — delegate classification to **specialist-tier** sub-agents, one per provenance bucket. See [step 5](#5-dispatch-classification-agents-specialist-tier).
+- `agent_mode: team` (default for this skill's design) — delegate classification to sub-agents, one per provenance bucket. See [step 5](#5-dispatch-classification-agents).
 - `agent_mode: solo` — handle classification inline in the main conversation. No delegation.
 
 Solo mode is acceptable for small runs (<10 tasks) but loses the context-isolation benefit of sub-agents for larger runs.
@@ -70,7 +73,7 @@ obsidian tasks todo format=json verbose > "$RUN_DIR/cog-tasks.json"
 Records: `{status, text, file, line}`. `text` includes `- [ ]` and any `📅 YYYY-MM-DD`.
 
 ### 2. Bucket and cluster
-Run `scripts/bucket_and_cluster.py` from project root. Defaults: reads `<RUN_DIR>/cog-tasks.json`, writes `cluster_*.json` to same dir. Buckets by `overdue / today / future / nodate`, clusters by source folder.
+Run `uv run .agents/skills/task-triage/scripts/bucket_and_cluster.py` from the vault root. Defaults: reads `<RUN_DIR>/cog-tasks.json`, writes `cluster_*.json` to same dir. Buckets by `overdue / today / future / nodate`, clusters by source folder.
 
 **Preprocessing — collapse within-file duplicates.** Before handing a cluster to an agent, within each single file (most often a weekly-checkin), merge task pairs that appear in both a "Next Steps" and a "Carry Forward" section into one logical task. These are structural duplicates of the same intent — the user writes them twice because the checkin template has two sections that happen to overlap. Classify the pair as a single unit (usually both supersede to the same newer task). The agent still sees both `file:line` entries so the render can apply the same edit to each occurrence.
 
@@ -79,7 +82,7 @@ Cluster mapping:
 | Cluster | Source folder pattern |
 |---|---|
 | `weekly_checkins` | `01-daily/checkins/` |
-| `project_overviews` | `04-projects/*/PROJECT-OVERVIEW.md` |
+| `project_overviews` | `04-projects/**/PROJECT-OVERVIEW.md` |
 | `daily_briefs` | `01-daily/briefs/` |
 | `consolidations` | `05-knowledge/consolidated/` |
 | `booklets` | `05-knowledge/booklets/` |
@@ -96,10 +99,10 @@ Folder-based clustering is deliberate: a cluster gives each agent a coherent nar
 
 ```
 Triaging N tasks (X overdue, Y due today) across M clusters.
-Rules loaded: 7. Will dispatch {K} agents after scope confirmation.
+Rules loaded: {R}. Will dispatch {K} agents after scope confirmation.
 ```
 
-Then **wait** for user confirmation or scope adjustment before §5. (Earlier wording "Dispatching {M} agents…" caused premature double-dispatch — every cluster got classified twice.)
+Then **wait** for user confirmation or scope adjustment before §5.
 
 ### 4. Classification taxonomy (shared by rules and agents)
 
@@ -122,7 +125,7 @@ When classifying "drop this task", the choice between `cancelled` and `untrack` 
 | Source folder | Provenance | Drop → |
 |---|---|---|
 | `01-daily/checkins/` | User-curated (weekly reflection) | **cancelled** |
-| `04-projects/*/PROJECT-OVERVIEW.md` | User-curated | **cancelled** |
+| `04-projects/**/PROJECT-OVERVIEW.md` | User-curated | **cancelled** |
 | `01-daily/briefs/` | AI-generated (daily-brief skill) | **untrack** |
 | `05-knowledge/booklets/` | AI-generated (scout/url-dump) | **untrack** |
 | `05-knowledge/consolidated/` | AI-generated (vault-health/consolidation) | **untrack** |
@@ -131,9 +134,7 @@ When classifying "drop this task", the choice between `cancelled` and `untrack` 
 
 The split matters because user-curated tasks were deliberate commitments — marking them `[-]` cancelled records a real decision-change event. AI-generated tasks are suggestions; untracking quietly is appropriate because the commitment never really existed.
 
-### 5. Dispatch classification agents (specialist tier)
-
-**Model tier is non-negotiable: specialist.** Per the tier→model mapping in your project's agent guide. Not worker (cross-references multiple files exceeds single-source scope); not architect (bounded pattern-matching with evidence, not open-ended reasoning).
+### 5. Dispatch classification agents
 
 #### Fan-out rules (apply in order)
 
@@ -143,7 +144,7 @@ The split matters because user-curated tasks were deliberate commitments — mar
    - **`ai_generated_agent`** — `daily_briefs` + `booklets` + `consolidations` + `braindumps` (drop → `untrack`)
 3. **Split a provenance bucket only if its task count > 40.** Splitting at smaller sizes wastes the agent overhead vs. just letting one agent process more tasks.
 
-Materialize the payloads deterministically: `python scripts/split_payloads.py <RUN_DIR>`. It encodes rules 2-3 — merges `cluster_*.json` into provenance buckets, splits any bucket >40 into balanced `payload_<provenance>[_n].json` (same-file tasks kept together), and writes `payload_manifest.json`. Inline-handle (rule 1) any payload ≤5 yourself; don't spawn for it. See [`scripts/split_payloads.py`](scripts/split_payloads.py).
+Materialize the payloads deterministically: `uv run .agents/skills/task-triage/scripts/split_payloads.py <RUN_DIR>`. It encodes rules 2-3 — merges `cluster_*.json` into provenance buckets, splits any bucket >40 into balanced `payload_<provenance>[_n].json` (same-file tasks kept together), and writes `payload_manifest.json`. Inline-handle (rule 1) any payload ≤5 yourself; don't spawn for it. See [`scripts/split_payloads.py`](scripts/split_payloads.py).
 
 Provenance grouping is more robust than folder grouping: adding a new vault folder type doesn't add an agent, and the taxonomy already splits cleanly by provenance (§4a).
 
@@ -219,7 +220,7 @@ Write the consolidated classifications to `<RUN_DIR>/proposals.json` — one rec
 Then:
 
 ```bash
-python .agents/skills/task-triage/scripts/render_review.py "$RUN_DIR"
+uv run .agents/skills/task-triage/scripts/render_review.py "$RUN_DIR"
 start "$RUN_DIR/review.html"   # Windows; `open` on macOS
 ```
 
@@ -241,7 +242,7 @@ Review is conversational (or page-driven). Don't write a staged review doc or ot
 
 ### 8. Apply edits (main context)
 
-Write the approved classifications to `<RUN_DIR>/decisions.json` — a list of `{file, line, action, [date], [target]}` using full vault-relative paths (several files share the name `PROJECT-OVERVIEW.md`). Then run `python scripts/apply_edits.py <RUN_DIR>/decisions.json`. It transforms each cited line per the §4 edit shapes, prints every before/after, and skips (never writes) any line that isn't an open task — a stale line number is reported, not mis-edited. See [`scripts/apply_edits.py`](scripts/apply_edits.py).
+Write the approved classifications to `<RUN_DIR>/decisions.json` — a list of `{file, line, action, [date], [target]}` using full vault-relative paths (several files share the name `PROJECT-OVERVIEW.md`). Then run `uv run .agents/skills/task-triage/scripts/apply_edits.py <RUN_DIR>/decisions.json`. It transforms each cited line per the §4 edit shapes, prints every before/after, and skips (never writes) any line that isn't an open task — a stale line number is reported, not mis-edited. See [`scripts/apply_edits.py`](scripts/apply_edits.py).
 
 For a few edits the `Edit` tool with exact-line matching is fine; reach for the script once a run exceeds ~15 edits or spans many files.
 
@@ -287,9 +288,8 @@ Emit:
 2a. **Accumulated rules are written to `.cog/task-triage/rules.md` only.** Writing them into the skill's `references/` means `cog-sync.sh` deletes them on the next run.
 3. **All edits land in one commit per run.** One `git revert` restores prior state.
 4. **Never delete without explicit user ack.** Default is untrack/cancel.
-5. **Sub-agents use specialist tier.** Not worker, not architect.
-6. **Stage inputs inside project root.** Use `.cog/task-triage/runs/<date>/`. Sub-agent sandbox denies `$TEMP` / `%TEMP%` / `/tmp`; Bash-on-Windows also mistranslates them.
-7. **Cap fan-out at 2 agents (one per provenance bucket).** Inline-handle clusters ≤5 tasks. Wait for user confirmation in §3 before dispatching anything in §5.
+5. **Stage inputs inside project root.** Use `.cog/task-triage/runs/<date>/`. Sub-agent sandbox denies `$TEMP` / `%TEMP%` / `/tmp`; Bash-on-Windows also mistranslates them.
+6. **Cap fan-out at 2 agents (one per provenance bucket).** Inline-handle clusters ≤5 tasks. Wait for user confirmation in §3 before dispatching anything in §5.
 
 ## Bundled resources
 

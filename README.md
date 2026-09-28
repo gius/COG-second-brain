@@ -93,7 +93,7 @@ graph TD
 |---|---|---|
 | **Self-Evolving** — Learns your patterns, auto-organizes content, builds frameworks | **Self-Healing** — Rename files or restructure; cross-references update automatically | **Verification-First** — Sources required, 7-day freshness, confidence levels on all analysis |
 | **Privacy-First** — Local `.md` files, strict domain separation, no external servers | **Multi-Device** — iCloud sync to iPhone/iPad/Mac; Git for version history | **Obsidian Tasks** — `📅 YYYY-MM-DD` emoji format works with Tasks plugin dashboards |
-| **Model Tier Routing** — Skills route sub-agents to `worker` / `specialist` / `architect` tiers; provider model mappings in each context file header | | |
+| **Model Tier Routing** — Skills route sub-agents to `worker` / `architect` tiers; provider model mappings in each context file header | | |
 
 ## Your Vault
 
@@ -167,7 +167,7 @@ This fork tracks [huytieu/COG-second-brain](https://github.com/huytieu/COG-secon
 
 - **Single source of truth** — skills live once in `.agents/skills/`; `cog-sync.sh` generates every tool surface (`.claude/`, `CLAUDE.md`). Upstream maintains per-tool dirs by hand.
 - **Curated adoption, not merge** — new upstream capabilities are reviewed release-by-release and ported into `.agents/skills/` when worth it. Upstream's file layout is never merged in. Procedure: [UPSTREAM-SYNC.md](UPSTREAM-SYNC.md).
-- **Local customizations** — model-tier routing (worker/specialist/architect), sub-agent briefing rules, tool-agnostic paths, and family distribution (`cog-update.bat`) are fork-only.
+- **Local customizations** — model-tier routing (worker/architect), sub-agent briefing rules, tool-agnostic paths, and family distribution (`cog-update.bat`) are fork-only.
 
 ## Contributing & Support
 

@@ -5,7 +5,7 @@ The four documents step 6 of `SKILL.md` creates. Read this file when you reach t
 #### `00-inbox/MY-PROFILE.md`
 ```markdown
 type: profile
-created: YYYY-MM-DD
+created: "YYYY-MM-DD HH:MM"
 onboarding_completed: true
 role_pack: [matched role_id or "custom"]
 agent_mode: [solo or team, based on role pack suggestion]
@@ -53,7 +53,7 @@ tags: ["profile", "config", "cog"]
 #### `00-inbox/MY-INTERESTS.md`
 ```markdown
 type: interests
-created: YYYY-MM-DD
+created: "YYYY-MM-DD HH:MM"
 tags: ["interests", "daily-brief", "config"]
 
 # My Interests & News Sources
@@ -86,8 +86,8 @@ tags: ["interests", "daily-brief", "config"]
 
 #### `03-professional/COMPETITIVE-WATCHLIST.md` (only if they mentioned companies/people to track)
 ```markdown
-type: competitive-intelligence
-created: YYYY-MM-DD
+type: competitive-watchlist
+created: "YYYY-MM-DD HH:MM"
 tags: ["competitive", "intelligence", "tracking"]
 
 # Competitive Watchlist
@@ -111,7 +111,7 @@ tags: ["competitive", "intelligence", "tracking"]
 type: project-overview
 project: [project-name]
 slug: [project-slug]
-created: YYYY-MM-DD
+created: "YYYY-MM-DD HH:MM"
 status: active
 tags: ["project", "overview"]
 

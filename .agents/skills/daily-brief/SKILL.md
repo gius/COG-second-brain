@@ -21,7 +21,7 @@ Find verified, relevant news for personalized daily briefings with strict verifi
 
 ## Agent Mode Awareness
 
-**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): delegate news research to **specialist-tier** sub-agents grouped by topic cluster (≤4 agents). One agent per topic cluster, NOT one per news source. Each agent searches, verifies primary sources, and returns findings with `Verification proof`. Combine and synthesize in main context.
+**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): delegate news research to sub-agents grouped by topic cluster (≤4 agents). One agent per topic cluster, NOT one per news source. Each agent searches, verifies primary sources, and returns findings with `Verification proof`. Combine and synthesize in main context.
 
 ## Interest Tiers
 
@@ -63,7 +63,7 @@ Collect the information needed for personalized curation:
 - Read `00-inbox/MY-PROFILE.md` for user's name, role, active projects
 - Read `00-inbox/MY-INTERESTS.md` for topics and preferred news sources
 - Read `03-professional/COMPETITIVE-WATCHLIST.md` (if exists) for companies/people to track
-- For watchlist companies with an intel file in `04-projects/*/competitive/`, read it — that's the accumulated intelligence from braindumps and earlier briefs. When a story involves a tracked company, connect it to what's already known instead of reporting it context-free, and cross-link the intel file in the brief.
+- For watchlist companies with an intel file in `04-projects/**/competitive/`, read it — that's the accumulated intelligence from braindumps and earlier briefs. When a story involves a tracked company, connect it to what's already known instead of reporting it context-free, and cross-link the intel file in the brief.
 
 #### Deduplication — Previous Brief Scan
 
@@ -96,7 +96,7 @@ Source verification follows the research delegation rules in `AGENTS.md → Brie
 - **Primary sources for news:** the original publisher (first outlet to break the story), official company/vendor announcements, GitHub releases pages, GHSA/CVE entries, government or regulatory notices. Aggregators (newsletters, Medium, "top X" roundups, release-tracking sites) are discovery paths, not primary sources — chase them back to the primary and cite that.
 - **One authoritative primary source is enough.** Do not demand a second source when the first is the project's own official channel. Two sources matter only when the primary is disputed.
 - **All news must fall within the last 7 days.** If a sub-agent returns an item outside the window, drop it or clearly mark it as context with the actual date shown inline.
-- **Sub-agent return format must include a `Verification proof` field** with the WebFetched title and publication date. Items without this field are dropped before synthesis — no "medium confidence" laundering.
+- **Sub-agent return format must include a `Verification proof` field**: fetched title, publication date, and one word-for-word quote in backticks. Items without it are dropped before synthesis — no "medium confidence" laundering.
 
 #### Strategic Relevance Analysis
 
@@ -122,7 +122,7 @@ Save to: `01-daily/briefs/daily-brief-YYYY-MM-DD.md`
 - **Executive Summary** — 2-3 sentences highlighting the most important developments across all interest areas
 - **High Impact News** — Stories with direct impact on user's projects/role. Each item gets: relevance explanation, summary, impact assessment (projects affected, potential effects, suggested action), primary source link
 - **Strategic Developments** — Medium-priority strategic news with strategic implications
-- **Market Intelligence / Technology Watch / Competitive Landscape** — optional sub-buckets if content warrants; merge or omit when thin. Competitive items about a tracked company link its intel file (`04-projects/*/competitive/[company].md`) when one exists
+- **Market Intelligence / Technology Watch / Competitive Landscape** — optional sub-buckets if content warrants; merge or omit when thin. Competitive items about a tracked company link its intel file (`04-projects/**/competitive/[company].md`) when one exists
 - **Opportunities & Recommendations** — Action items in Obsidian Tasks format (`📅 YYYY-MM-DD`): immediate actions (today/this week), research needed, people to inform/consult
 - **Risks & Threats** — Active threats with mitigation approaches, emerging risks to monitor
 - **Complete Sources** — Full citations grouped by section, with links
@@ -133,7 +133,7 @@ Save to: `01-daily/briefs/daily-brief-YYYY-MM-DD.md`
 - State clearly: "No significant news found in last 7 days"
 - Note last significant development if known
 - Suggest expanding search criteria or alternative sources
-- NEVER fabricate or use older news without explicit date disclosure
+- News older than 7 days is dropped unless its date is shown next to it
 
 **When a claim cannot be verified against a primary source:** drop it. Do not include with a warning icon and a softened confidence label — that's how unverified content ends up shaping decisions.
 

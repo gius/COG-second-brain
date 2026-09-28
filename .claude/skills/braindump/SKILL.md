@@ -20,7 +20,7 @@ Transform raw thoughts into strategic intelligence through quick capture, system
 
 ## Agent Mode Awareness
 
-**Mostly solo.** Braindump is fast capture-and-classify work that lives in main context regardless of `agent_mode`. **Single allowed delegation** (team mode only): if the braindump contains **3+ competitive watchlist matches** AND the matched companies have existing competitive-intel files, delegate the cross-reference + extraction step (Phase 5) to ONE specialist-tier sub-agent. Don't fan out per company. Don't delegate Phase 1-4 — they need the user's raw input in main context.
+**Mostly solo.** Braindump is fast capture-and-classify work that lives in main context regardless of `agent_mode`. **Single allowed delegation** (team mode only): if the braindump contains **3+ competitive watchlist matches** AND the matched companies have existing competitive-intel files, delegate the cross-reference + extraction step (Phase 5) to ONE sub-agent. Don't fan out per company. Don't delegate Phase 1-4 — they need the user's raw input in main context.
 
 ## Pre-Flight Check
 
@@ -289,7 +289,7 @@ If the braindump contains **decisions that supersede existing plans or documents
 1. Identify which existing documents are affected (check the project's `planning/`, `research/`, and `PROJECT-OVERVIEW.md`)
 2. Compare dates — if the planning doc is older, it's stale
 3. **Ask the user:** "This braindump changes the plan for [X]. Should I update [list of affected docs] now?"
-4. If yes: update the affected documents and add changelog entries with today's date
+4. If yes: rewrite the affected documents in place to state the new decision; a status change also gets a dated PROJECT-OVERVIEW status paragraph
 5. If no: add a note to the braindump's Action Items: `- [ ] Pending: propagate decision to [doc list] 📅 [tomorrow's date]`
 
 **Why this matters:** Without propagation, braindumps and plans diverge. The next person (or AI) reading the plan gets outdated information. The braindump has the truth but isn't the expected place to look for current state.

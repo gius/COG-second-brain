@@ -41,7 +41,7 @@ Braindumps live in a `braindumps/` subfolder of their domain and are named
   personalized output.
 - Do not spawn sub-agents. This plugin has no sub-agent tool; do the work yourself.
   Skills carry a **Delegation buckets** paragraph naming `agent_mode: team`,
-  `specialist-tier` sub-agents and `AGENTS.md → Model Tiers`. None of that exists on
+  sub-agent tiers and `AGENTS.md → Model Tiers`. None of that exists on
   this runtime - ignore those paragraphs and run every phase in this session,
   whatever `MY-PROFILE.md` sets `agent_mode` to. Never narrate a fan-out you did not
   perform. For wide research, `deep_research` is the substitute: one tool call, and

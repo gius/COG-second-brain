@@ -20,7 +20,7 @@ Inspired by Karpathy's autoresearch — but for strategic thinking instead of ML
 ## Agent Mode Awareness
 
 **Check `agent_mode` in `00-inbox/MY-PROFILE.md` frontmatter:**
-- If `agent_mode: team` — use the full parallel agent execution strategy (5-7 agents). This skill benefits massively from team mode.
+- If `agent_mode: team` — use the parallel agent execution strategy (3-7 agents).
 - If `agent_mode: solo` — run 2-3 sequential research passes with WebSearch/WebFetch, produce a lighter analysis without the full multi-thread structure.
 
 ## Command: `/auto-research`
@@ -63,9 +63,7 @@ Not all threads apply to every question. Pick the 3-7 most relevant — fewer th
 
 ### Phase 2: Parallel Deep Research (Spawn 3-7 Agents)
 
-**CRITICAL: Launch ALL agents in a single message.** Use `run_in_background: true` for all agents.
-
-**Model tier (all research agents):** specialist (per the tier→model mapping in your project's agent guide). Web research with verification + structured output is bounded synthesis, not architect-tier strategic reasoning — that happens in Phase 3 main context.
+Launch all agents in one message with `run_in_background: true` - agents sent in separate messages run one after another.
 
 Each agent gets a detailed prompt following this template:
 
@@ -87,7 +85,7 @@ RESEARCH METHODOLOGY:
 VERIFICATION REQUIREMENT (follow the research delegation rules in AGENTS.md → Briefing sub-agents):
 - Cite primary sources only — vendor blogs, official GitHub repos, company press releases, academic preprints, government notices, research filings. Aggregators (newsletters, Medium, "top X" roundups, release-tracking sites) are discovery paths only. Chase them back to the primary and cite that.
 - One authoritative primary source is enough. Do not pad with a second source when the first is the project's or vendor's own official channel.
-- For each citation, return a `Verification proof` field containing the WebFetched title and publication date exactly as the fetch returned them.
+- For each citation, return a `Verification proof` field: the fetched title and publication date exactly as returned, and one word-for-word quote in backticks.
 - If WebFetch fails or no primary source exists, DROP the finding. Do not substitute an aggregator. Do not return it with a caveat. Returning zero items on a thread is acceptable; returning fabricated items is not.
 
 OUTPUT FORMAT (return ALL of this):
@@ -95,7 +93,7 @@ OUTPUT FORMAT (return ALL of this):
 ## Thread: [thread name]
 
 ### Key Findings (3-5 bullet points)
-- Finding with source attribution and `Verification proof` (WebFetched title + date)
+- Finding with source attribution and `Verification proof` (fetched title, date, word-for-word quote)
 
 ### Evidence & Data Points
 - Specific statistics, market data, examples with primary-source links and fetched-title proof
@@ -202,8 +200,7 @@ Consolidated, deduplicated list of all sources across threads.
 ### Phase 4: Save & Deliver
 
 1. Save the full analysis to `05-knowledge/research/YYYY-MM-DD-[slug].md`
-2. If the analysis is long (>3000 words), also create a brief 1-page summary at `05-knowledge/research/YYYY-MM-DD-[slug]-summary.md`
-3. Present the Executive Summary + Recommended Actions to the user directly in chat
+2. Present the Executive Summary + Recommended Actions to the user directly in chat
 
 
 ## Quality Standards

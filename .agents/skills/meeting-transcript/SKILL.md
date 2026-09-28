@@ -17,7 +17,7 @@ metadata:
 
 ## Agent Mode Awareness
 
-**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): only for transcripts over ~2000 words. Below that, process sequentially in main context — the spawn cost outweighs the benefit on a short transcript. At most 3 **specialist-tier** sub-agents, ≤3KB output each:
+**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): only for transcripts over ~2000 words. Below that, process sequentially in main context — the spawn cost outweighs the benefit on a short transcript. At most 3 sub-agents, ≤3KB output each:
 
 1. **Content extraction** (always) — decisions with rationale, action items with owners and deadlines, strategic themes, key quotes, unresolved issues.
 2. **Team dynamics** (skip for solo standups) — participation, collaboration quality, decision-making effectiveness, tensions and alignment issues.
@@ -122,19 +122,19 @@ After the meeting note is written, list the per-person observations worth keepin
 - Focus on career development and personal growth
 - Maintain strict privacy for personal discussions
 - Extract learning and development opportunities
-- Save to `[CUSTOMIZE: path/to/personal/]meetings/`
+- Save to `02-personal/meetings/<slug>-YYYY-MM-DD.md`
 
 ### Professional Domain Meetings
 - Analyze leadership and team management aspects
 - Extract strategic business insights
 - Identify professional development opportunities
-- Save to `[CUSTOMIZE: path/to/professional/]meetings/`
+- Save to `03-professional/meetings/<slug>-YYYY-MM-DD.md`
 
 ### Project-Specific Meetings
 - Connect to project metrics and milestones
 - Analyze progress against project goals
 - Extract competitive and market intelligence
-- Save to `[CUSTOMIZE: path/to/projects/][project-name]/meetings/`
+- Save to `04-projects/<project>/planning/<slug>-YYYY-MM-DD.md`
 
 ## Content Filtering Protocol
 

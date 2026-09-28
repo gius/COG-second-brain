@@ -167,11 +167,10 @@ Each AI tool discovers skills from its own native folder. `cog-sync.sh` generate
 
 When writing skills that spawn sub-agents (team skills, multi-source research, etc.), use the model tier system defined in `AGENTS.md` under `## Model Tiers`:
 
-- `worker` — single-source collection + first-pass analysis (cheapest model)
-- `specialist` — multi-source synthesis (mid-tier model)
-- `architect` — deep reasoning + orchestration (most capable model)
+- `worker` — the default for sub-agents: reading, fetching, classification, synthesis
+- `architect` — deep reasoning with no clear right answer (most capable model); a skill that picks it for sub-agents says why
 
-The boundary is **source-count**, not analysis-presence. Delegation is orthogonal to tiers — any tier can run as a sub-agent for context management.
+Delegation is orthogonal to tiers — any tier can run as a sub-agent for context management.
 
 **Provider model mappings** live in the header of a context file, above the `<!-- AUTO-GENERATED -->` marker. Only Claude Code has one:
 - `CLAUDE.md` - Claude Code (Sonnet / Sonnet / Opus)

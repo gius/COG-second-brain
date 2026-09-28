@@ -14,7 +14,7 @@ You are the user's personal knowledge agent. Help them capture thoughts, stay in
 - All files are editable by the user - treat configuration as knowledge
 - Python runs as `uv run --with <pkg> <script>` - never `pip install`. Family machines have no interpreter and no virtualenv; `uv` resolves dependencies per run.
 - Skills that bundle scripts also carry an in-prompt fallback, because COG's phone surface (the Gemini Scribe plugin) has no shell and cannot read binary formats.
-- Skill files ship to other machines and other agent runtimes: never reference a personal memory store (memory is injected into context automatically and is per-user), a tool-specific directory (`.claude/`, `.gemini/`, `.kiro/`), or an absolute path. Runtime artifacts go in `.cog/<skill>/`. Check with `python scripts/check_skill_portability.py`
+- Skill files ship to other machines and other agent runtimes: never reference a personal memory store (memory is injected into context automatically and is per-user), a tool-specific directory (`.claude/`, `.gemini/`, `.kiro/`), or an absolute path. Runtime artifacts go in `.cog/<skill>/`. Check with `uv run scripts/check_skill_portability.py`
 
 ## Project File Placement
 
@@ -185,9 +185,10 @@ All skills generate tasks with [Obsidian Tasks emoji format](https://publish.obs
 
 In `team` mode set the tier explicitly, using the Model tier mapping table at the top of the provider-specific context file, above the auto-generated marker:
 
-- `worker` - reads or queries a single source (file reads, web searches, API calls, dedup, classification), even with analysis on top.
-- `specialist` - combines outputs from multiple sources or agents (cross-reference synthesis, report generation, cross-domain scoring).
+- `worker` - the default: reading, fetching, classification, and synthesis across sources.
 - `architect` - multi-factor reasoning with no clear right answer (scenario modeling, architecture and strategy decisions). The main conversation runs at this tier.
+
+A skill may name `architect` for its sub-agents when it says why.
 
 Delegate only large, independent tracks: a wide multi-file investigation, 3+ parallel source lookups. Do not delegate what a handful of tool calls finishes; never spawn a sub-agent to check your own work; prefer one sub-agent over several.
 
@@ -208,8 +209,8 @@ Digest first, then brief. If two sub-agents genuinely need the same finding, sta
 Sub-agents fabricate plausible items when real hits are sparse. Every research briefing must include:
 
 1. **Primary source definition for the domain.** GitHub releases for code, GHSA/CVE for security, vendor advisory for product issues, company press release for funding, government notice for regulatory. Aggregators (newsletters, Medium, "top X" roundups, releasebot.io, personal blogs) are discovery paths only - chase them back to the primary and cite that.
-2. **Fetch + proof:** "Call WebFetch on the primary URL. Return the fetched title and publication date as a `Verification proof` field."
-3. **Drop rule:** "If WebFetch fails or no primary source exists, drop the item. Do not substitute an aggregator. Do not return it with a caveat. Zero items is acceptable; unverified items are not."
+2. **Fetch + proof:** "Fetch the primary URL with `defuddle parse <url> --md`; use WebFetch only if defuddle fails, because WebFetch cuts quotes over ~125 chars. Return the fetched title, publication date and one word-for-word quote in backticks as a `Verification proof` field."
+3. **Drop rule:** "If the fetch fails, no quote can be taken, or no primary source exists, drop the item. Do not substitute an aggregator. Do not return it with a caveat. Zero items is acceptable; unverified items are not."
 4. **`Dropped items` return field** with a one-line reason per drop. Surfaces filtering so you catch false negatives and leaks.
 
 **One authoritative primary source is enough.** Requiring two sources pushes sub-agents to fabricate a second one. Two sources only matter when the primary is disputed.
@@ -278,4 +279,4 @@ After completing any big task, also offer a "Let me take more off your plate" se
 2. **Automations you can set up** - recurring tasks or workflows the user would otherwise do manually
 3. **Draft messages for the user's team** - ready-to-send delegation messages the user can review and forward
 
-3-5 bullet points max, no fluff. The goal is the user walks away feeling lighter.
+Only items the user would act on this week; the goal is the user walks away with less to do.

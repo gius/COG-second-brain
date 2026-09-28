@@ -64,14 +64,14 @@ Step 4 already read the overlapping notes. Compare them against what the source 
 | Target | Action |
 |---|---|
 | Living doc (undated - `PROJECT-OVERVIEW.md`, `architecture.md`, booklet entry, `05-knowledge/patterns/`) | Edit in place |
-| Dated doc (`reports/`, `braindumps/`, `research/<x>-YYYY-MM-DD.md`) | Never rewrite - point-in-time record. Append one dated correction line, or leave it and cite the newer source in the report |
+| Dated doc (`reports/`, `braindumps/`, `research/<x>-YYYY-MM-DD.md`) | Never edit - point-in-time record. If a newer doc supersedes it, add one pointer line to the successor at the top; otherwise cite the newer source in the report |
 | `05-knowledge/consolidated/` framework | Never edit. Append one line to `05-knowledge/_index.md` -> **Open Contradictions**; only `/knowledge-consolidation` resolves it |
 
 **Ask first vs edit now:**
 - **Edit now, report after** - the correction is a fact: version, name, URL, status, price, a falsified claim.
 - **Ask first** - the correction changes a decision, plan, or recommendation ("we picked X because it does Y" and it no longer does).
 
-Every in-place edit carries a dated changelog line naming the source URL. State the source date so a reader can tell which is newer.
+State the corrected fact with its source URL and the source's date; record the change in the daily journal, not in the file.
 
 Report as `## Refreshed` only when a file changed - file, what changed, one-line evidence. Never manufacture an edit to fill the section. Nothing stale: emit no section and no justification - one clause in the verdict.
 
@@ -113,8 +113,7 @@ its seven skills already exists in COG in a deeper form. Nothing stale, nothing 
 ```
 
 ## Agent Mode
-- **team:** delegate each external-source lookup to a **specialist-tier** sub-agent. Brief each with the verification rules in step 3 - primary source, fetch + proof, drop rule. Synthesize in the main conversation.
-- **Not worker tier.** `WebFetch` caps quotes at ~125 chars and elides silently. Noticing the elision and climbing to rung 3 is a judgment call worker tier misses, and an elided quote returned as verbatim is worse than a dropped one.
+- **team:** delegate each external-source lookup to a sub-agent. Brief each with the verification rules in step 3 - primary source, fetch + proof, drop rule - and the step-2 fetch ladder, since `WebFetch` elides quotes over ~125 chars silently. Synthesize in the main conversation.
 - **Sub-agents fetch, they never write.** Steps 5 and 6 - vault edits, the Open Contradictions append, project scoring - run in the main conversation.
 - **solo:** do all fetching and reading directly.
 

@@ -2,6 +2,8 @@
 # Fetch and parse Czech news from ai.hn.cz/strucne
 # Outputs ready-to-display markdown
 
+set -o pipefail
+
 URL="https://ai.hn.cz/strucne"
 
 echo "# Hospodářské Noviny - Stručně"
@@ -9,7 +11,7 @@ echo ""
 echo "**$(date +%Y-%m-%d)** | ai.hn.cz/strucne"
 echo ""
 
-curl -s "$URL" | awk '
+curl -sS --fail "$URL" | awk '
 BEGIN { in_article = 0; title = ""; content = "" }
 
 /<div class="article-sum/ {

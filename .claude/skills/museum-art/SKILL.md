@@ -10,10 +10,10 @@ metadata:
 
 # museum-art: Public-Domain Artwork for Visuals
 
-> Standing rule (adopted 2026-07-24, from Eric Li's post on museum open-access): **whenever a visual needs a real image with aesthetic weight, source public-domain museum artwork first** - over AI-generated imagery and over generic stock. Curated, historically significant art reads as credible and sophisticated; AI-gen reads as slop. This stacks with [[no-ai-slop]]. Use museum art for photographic, hero, decorative and mood imagery; claim-driven diagrams and charts belong to [[data-forms]] and Mermaid.
+> **Whenever a visual needs a real image with aesthetic weight, source public-domain museum artwork first** - over AI-generated imagery and over generic stock. Curated, historically significant art reads as credible and sophisticated; AI-gen reads as slop. This stacks with [[no-ai-slop]]. Use museum art for photographic, hero, decorative and mood imagery; claim-driven diagrams and charts belong to [[data-forms]] and Mermaid.
 
 ## When to reach for this
-- Blog post hero images, section breaks, mood imagery (the blog-publish image step).
+- Blog post hero images, section breaks, mood imagery.
 - Deck/slide backgrounds and section dividers, social cards, essay figures, spec cover art.
 - Any time the instinct is "generate an image" for something decorative or evocative. Stop and pull a real painting instead.
 - NOT for: product screenshots, UI mockups, data charts, logos, or claim-driven explanatory diagrams. Those need a real capture, [[data-forms]], or a Mermaid diagram.
@@ -28,12 +28,12 @@ metadata:
 
 ## How to fetch in THIS environment
 - Use **WebFetch** to hit the JSON search endpoint, then WebFetch/download the returned image URL. These APIs are server-side reachable; no browser needed.
-- **Exception - Art Institute of Chicago images:** the JSON API (`api.artic.edu`) is fine, but the image host `www.artic.edu/iiif/...` 403s scripted/curl fetches via a Cloudflare bot challenge. Use the JSON metadata from AIC, but download the actual image through a real/headless browser (browser-harness) or prefer a different museum for the image bytes.
+- **Exception - Art Institute of Chicago images:** the JSON API (`api.artic.edu`) is fine, but the image host `www.artic.edu/iiif/...` 403s scripted/curl fetches via a Cloudflare bot challenge. Use the JSON metadata from AIC, but download the image bytes via `/playwriter`, or use a different museum.
 - Always **filter for public domain in the query AND spot-check the per-image license flag** before shipping (see Licensing).
 
 ## Freshness over caching (mandatory)
 **Fetch fresh per need. Do NOT build a reusable local pool of downloaded images to draw from.** A small cached set gets reused everywhere and becomes the new "same stock photo on every post" - sameness is a form of slop, and the variety of a huge open collection is the entire point. Fetching is keyless and sub-second, so there is no cost reason to cache pixels.
-- **Cache recipes/metadata, not images** - that is what this skill's `references/` already are.
+- **Cache recipes/metadata, not images** - the recipes in this file are that cache.
 - **Commit an image only into the specific artifact that uses it** (a post's `assets/`, a deck's media) once chosen - for provenance and offline builds. That is an artifact asset, never a shared library other artifacts pull from.
 - Each new visual = a fresh query. Vary the search terms and the source museum so consecutive posts do not converge on the same few crowd-pleasers.
 
@@ -97,7 +97,4 @@ metadata:
 ## Relationship to other skills
 - Stacks with [[no-ai-slop]]: real museum art is the anti-slop default for evocative imagery.
 - Complements [[data-forms]], which owns explanatory graphics. This owns photographic, artwork and mood imagery.
-- Feeds **blog-publish**, **social-media-kit**, **weekly-ai-slide**, deck and essay work at their image-sourcing step.
-
-## References (full per-museum recipes, verified)
-`references/_synthesis.md` (cheat-sheet) + one file per museum (`met.md`, `cleveland.md`, `smk.md`, `rijksmuseum.md`, `nga.md`, `artic.md`, `getty.md`, `smithsonian.md`) with live-tested example URLs, field maps, and gotchas.
+- Feeds blog, social-card, deck and essay work at its image-sourcing step.

@@ -7,7 +7,7 @@ Generate: `00-inbox/WELCOME-TO-COG.md` in the profile `language`. Per-user conte
 ```markdown
 ---
 type: guide
-created: YYYY-MM-DD
+created: "YYYY-MM-DD HH:MM"
 tags: [welcome, getting-started, cog]
 ---
 

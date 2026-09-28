@@ -20,7 +20,7 @@ Comprehensive weekly review and analysis integrating insights across all domains
 
 ## Agent Mode Awareness
 
-**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): at most 3 specialist-tier sub-agents, one per provenance bucket: (1) personal-domain scan, (2) professional-domain scan, (3) all-projects-combined scan. **Do NOT spawn one agent per active project** — each agent costs ~40K context overhead, and per-project context is rarely deep enough to need isolation. Skip any bucket with no fresh content in the window.
+**Delegation buckets** (`agent_mode: team` only — mode check and tier rules in `AGENTS.md → Model Tiers`): at most 3 sub-agents, one per provenance bucket: (1) personal-domain scan, (2) professional-domain scan, (3) all-projects-combined scan. **Do NOT spawn one agent per active project** — each agent costs ~40K context overhead, and per-project context is rarely deep enough to need isolation. Skip any bucket with no fresh content in the window.
 
 ## Pre-Flight Check
 
@@ -40,7 +40,7 @@ Comprehensive weekly review and analysis integrating insights across all domains
 
 Scan recent files from the past week:
 - Daily briefs in `01-daily/briefs/`
-- Braindumps in `02-personal/braindumps/`, `03-professional/braindumps/`, `04-projects/*/braindumps/`
+- Braindumps in `02-personal/braindumps/`, `03-professional/braindumps/`, `04-projects/**/braindumps/`
 - Previous check-ins in `01-daily/checkins/`
 - `00-inbox/FOCUS.md` if present - the streams the user pushes daily; check each stream's linked files for the week's movement
 - Knowledge index `05-knowledge/_index.md` — note frameworks/patterns relevant to this week's themes (fallback if missing: scan `05-knowledge/consolidated/` and `05-knowledge/patterns/` directly)
@@ -53,7 +53,7 @@ If `MY-PROFILE.md` available:
 #### Knowledge Health Check
 
 Assess consolidation debt:
-- Count braindumps with `status: "captured"` across `02-personal/braindumps/`, `03-professional/braindumps/`, `04-projects/*/braindumps/`, and `00-inbox/braindump-*.md`
+- Count braindumps with `status: "captured"` across `02-personal/braindumps/`, `03-professional/braindumps/`, `04-projects/**/braindumps/`, and `00-inbox/braindump-*.md`
 - Find the most recent `05-knowledge/consolidated/consolidation-*.md` and extract its date
 - Calculate days since last consolidation
 - **Read that consolidation report's content** (Major Themes, frameworks updated/created) — not just its date. Carry it into Pattern Recognition below so this week's reflection builds on the last synthesis instead of restarting from zero.
@@ -187,16 +187,6 @@ After creating the check-in:
 - Acknowledge challenges without sugar-coating or minimizing
 - Show curiosity about their experiences
 - Reflect back what you're hearing for validation
-
-### Don't:
-- Rush through the questions
-- Make assumptions about what matters to them
-- Judge their answers or week rating
-- Over-structure their free-form reflections
-- Force positivity if they had a tough week
-- Dismiss their challenges or concerns
-- Skip the emotional/energy assessment
-- Be clinical or robotic in tone
 
 ## After Completion
 

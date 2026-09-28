@@ -20,7 +20,7 @@ Welcome new users and collect essential information to personalize their COG exp
 
 ## Core Design Principle: Smart, Low-Friction Onboarding
 
-**The onboarding MUST feel like a natural conversation, NOT a form to fill out.**
+Run onboarding as a conversation, not a form.
 
 Key rules:
 - **Ask open-ended questions, not option-pickers.** Never present numbered lists of choices for the user to pick from.
@@ -52,7 +52,7 @@ Look for `00-inbox/MY-PROFILE.md`. If it exists:
 I found an existing COG profile! What would you like to update? Just tell me what you'd like to change - your interests, projects, profile info, or anything else.
 ```
 
-**Don't present a numbered menu.** Let them describe what they want in natural language. "Interview me" on an existing profile runs step 4.5 and appends to the two interview sections.
+Let them describe what they want in natural language. "Interview me" on an existing profile runs step 4.5 and appends to the two interview sections.
 
 ### 3. Intelligent Information Extraction
 
@@ -81,7 +81,7 @@ If any required field is missing, ask ONE follow-up that covers all gaps. For ex
 Thanks! I got your name and role. What topics are you most interested in staying updated on? (e.g., AI, startups, design, health - whatever matters to you)
 ```
 
-**Optional fields** (news sources, projects, competitive watch) should NEVER generate follow-up questions. If the user didn't mention them, skip them. They can always add them later by editing the files or running onboarding again.
+**Optional fields** (news sources, projects, competitive watch) get no follow-up questions. If the user didn't mention them, skip them. They can always add them later by editing the files or running onboarding again.
 
 ### 4.5. Interview Mode (opt-in)
 
@@ -173,7 +173,7 @@ After role pack matching, set up the user's integration preferences:
    ```markdown
    ---
    type: integrations
-   created: YYYY-MM-DD
+   created: "YYYY-MM-DD HH:MM"
    tags: ["integrations", "config", "cog"]
    ---
 
@@ -255,13 +255,13 @@ You're all set! I've created your profile, interests, and project files. Everyth
 If you want to jump right in, try a braindump - just tell me what's on your mind and I'll capture it. Or ask for your daily brief to see what's happening in your interest areas today.
 ```
 
-**Don't present a numbered menu of next actions.** Just suggest one or two natural things and let them decide.
+Suggest one or two natural next things and let them decide.
 
 ## Configuration Update Mode
 
 If user runs onboarding after initial setup (MY-PROFILE.md exists):
 
-Don't show a menu. Just ask:
+Ask:
 ```
 You've already completed onboarding! What would you like to update? Just tell me what needs changing.
 ```

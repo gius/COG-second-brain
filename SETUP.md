@@ -156,12 +156,11 @@ COG-second-brain/              # This is your second brain folder
 
 ### Model Tier Configuration
 
-COG routes sub-agents to one of three tiers based on source count:
+COG routes sub-agents to one of two tiers:
 
 | Tier | Role | Claude Code | Antigravity CLI | OpenAI Codex |
 |---|---|---|---|---|
-| `worker` | Single-source collection + first-pass analysis | Sonnet | Flash | o4-mini |
-| `specialist` | Multi-source synthesis | Sonnet | Flash | o4-mini |
+| `worker` | Reading, fetching, classification, synthesis (default) | Sonnet | Flash | o4-mini |
 | `architect` | Deep reasoning + orchestration | Opus | Pro | o3 |
 
 Tier definitions live in `AGENTS.md` under `## Model Tiers`. The only runtime that reads a concrete model mapping from a file is Claude Code:

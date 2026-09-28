@@ -78,49 +78,20 @@ Optional:
 - Publish mode: "create new" or "update existing"
 ```
 
-**If the user doesn't know the space or parent page:**
-```
-Use WebFetch to search Confluence:
-GET /wiki/rest/api/space?limit=50
-- List available spaces for the user to choose
+**If the user doesn't know the space or parent page:** list spaces and pages with the Atlassian integration's read tools (Claude: `searchConfluence` / `getConfluenceContent`, with the `cloudId` from `getAccessibleAtlassianResources`) and let the user choose.
 
-GET /wiki/rest/api/content?spaceKey=[SPACE]&type=page&limit=25
-- List pages in the space for parent page selection
-```
+### Phase 3: Prepare the Page Body
 
-### Phase 3: Convert Markdown to Confluence Format
+The Atlassian integration accepts markdown or HTML page bodies, so no hand conversion to storage XHTML is needed. Prepare the body:
 
-Convert the markdown document to Confluence storage format (XHTML):
-
-**Conversion rules:**
-| Markdown | Confluence Storage Format |
-|----------|--------------------------|
-| `# Heading` | `<h1>Heading</h1>` |
-| `## Heading` | `<h2>Heading</h2>` |
-| `**bold**` | `<strong>bold</strong>` |
-| `*italic*` | `<em>italic</em>` |
-| `- list item` | `<ul><li>list item</li></ul>` |
-| `1. list item` | `<ol><li>list item</li></ol>` |
-| `[text](url)` | `<a href="url">text</a>` |
-| `` `code` `` | `<code>code</code>` |
-| Code blocks | `<ac:structured-macro ac:name="code"><ac:plain-text-body><![CDATA[...]]></ac:plain-text-body></ac:structured-macro>` |
-| Tables | `<table><tbody><tr><th>...</th></tr><tr><td>...</td></tr></tbody></table>` |
-| `> blockquote` | `<blockquote><p>quote</p></blockquote>` |
-| `---` | `<hr />` |
-| `- [ ] task` | `<ac:task-list><ac:task><ac:task-status>incomplete</ac:task-status><ac:task-body>task</ac:task-body></ac:task></ac:task-list>` |
-| `- [x] task` | Same with `complete` status |
-| YAML frontmatter | Strip entirely (not displayed in Confluence) |
-
-**Important conversion notes:**
-- Strip YAML frontmatter — it should not appear in the Confluence page
-- Preserve table structure carefully
-- Convert relative vault links to plain text (they won't work in Confluence)
-- Handle nested lists properly
-- Preserve emoji characters as-is
+- Strip YAML frontmatter.
+- Turn vault wiki-links (`[[note]]`, `[[note|alias]]`) into plain text (the alias if present); they do not resolve in Confluence.
+- Keep tables, nested lists, code blocks, task lists and emoji as they are.
+- Before writing, read the integration's authoring guide for the target tool (Claude: `getContentFormatGuide`) and the space's instructions (`getConfluenceSpace`), and apply them.
 
 ### Phase 4: Preview and Approval Gate
 
-**CRITICAL: NEVER publish without explicit user approval.**
+Publish only after the user approves this preview - a published page is visible to the whole space at once.
 
 Present a summary to the user:
 
@@ -146,65 +117,27 @@ Proceed with publishing? (yes/no)
 
 ### Phase 5: Publish
 
-#### Create New Page
-```
-Use WebFetch to POST to Confluence REST API:
+Needs an Atlassian integration with write access. If `00-inbox/MY-INTEGRATIONS.md` lists only read scopes, stop after Phase 4 and offer the prepared body as a file for manual paste.
 
-POST [CUSTOMIZE: your-confluence-url]/wiki/rest/api/content
+#### Create new page
+Create the page with the integration's create tool (Claude: `createConfluenceContent`, `contentType: "page"`, `parent: {spaceId, parentContentId}`, `body: {format: "markdown", value: ...}`). Add labels afterwards if the user asked for them.
 
-Headers:
-  Content-Type: application/json
-  Authorization: [from configured credentials]
+#### Update existing page
+1. Read the current page in full (Claude: `getConfluenceContent`, `detail: "full"`, `content_format: "html"`) - this returns the `snapshotToken` the update needs.
+2. If the page body contains macros (table of contents, page properties, excerpts, Jira embeds), do not replace the whole body - a markdown replacement drops them. Use granular edits (`edits`) on the changed sections, or send back the fetched HTML with only the prose sections replaced.
+3. Otherwise replace the body (Claude: `updateConfluenceContent` with `snapshotToken` and `body`). A `dryRun: true` call first shows the result without saving.
 
-Body:
-{
-  "type": "page",
-  "title": "[page title]",
-  "space": { "key": "[SPACE_KEY]" },
-  "ancestors": [{ "id": "[PARENT_PAGE_ID]" }],
-  "body": {
-    "storage": {
-      "value": "[converted XHTML content]",
-      "representation": "storage"
-    }
-  },
-  "metadata": {
-    "labels": [
-      { "prefix": "global", "name": "[label]" }
-    ]
-  }
-}
-```
+### Verify
 
-#### Update Existing Page
-```
-First, get the current page to obtain the version number:
-GET [CUSTOMIZE: your-confluence-url]/wiki/rest/api/content/[PAGE_ID]?expand=version
-
-Then update:
-PUT [CUSTOMIZE: your-confluence-url]/wiki/rest/api/content/[PAGE_ID]
-
-Body:
-{
-  "type": "page",
-  "title": "[page title]",
-  "version": { "number": [current_version + 1] },
-  "body": {
-    "storage": {
-      "value": "[converted XHTML content]",
-      "representation": "storage"
-    }
-  }
-}
-```
+Read the page back by ID (Claude: `getConfluenceContent`, `detail: "full"`). Confirm the title, the parent, a version number higher than before (update) and a body that contains the document's headings. On any mismatch, tell the user what differs and do not report success.
 
 ### Phase 6: Confirm and Update Vault
 
-After successful publishing:
+After the Verify step passes:
 
 1. **Confirm to the user:**
    ```
-   Published successfully!
+   Published and verified.
 
    Page: [Title]
    URL: [Confluence page URL]
@@ -245,8 +178,8 @@ c) Cancel
 | Scenario | Behavior |
 |----------|----------|
 | Confluence not active | Stop and inform user; suggest alternative platforms |
-| Confluence API fails | Save the converted XHTML to a file so user can manually paste it |
-| Authentication failure | Inform user their Confluence credentials may need refreshing |
+| Integration call fails | Save the prepared body to a file so the user can paste it manually |
+| Authentication failure or read-only access | Tell the user the integration needs re-authentication or write access |
 | Page already exists (same title) | Ask user: update existing, create with different title, or cancel |
 | Very large document | Warn user about page size; suggest splitting into child pages |
 | Complex markdown (unsupported elements) | Convert best-effort, warn about any elements that couldn't be converted |
@@ -255,7 +188,6 @@ c) Cancel
 
 - **API 403 (Forbidden)**: User may lack write permissions to the target space
 - **API 404 (Not Found)**: Space key or parent page ID may be incorrect
-- **API 409 (Conflict)**: Page was modified by someone else; fetch latest version and retry
+- **Conflict / stale snapshot**: Page was modified by someone else; re-read it for a fresh `snapshotToken` and retry
 - **Conversion failures**: Fall back to plain text for elements that can't be converted
-- **Rate limits**: Retry with backoff
 - **Network errors**: Save converted content locally so no work is lost

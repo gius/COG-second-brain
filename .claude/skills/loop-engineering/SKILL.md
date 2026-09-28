@@ -65,7 +65,7 @@ Long loops fill the window with old tool output and start to drift ("context rot
 
 - **Externalize state to the vault.** Write progress to the output file as you go. The vault file is the memory; the conversation is scratch.
 - **Compact and prune.** Summarize finished passes into a line or two. Drop raw page text once you have extracted what you need.
-- **Isolate sub-agents.** In `agent_mode: team`, give each worker (routed to its model tier: worker/specialist/architect) only the slice it needs and take back only its conclusion, so one subtask runs in a clean window. Never paste one worker's raw output into the next worker's prompt.
+- **Isolate sub-agents.** In `agent_mode: team`, give each worker (routed to its model tier: worker/architect) only the slice it needs and take back only its conclusion, so one subtask runs in a clean window. Never paste one worker's raw output into the next worker's prompt.
 
 ## Named patterns
 

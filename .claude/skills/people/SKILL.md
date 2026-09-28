@@ -32,7 +32,7 @@ Never a substitute for talking to people. The profile records observed working p
 ## Mode: update
 
 1. Resolve the name to a file. On a near-match (`jan-novak` vs `jan-novack`), ask before creating a second file.
-2. For each observation, capture the **source note it came from**. An observation with no vault source is not written - ask the user to braindump it first, or record it as their statement with the conversation as the source.
+2. For each observation, capture the **source note it came from**. An observation with no vault source is not written - ask the user to braindump it first, then cite that note.
 3. Append to `## Timeline` under a `### YYYY-MM-DD` heading. Never rewrite an existing entry.
 4. Update **Compiled Truth** only where the new evidence changes the current picture. Contradiction with an existing line moves that line to `### Open Threads`, it does not silently overwrite it.
 5. Report which profiles changed and how many observations landed.

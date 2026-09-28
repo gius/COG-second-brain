@@ -21,7 +21,7 @@ Transform raw URLs into structured, insightful knowledge entries through intelli
 
 ## Agent Mode Awareness
 
-**Mostly solo.** A single URL save is fast direct work; one sub-agent at ~40K overhead rarely pays off. **Only delegate** (team mode) when batch-processing **3+ URLs** simultaneously: spawn ONE specialist-tier agent that fetches + analyzes all URLs in parallel internally and returns the structured results. Don't spawn one agent per URL.
+**Mostly solo.** A single URL save is fast direct work; one sub-agent at ~40K overhead rarely pays off. **Only delegate** (team mode) when batch-processing **3+ URLs** simultaneously: spawn ONE agent that fetches + analyzes all URLs in parallel internally and returns the structured results. Don't spawn one agent per URL.
 
 ## Pre-Flight Check
 
@@ -61,7 +61,7 @@ What URL(s) would you like to save?
 - Detect duplicate URLs in existing knowledge base
 - Fetch the web page content via the fetch ladder (`defuddle` → `WebFetch` → `/playwriter`)
 
-**If the fetch fails** (network error, 403/404, paywall blocking extraction, or every rung of the ladder returns substantially empty content): do NOT proceed to Phase 3 analysis. Instead, save a minimal stub to `00-inbox/url-[title-slug]-YYYY-MM-DD.md` with `status: "fetch-failed"` and the original URL + any user note, and tell the user the fetch failed so they can review manually. Analyzing content that didn't actually load produces plausible-sounding but fabricated insights — exactly the failure mode we're guarding against.
+**If the fetch fails** (network error, 403/404, paywall blocking extraction, or every rung of the ladder returns substantially empty content): do not run step 4 (analysis). Instead, save a minimal stub to `00-inbox/url-[title-slug]-YYYY-MM-DD.md` with `status: "fetch-failed"` and the original URL + any user note, and tell the user the fetch failed so they can review manually. Analyzing content that didn't actually load produces plausible-sounding but fabricated insights — exactly the failure mode we're guarding against.
 
 #### Content Extraction
 Extract from the fetched page:
@@ -135,7 +135,7 @@ Write the file from the bookmark template in `references/output-templates.md`. R
 
 Save to appropriate location:
 - **Standard:** `05-knowledge/booklets/[category-slug]/[title-slug]-YYYY-MM-DD.md`
-- **Project-specific:** `04-projects/[project-slug]/resources/[title-slug]-YYYY-MM-DD.md`
+- **Project-specific:** `04-projects/[project-slug]/research/[title-slug]-YYYY-MM-DD.md`
 - **Mixed/Unclear:** `00-inbox/url-[title-slug]-YYYY-MM-DD.md`
 
 ### 6. Tool/Resource Special Handling
