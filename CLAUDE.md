@@ -51,6 +51,14 @@ Inside a project folder (`04-projects/<project>/` or `04-projects/<customer>/<pr
 
 **Exceptions, stated not guessed:** a dated doc that is neither input nor output (e.g. `type: reference` records like a filed tax form) may stay at the project root. Say so when you place one there.
 
+**One truth doc per topic.** A topic investigated across sessions (an audit, an architecture, a vendor choice) gets one undated living doc at the project root that consolidates its findings: the topic's truth doc. Reports are cut from the truth doc, never assembled from research notes directly, and name it in frontmatter: `source: "[[<truth-doc>]]"`.
+
+- **Evidence lives only in `research/`.** Every check, measurement, code read, and statement quoted from a person lands in a dated research note. A report appendix, a list in `reports/`, or a PROJECT-OVERVIEW paragraph is never the only record of a finding.
+- **Research notes declare their topic and state.** At write time: `feeds: "[[<truth-doc>]]"`. Once the truth doc carries the note's findings: `consolidated_in: "[[<truth-doc>]]"` and `consolidated_date`. `feeds` without `consolidated_in` = pending, not in the truth doc yet.
+- **Contradictions are flagged at write time.** A research note that contradicts the truth doc adds one line to the truth doc's `## Open contradictions` section immediately: the claim, the new evidence, the date. Consolidation resolves and removes it.
+- **The truth doc marks confidence per finding.** A finding checked against its source carries the check date. Anything inferred, reported by one person, or not tested on a live system says so inline.
+- **PROJECT-OVERVIEW names the phase** in a `## Sources of truth` table: topic | truth doc | phase. `research` = no truth doc yet, findings exist only in research notes. `consolidated` = truth doc exists; pending notes are the ones without `consolidated_in`. A report cut during the `research` phase states that in its first line.
+
 **Links:** prefer bare `[[filename]]` wiki-links - they survive file moves. Use relative (`[[../x]]`) or vault-absolute (`[[04-projects/...]]`) paths only when disambiguating a duplicate filename, since those break on move.
 
 **When moving files:** grep for path-based inbound links first (`\[\[(\.\./|04-projects/)[^]]*<name>`), report what breaks, then move and rewrite. Bare links need no change. The user handles git - use plain `mv`, not `git mv`.
@@ -279,6 +287,7 @@ The user reviews **one file per run**. Staging files, per-sub-agent dumps, and s
 - **Fan-out is fine mid-run.** Parallel sub-agents write separate staging files to avoid write conflicts.
 - **The final step always consolidates:** one deliverable with the synthesis on top, then `## Appendix - sources` carrying each staging file's content (condensed plus a link if it is bulky raw data).
 - **Delete the staging files afterwards.** The run ends with exactly one new file, or zero if the deliverable belongs in an existing living doc.
+- **Project topics keep evidence out of the appendix.** When the run feeds a project topic (see **One truth doc per topic**), new evidence goes to a research note, not to `## Appendix - sources`. A report run that also gathered evidence ends with two files: the research note and the report.
 - Never hand over "see files A, B, C, D".
 
 Where that one file goes is decided by **Project File Placement** above.

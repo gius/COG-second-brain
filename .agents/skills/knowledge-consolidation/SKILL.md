@@ -102,7 +102,7 @@ When in doubt, err toward lighter output. A framework created too early from thi
     - living docs at the project root (`PROJECT-OVERVIEW.md`, `architecture.md`, `build-plan.md`)
   - **Processing note:** Different artifact types serve different purposes:
     - *Meeting notes* — extract decisions made, action items, and recurring blockers. Decision patterns across meetings are high-value.
-    - *Research* — extract the options weighed and why one won. Useful for tracking how thinking evolves.
+    - *Research* — extract the options weighed and why one won. Useful for tracking how thinking evolves. A note with `feeds:` and no `consolidated_in` is evidence still waiting for its project truth doc (`AGENTS.md` → One truth doc per topic); folding it in is project work, this skill only reports the debt (Step 1b).
     - *Reports* — extract the conclusions delivered and any recurring findings across audits and reviews.
     - *Living docs* — read the current state and the dated status paragraphs; trends across status paragraphs are high-value.
 
@@ -172,6 +172,12 @@ Score each document 0-100 across four dimensions:
 - **Freshness (20%):** Age relative to category decay threshold, weighted by category
 
 **Vault health score** = weighted average of all document scores, reported as a single 0-100 number. Exclude files whose path contains `/archive/` from scoring — they're out-of-active-scope and shouldn't drag metrics when archival (a cleanup win) happens.
+
+**Consolidation debt check** (per project topic, from each PROJECT-OVERVIEW `## Sources of truth` table and each research note's `feeds:`):
+- Topics in `research` phase: topic, research note count, oldest note age.
+- Topics in `consolidated` phase: pending notes (`feeds` set, no `consolidated_in`), oldest pending age, lines in the truth doc's `## Open contradictions`.
+- Research notes without `feeds` in a project that has a Sources of truth table: list them; the note's topic is unknown.
+- Reports whose frontmatter `source` truth doc has pending notes older than the report: the report may be built on stale findings.
 
 **Obsolescence check:** for braindumps with `status: consolidated` and `consolidated_in: [[...]]`, resolve the parent consolidation and flag the braindump if the parent is >180 days old (the source's reference value has likely passed). List under Freshness Report.
 
@@ -338,6 +344,7 @@ Save to: `05-knowledge/consolidated/vault-health-YYYY-MM-DD.md`
 - **Overall Health Score: [X]/100** — Table with dimensional breakdown (Completeness, Connectivity, Metadata Quality, Freshness) — each with score and notes
 - **Content Inventory** — Table: content type | count | unprocessed | oldest unprocessed | avg age. Include all types (braindumps by domain, daily/team briefs, check-ins, research, bookmarks, PRDs, releases, stories, audits, competitive intel, meeting notes, frameworks, patterns, timeline entries). End with totals row.
 - **Freshness Report** — Stale content table (document, type, age, threshold, action needed). Frameworks needing evidence (status emerging/working, last updated, days since update).
+- **Consolidation Debt**: table from the Step 1b check: project | topic | phase | truth doc | pending notes | oldest pending | open contradictions. Omit when no project has a Sources of truth table or `feeds:` note.
 - **Connectivity Report** — Orphaned documents list (path, type, created date). Dead links list (broken reference, source file). Most connected hub documents table (top 5 by inlink + outlink count).
 - **Recommended Actions** — Three tiers: Immediate (this session), Next Consolidation, Maintenance. Each with specific actionable items.
 
