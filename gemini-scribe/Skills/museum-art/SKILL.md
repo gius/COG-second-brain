@@ -10,7 +10,7 @@ metadata:
 
 # museum-art: Public-Domain Artwork for Visuals
 
-> **Whenever a visual needs a real image with aesthetic weight, source public-domain museum artwork first** - over AI-generated imagery and over generic stock. Curated, historically significant art reads as credible and sophisticated; AI-gen reads as slop. This stacks with [[no-ai-slop]]. Use museum art for photographic, hero, decorative and mood imagery; claim-driven diagrams and charts belong to [[data-forms]] and Mermaid.
+> **Whenever a visual needs a real image with aesthetic weight, source public-domain museum artwork first** - over AI-generated imagery and over generic stock. Curated, historically significant art reads as credible and sophisticated; AI-gen reads as slop. This stacks with [[my-voice]]. Use museum art for photographic, hero, decorative and mood imagery; claim-driven diagrams and charts belong to [[data-forms]] and Mermaid.
 
 ## When to reach for this
 - Blog post hero images, section breaks, mood imagery.
@@ -95,6 +95,6 @@ metadata:
 - **Good practice everywhere:** a one-line credit ("Digital image courtesy of [Museum]") costs nothing and covers mixed-license collections. When masking/compositing per house style, keep the credit.
 
 ## Relationship to other skills
-- Stacks with [[no-ai-slop]]: real museum art is the anti-slop default for evocative imagery.
+- Stacks with [[my-voice]]: real museum art is the anti-slop default for evocative imagery.
 - Complements [[data-forms]], which owns explanatory graphics. This owns photographic, artwork and mood imagery.
 - Feeds blog, social-card, deck and essay work at its image-sourcing step.

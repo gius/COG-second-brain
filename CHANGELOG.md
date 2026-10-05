@@ -4,10 +4,23 @@ All notable changes to COG (Cognition + Obsidian + Git) will be documented in th
 
 Versions from `1.0.0` onward are **this fork's own**, independent of upstream - see `UPSTREAM-SYNC.md`. Earlier entries carry the inherited upstream numbering.
 
-## [Unreleased]
+## [1.4.0] - 2026-10-05
+
+Upstream review of `623ed00..36ac9d7` (upstream v3.13.0 - v3.15.0). Pick sheet in the vault at `04-projects/cog-customization/reports/upstream-review-v3.15.0-2026-10-05.md`.
 
 ### Added
-- **`my-voice` learns your writing voice from your edits.** Few people have a long sample of their own writing, but everyone fixes agent drafts. The agent snapshots each vault file it hands over (`.cog/my-voice/drafts/`) and captures your edits before it changes the file again (`.cog/my-voice/pending/`). `/my-voice` learn diffs the pairs paragraph by paragraph with `scripts/edit_pairs.py`, sorts voice changes from fact fixes, and proposes rules for your approval. Pairs you paste (a message you actually sent) are saved to `pending/` too, and proposals wait in `.cog/my-voice/proposals.md`, so any session can finish an approval. Approved rules live in `00-inbox/MY-VOICE.md`, grouped by language and audience, capped at 20 per group. Writing for other people and `no-ai-slop` read them. Method after PRELUDE/CIPHER (arXiv:2404.15269): readable preference descriptions inferred from edits, retrieved by context.
+- **`my-voice` and `learn-my-voice`: writing that sounds like you.** `my-voice` writes and edits by two rule sets: general rules against AI-slop patterns (the former `no-ai-slop`) and your personal rules from `00-inbox/MY-VOICE.md`, where a personal rule wins. `learn-my-voice` builds those personal rules from your edits, because few people have a long sample of their own writing but everyone fixes agent drafts. The agent copies each vault file it hands over to `.cog/learn-my-voice/drafts/` and saves your edits to `pending/` before it changes the file again. A message you show as actually sent is saved there too. `scripts/edit_pairs.py` diffs the pairs paragraph by paragraph, the agent separates voice changes from fact fixes, and proposes rules in `.cog/learn-my-voice/proposals.md`, so any session can finish the approval. Rules are grouped by language and audience, capped at 20 per group. Method after PRELUDE/CIPHER (arXiv:2404.15269): readable preference descriptions inferred from edits, picked by context.
+- **Simplified Technical English for English agent text** in `AGENTS.md` § Response Content, at about 80% of ASD-STE100 (from upstream v3.15.0). Other languages follow the personal rules, because the sentence caps break up Czech subordinate clauses.
+
+### Changed
+- **`my-voice` carries upstream's newer writing rules:** the Opus 5.5 habits (parenthetical stuffing, semicolon chains, bullet-and-bold replies, colon lead-ins) with counts from our own transcripts, announcement preambles and meta-narration, the same rules for titles, table headers and labels with three failing title shapes, voice limits against an agent turning a person's habits into tics, and why ban lists backfire. `eval.md` checks each.
+
+### Fixed
+- **`cog-sync.sh` left deleted files in the mirrors.** It copied `scripts/`, `references/` and `assets/` over the old mirror, so a file moved or deleted in `.agents/skills/` stayed in `.claude/skills/` and `gemini-scribe/Skills/`, and the parity check, which only looked for `SKILL.md`, still said "in sync". The sync now clears each mirrored folder before copying, and the parity check compares every mirror with its source.
+
+### Skipped from upstream
+- `slop-gate` and `voice-baseline`: pattern counters over English text. On our transcripts the gate would mainly catch "X, not Y", which it cannot tell from a fair contrast, and the baseline needs a body of the user's own writing. Their rules are carried as text in `my-voice` instead.
+- `release-video` (needs ElevenLabs, ffmpeg and Playwright, no use case yet), the ELI5 opener and the format ladder (covered by mechanism-first and shape rules users keep in their own global instructions), and the `cog-update.sh` file list (upstream layout).
 
 ### Removed
 - **The `clear` output style.** On Opus 5.5, Claude Code's built-in `Concise` style (2.1.237+) leads with the result and drops preamble and recaps, which was most of what `clear` added; a side-by-side run of the same prompts under Default, `Concise` and `clear` showed plain answers on all three. Set `"outputStyle": "Concise"` in `~/.claude/settings.json`. Personal answer rules (decision format, markers, drawn shapes) belong in your own global `CLAUDE.md`.

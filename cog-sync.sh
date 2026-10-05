@@ -121,8 +121,16 @@ parity_check() {
     name=$(get_field "name" "$skill_file")
     [[ -z "$name" ]] && continue
 
-    [[ ! -f "${CLAUDE_DIR}/${name}/SKILL.md" ]] && warn "Missing: ${CLAUDE_DIR}/${name}/SKILL.md" && issues=$((issues + 1))
-    [[ ! -f "${SCRIBE_DIR}/${name}/SKILL.md" ]] && warn "Missing: ${SCRIBE_DIR}/${name}/SKILL.md" && issues=$((issues + 1))
+    for tool_dir in "$CLAUDE_DIR" "$SCRIBE_DIR"; do
+      if [[ ! -f "${tool_dir}/${name}/SKILL.md" ]]; then
+        warn "Missing: ${tool_dir}/${name}/SKILL.md"
+        issues=$((issues + 1))
+      elif ! diff -rq "${skill_dir%/}" "${tool_dir}/${name}" >/dev/null; then
+        warn "Differs from source: ${tool_dir}/${name}/"
+        diff -rq "${skill_dir%/}" "${tool_dir}/${name}" | sed 's/^/    /'
+        issues=$((issues + 1))
+      fi
+    done
   done
 
   # 2. Check generated copies exist for each output style
@@ -194,8 +202,10 @@ sync_skill() {
     mkdir -p "${tool_dir}/${name}"
     cp "$skill_file" "$target"
 
-    # Also copy scripts/, references/, assets/ if they exist
+    # Also copy scripts/, references/, assets/ if they exist. Clear the mirror's copy
+    # first, or a file moved or deleted in the source lingers in the mirror.
     for subdir in scripts references assets; do
+      rm -rf "${tool_dir}/${name}/${subdir}"
       if [[ -d "${skill_base}/${subdir}" ]]; then
         cp -r "${skill_base}/${subdir}" "${tool_dir}/${name}/"
       fi

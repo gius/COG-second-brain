@@ -60,6 +60,7 @@ git log <last-reviewed>..public-souce/main --oneline
 #    PORT target is always our source of truth, never a copied file:
 #      - a skill        -> .agents/skills/<name>/SKILL.md   (new dir or edit)
 #      - framework docs -> AGENTS.md
+#    Renamed in this fork: upstream no-ai-slop -> .agents/skills/my-voice/.
 #    NEVER adopt upstream's per-tool dirs (.claude/agents, .gemini, .cursor-plugin,
 #    .claude/roles) — cog-sync.sh owns those surfaces.
 

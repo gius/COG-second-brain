@@ -1,6 +1,6 @@
-# No AI slop eval
+# My voice eval
 
-Use this after the rewrite. Answer each check with pass or fail. If any check fails, fix the draft before returning it.
+Use this after writing or editing. Answer each check with pass or fail. If any check fails, fix the text before returning it.
 
 For detect requests, make sure the response names each pattern found with a quoted line and a short fix, without rewriting the draft.
 
@@ -40,10 +40,23 @@ For detect requests, make sure the response names each pattern found with a quot
 4. Is section length proportional to importance and evidence, not symmetrical by default?
 5. Does every paragraph add a fact, mechanism, example, implication, counterexample, or decision beyond the previous paragraph?
 6. Does the piece stop at the last useful point instead of appending an artificial synthesis?
+7. Are announcement preambles and meta-narration about the document gone?
+
+## Surfaces and model habits
+
+1. Do titles, headings, table headers and labels name their subject, with no number pairing, metaphor for the noun, or question as title?
+2. Is there at most one parenthetical per paragraph, no semicolon-chained clauses, no colon lead-ins, and prose where bullets were carrying a line of reasoning?
+
+## Personal rules and voice limits
+
+1. Does the text follow every personal rule from the matching `00-inbox/MY-VOICE.md` sections, where the rule fits?
+2. Is no personal rule or favorite word applied so often that it reads as a tic?
+3. Is there at most one paragraph-ending verdict sentence, no kicker closer, and no default question to the reader at the end?
+4. For agent-written English text: does it meet the Simplified Technical English limits in `AGENTS.md` § Response Content?
 
 ## Final read
 
-1. Was the edit checked directly against this file without requiring separate editor and evaluator agents?
+1. Was the text checked directly against this file without requiring separate editor and evaluator agents?
 2. Does the draft avoid robotic symmetry, repeated sentence shapes, and stacked punchy fragments?
 3. Would the writer recognize the edited draft as their own voice?
 4. Would the edited draft sound natural if read to a sharp colleague?
