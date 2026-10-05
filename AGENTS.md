@@ -93,6 +93,7 @@ Each skill has a full playbook in `.agents/skills/[name]/SKILL.md`. When the use
 | `/task-triage` | Clear overdue + due-today tasks from TASKS.md - evidence-based classification, batched approval, rulebook grows over time | "triage tasks", "what's overdue", "clear my tasks", "clean up TASKS.md" |
 | `/memory-hygiene` | Trust sweep of persistent memory - re-verify environment-dependent claims against the live environment, stamp `last_verified`, propose archiving drifted entries | "audit my memories", "check for stale memories" |
 | `/no-ai-slop` | Edit a draft into sharper, more human writing while keeping your voice, or audit one for AI-slop patterns without rewriting | "make this less AI", "sharpen this draft", "does this read as AI?" |
+| `/my-voice` | Learn your writing voice from the edits you make to agent drafts, keep it as a rule list you can review, rewrite drafts by it | "learn from my edits", "write this like me", "add a voice rule" |
 | `/museum-art` | Source public-domain artwork from museum open-access APIs for heroes, decks, and social cards | "find a hero image", "public domain art", "image for this post" |
 | `/data-forms` | Pick the chart or diagram form that carries the finding, plus the encoding decisions that make it readable | "which chart", "how should I visualize this", "graph this data" |
 | `/czech-ai-news` | Latest Czech AI news from ai.hn.cz, grouped by topic, no translation or rewriting | "czech ai news", "co je noveho v AI" |
@@ -117,6 +118,16 @@ Ambient behavior, active only when `00-inbox/FOCUS.md` exists. The file holds th
 - **Read it at session start.** When the user asks what to push, or names a stream, follow the stream's links and answer from the linked files' open items.
 - **Offer the parallel work.** Propose what an agent can run for a stream without the user, as sub-agents under the Model Tiers rules; one agent per stream, only for streams the user named unless they asked for all.
 - **Keep it a list of links.** Never copy tasks, status or sub-items into FOCUS.md; detail stays in the linked files. Do not add, reorder or remove streams - that is the user's call, or `/weekly-checkin`'s. Fix a link only when its target moved.
+
+## Voice
+
+Ambient behavior, active only when `00-inbox/MY-VOICE.md` exists. The procedure lives in `.agents/skills/my-voice/SKILL.md`.
+
+- **Writing prose another person reads** (report, delivery note, email, message, review comment): read `00-inbox/MY-VOICE.md` and follow `## All writing` plus the section matching the text's language and audience.
+- **Handing a vault file to the user to read or edit:** copy it to `.cog/my-voice/drafts/<path with / replaced by __>`.
+- **Before editing a file that has a snapshot:** if the file differs from the snapshot, the user edited it. Copy the snapshot and the current file to `.cog/my-voice/pending/<YYYYMMDD-HHMM>-<flat-path>.before.md` and `.after.md`, then edit, then refresh the snapshot. This keeps the user's edits learnable after the agent changes the file again.
+- **The user shows the version they actually sent** of a text you drafted in chat: save both to `.cog/my-voice/pending/`.
+- Do not announce these writes. Offer `/my-voice` learn once per session when `pending/` holds pairs or `.cog/my-voice/proposals.md` exists.
 
 ## Response Content
 

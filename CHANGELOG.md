@@ -6,6 +6,9 @@ Versions from `1.0.0` onward are **this fork's own**, independent of upstream - 
 
 ## [Unreleased]
 
+### Added
+- **`my-voice` learns your writing voice from your edits.** Few people have a long sample of their own writing, but everyone fixes agent drafts. The agent snapshots each vault file it hands over (`.cog/my-voice/drafts/`) and captures your edits before it changes the file again (`.cog/my-voice/pending/`). `/my-voice` learn diffs the pairs paragraph by paragraph with `scripts/edit_pairs.py`, sorts voice changes from fact fixes, and proposes rules for your approval. Pairs you paste (a message you actually sent) are saved to `pending/` too, and proposals wait in `.cog/my-voice/proposals.md`, so any session can finish an approval. Approved rules live in `00-inbox/MY-VOICE.md`, grouped by language and audience, capped at 20 per group. Writing for other people and `no-ai-slop` read them. Method after PRELUDE/CIPHER (arXiv:2404.15269): readable preference descriptions inferred from edits, retrieved by context.
+
 ### Removed
 - **The `clear` output style.** On Opus 5.5, Claude Code's built-in `Concise` style (2.1.237+) leads with the result and drops preamble and recaps, which was most of what `clear` added; a side-by-side run of the same prompts under Default, `Concise` and `clear` showed plain answers on all three. Set `"outputStyle": "Concise"` in `~/.claude/settings.json`. Personal answer rules (decision format, markers, drawn shapes) belong in your own global `CLAUDE.md`.
 

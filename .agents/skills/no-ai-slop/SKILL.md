@@ -113,7 +113,7 @@ The reliable composition order is finding -> evidence -> reasoning -> decision, 
 ## Workflow
 
 1. Read the full draft before editing.
-2. Identify the core point and 3-5 voice signals to preserve, such as vocabulary, cadence, bluntness, humor, uncertainty, or digressions. Keep this note internal. If you cannot identify the core point, ask the user.
+2. Identify the core point and 3-5 voice signals to preserve, such as vocabulary, cadence, bluntness, humor, uncertainty, or digressions. If the draft is the user's own writing and `00-inbox/MY-VOICE.md` exists, add its rules for the draft's language and audience; they beat the generic rules here when they conflict. Keep this note internal. If you cannot identify the core point, ask the user.
 3. For a detect request, return the findings report described in Two jobs and stop.
 4. For an edit, make the minimum effective changes, then check the edited draft against `references/eval.md` yourself. Do not spawn a separate evaluator agent.
 5. If any check fails, fix the draft and run the checks again.
