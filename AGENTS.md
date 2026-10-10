@@ -50,6 +50,13 @@ Inside a project folder (`04-projects/<project>/` or `04-projects/<customer>/<pr
 
 **When moving files:** grep for path-based inbound links first (`\[\[(\.\./|04-projects/)[^]]*<name>`), report what breaks, then move and rewrite. Bare links need no change. The user handles git - use plain `mv`, not `git mv`.
 
+**Keeping project docs current.**
+- Before planning work on a project, list its folder and read `PROJECT-OVERVIEW.md` plus the plans and backlog it links. Check proposed work against what is already planned, deferred or in the backlog.
+- A status change the user shares (decision, delivery, phase change, correction, new task) updates `PROJECT-OVERVIEW.md` before moving on: one outcome line, not the steps. Step-by-step logs go to the daily journal.
+- Record results in the existing living docs. Create a braindump only when the user asks for one or the content is cross-cutting (architecture analysis, multi-component snapshot, method change).
+- Match the density of neighbouring entries: facts, references, triggers, no narrative. Standards and rule files carry no dates or "applied on" notes; git is the audit trail.
+- A new booklet entry under `05-knowledge/booklets/<category>/` gets a pointer line at the top of that category's `_index.md` Recent Additions, and its `entry_count` and `last_updated` are bumped.
+
 ## Integration Preferences
 
 Before using any external integration in a skill, check `00-inbox/MY-INTEGRATIONS.md`:
@@ -214,7 +221,8 @@ Delegate only large, independent tracks: a wide multi-file investigation, 3+ par
 
 ## Briefing sub-agents
 
-Sub-agents see only the prompt you write - not this file, not your skill, not the user's prior messages. Rules in your context do not cross to sub-agents automatically. Encode anything that matters in the briefing.
+- Put everything the sub-agent needs in the briefing; assume it knows nothing else.
+- Sub-agent claim the briefing cannot explain = unverified.
 
 ### Fresh-context isolation - always apply when fanning out
 
