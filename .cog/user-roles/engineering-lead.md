@@ -16,6 +16,7 @@ aliases: [eng lead, engineering manager, em, tech lead, vp engineering, director
 | weekly-checkin | Spot patterns across sprints — recurring blockers, velocity trends, team dynamics shifts |
 | knowledge-consolidation | Build engineering playbooks and decision records from scattered technical notes |
 | url-dump | Save technical articles, architecture references, and tool evaluations with auto-extracted insights |
+| retro | Every two weeks, find where coding agents waste calls or repeat mistakes in your repos and fix the environment, not the code |
 | onboarding | Initial setup — run this first |
 
 ## Recommended Integrations

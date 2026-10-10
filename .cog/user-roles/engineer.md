@@ -15,6 +15,7 @@ aliases: [software engineer, developer, dev, swe, frontend engineer, backend eng
 | url-dump | Save Stack Overflow answers, library docs, and blog posts with auto-extracted key takeaways |
 | weekly-checkin | Reflect on what you shipped, what you learned, and where you want to grow |
 | knowledge-consolidation | Build personal engineering reference docs from scattered notes and learnings |
+| retro | Every two weeks, find where coding agents waste calls or repeat mistakes in your repos and fix the environment, not the code |
 | onboarding | Initial setup — run this first |
 
 ## Recommended Integrations
