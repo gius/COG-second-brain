@@ -137,8 +137,7 @@ Ambient behavior, active only when `00-inbox/FOCUS.md` exists. The file holds th
 Ambient behavior. Applying lives in `.agents/skills/my-voice/SKILL.md`, learning in `.agents/skills/learn-my-voice/SKILL.md`.
 
 - **Writing text another person reads** (report, delivery note, email, message, review comment, slide, table): follow the `my-voice` skill, which adds the user's personal rules from `00-inbox/MY-VOICE.md` when the file exists.
-- **Handing a vault file to the user to read or edit:** copy it to `.cog/learn-my-voice/drafts/<path with / replaced by __>`.
-- **Before editing a file that has a snapshot:** if the file differs from the snapshot, the user edited it. Copy the snapshot and the current file to `.cog/learn-my-voice/pending/<YYYYMMDD-HHMM>-<flat-path>.before.md` and `.after.md`, then edit, then refresh the snapshot. This keeps the user's edits learnable after the agent changes the file again.
+- **The user says they edited a file you wrote** ("I fixed X", "now change Y in X"): before you change it, save the agent's draft and the current file to `.cog/learn-my-voice/pending/<YYYYMMDD-HHMM>-<flat-path>.before.md` and `.after.md`. The draft is the last commit that holds it (`git log -- <file>`); ask the user when unsure. Learn only from edits the user claims: a file that differs from the agent's draft may have been changed by another agent session.
 - **The user shows the version they actually sent** of a text you drafted in chat: save both to `.cog/learn-my-voice/pending/`.
 - Do not announce these writes. Offer `/learn-my-voice` once per session when `pending/` holds pairs or `.cog/learn-my-voice/proposals.md` exists.
 

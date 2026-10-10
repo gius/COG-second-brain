@@ -29,14 +29,13 @@ Method follows PRELUDE/CIPHER (Gao et al. 2024, arXiv:2404.15269): infer a prefe
 | Path | Holds |
 |---|---|
 | `00-inbox/MY-VOICE.md` | The profile. Created from `references/voice-template.md` on the first approved rule |
-| `.cog/learn-my-voice/drafts/<flat-path>` | The agent's last handed-over version of a vault file. `<flat-path>` = vault-relative path with `/` replaced by `__` |
-| `.cog/learn-my-voice/pending/<YYYYMMDD-HHMM>-<slug>.before.md` + `.after.md` | Edit pairs waiting for **learn**: captured before an agent overwrote the user's edits, or pasted in chat |
+| `.cog/learn-my-voice/pending/<YYYYMMDD-HHMM>-<slug>.before.md` + `.after.md` | Edit pairs waiting for **learn**: captured when the user said they edited a file, or pasted in chat. `<slug>` for a file = vault-relative path with `/` replaced by `__` |
 | `.cog/learn-my-voice/proposals.md` | Proposed rules waiting for approval. Any session can finish the approval |
 | `.cog/learn-my-voice/runs/` | Scratch for one learn run: git baselines, script output |
 
 Everything learned about the user stays in these files. Never write rules, examples or pairs into the skill folder or any framework file: the skill ships to other people.
 
-Snapshot capture is ambient and described in `AGENTS.md` § Voice.
+Pair capture is ambient and described in `AGENTS.md` § Voice.
 
 ## Learn
 
@@ -45,9 +44,7 @@ Snapshot capture is ambient and described in `AGENTS.md` § Voice.
 Take every source that applies, in this order:
 
 1. All pairs in `.cog/learn-my-voice/pending/`.
-2. A file the user names. Baseline:
-   - its snapshot in `.cog/learn-my-voice/drafts/`, if one exists and differs from the file;
-   - else git: show `git log --format='%h %ad %s' --date=short -5 -- <file>` and ask which commit holds the agent's draft. Uncommitted changes against `HEAD` count only if the user confirms nobody else (no agent) edited the file since.
+2. A file the user names. Baseline from git: show `git log --format='%h %ad %s' --date=short -5 -- <file>` and ask which commit holds the agent's draft. Uncommitted changes against `HEAD` count only if the user confirms nobody else (no agent) edited the file since.
 3. Text pasted in chat: the agent's draft and the version the user sent (email, message, comment). Save both to `pending/` first, so the pair outlives the session.
 
 `proposals.md` exists: finish that approval (step 5) before collecting new pairs. No pairs and no proposals: say so and stop.
