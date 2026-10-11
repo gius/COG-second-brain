@@ -14,7 +14,7 @@ metadata:
 Deep investigation of a single artifact (a URL, library/tool/repo, or article) before you commit time to it. Scout reads the thing, gathers verified external signal (reviews, comments, reactions, comparisons), checks whether the vault already covers the substance, refreshes vault notes the source proves outdated, flags what it offers the user's other projects, and gives one clear recommendation. It does the reading so you do not have to.
 
 ## Pre-Flight
-- Read `00-inbox/MY-PROFILE.md` (active projects, role) and `00-inbox/MY-INTERESTS.md`. Keep the active-project list - step 6 scores against it. Missing: evaluate on general quality and ask if they want `/onboarding`.
+- Read `00-inbox/MY-PROFILE.md` (active projects, priority projects, personal life areas, role) and `00-inbox/MY-INTERESTS.md`. Keep the projects and life areas - step 6 scores against them. Missing: evaluate on general quality and ask if they want `/onboarding`.
 - Fetching needs no integration check. If every rung of the step-2 ladder fails, say so and ask the user to paste the content.
 
 ## Process
@@ -76,11 +76,17 @@ State the corrected fact with its source URL and the source's date; record the c
 Report as `## Refreshed` only when a file changed - file, what changed, one-line evidence. Never manufacture an edit to fill the section. Nothing stale: emit no section and no justification - one clause in the verdict.
 
 ### 6. Cross-project relevance
-Score the source against the active projects from `00-inbox/MY-PROFILE.md`. Where a hit looks plausible, read that project's `PROJECT-OVERVIEW.md` and backlog to check the need is real and not already solved.
+Score the source against the active projects and personal life areas (hobbies, home, family, health) from `00-inbox/MY-PROFILE.md`.
+
+- **Priority projects** (the profile marks them, often with a candidates or components doc): always read that doc, even when nothing in the source names the project. A library that fits an open slot rarely uses the project's words.
+- **Other projects:** read the `PROJECT-OVERVIEW.md` and backlog only when a hit looks plausible, to check the need is real and not already solved.
+- **Life areas:** a hit must quote the gap, wish, or open item it answers from the area's hub note. No such line in the note: no hit, however well it fits the hobby.
 
 Look for: a feature or approach that solves a known open problem, a library that replaces something hand-rolled, a benchmark or number that settles an open decision, a failure mode the project would hit.
 
-Report as `## Relevant to your projects` only on a hit - project, the specific thing, suggested action (one line each). Skip the slot if it is only "interesting"; the tie-in must name what it changes.
+**Candidate tables.** When the profile or the project names a truth doc that collects candidates (a components or candidates table), a hit worth keeping is a new row there. The row links its evidence (the saved booklet entry or a research note) and carries the check date; no evidence note, no row. Step 5 rules apply: edit a living doc in place; ask first when the row would change a current pick.
+
+Report as `## Relevant to your projects` only on a hit - project or life area, the specific thing, suggested action (one line each). Skip the slot if it is only "interesting"; the tie-in must name what it changes.
 
 **No forced tie-ins.** Nothing carries over: emit no section and no per-project list - one clause in the verdict. Never one bullet per active project.
 
@@ -120,5 +126,5 @@ its seven skills already exists in COG in a deeper form. Nothing stale, nothing 
 ## Handoff
 - **Save** -> `/url-dump` with a pre-filled category + any step-4 framework/pattern overlaps as `## Confirms` targets
 - **Step 5 raised a plan-level contradiction** -> `/knowledge-consolidation` to resolve the Open Contradictions entry
-- **Step 6 hit is worth acting on** -> a task in the project's doc, Obsidian emoji format `- [ ] <action> 📅 YYYY-MM-DD`
+- **Step 6 hit is worth acting on** -> a task in the project's doc, Obsidian emoji format `- [ ] <action> 📅 YYYY-MM-DD`, or a candidate row in its truth doc
 - **Open-ended question** -> `/auto-research`

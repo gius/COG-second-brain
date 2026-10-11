@@ -37,7 +37,7 @@ Transform raw URLs into structured, insightful knowledge entries through intelli
    Would you like to run onboarding first, or should I proceed with default settings?
    ```
 3. If found:
-   - Read the profile to get user's interests and projects
+   - Read the profile to get user's interests, projects, and personal life areas
    - Use interests to help with auto-categorization
    - Check for existing booklet categories in `05-knowledge/booklets/`
 
@@ -116,7 +116,7 @@ Generate:
 #### Phase 3: Relevance Assessment
 Analyze:
 - **User Interest Match:** [high|medium|low] - [which interests from profile]
-- **Project Relevance:** [project-name] - [why relevant]
+- **Project Relevance:** [project or personal life area from the profile] - [the open problem it helps with]
 - **Knowledge Gap:** [yes|no] - [what gap it fills]
 - **Timeliness:** [evergreen|current|dated]
 - **Uniqueness:** [novel|common|duplicate-adjacent]
