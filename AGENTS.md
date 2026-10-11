@@ -172,12 +172,20 @@ Read these files to understand the user's context:
 
 ## Knowledge Reuse
 
-`05-knowledge/_index.md` is the index of compiled knowledge - frameworks, patterns, open contradictions. `/knowledge-consolidation` maintains it; everything else consults it.
+`05-knowledge/_index.md` is the index of compiled knowledge - frameworks, patterns, topic hubs, open contradictions. `/knowledge-consolidation` maintains it; everything else consults it.
 
 - Before analysis, planning, or strategy work, check the index and read the relevant frameworks/patterns. Don't re-derive what's already compiled.
 - Link consulted frameworks/patterns in outputs with `[[wiki-links]]`.
 - If new evidence contradicts a framework, append a line to the index's **Open Contradictions** section - only `/knowledge-consolidation` resolves and removes entries there.
 - If the index doesn't exist yet, fall back to scanning `05-knowledge/consolidated/` and `05-knowledge/patterns/` directly.
+
+## Topic Hubs
+
+A topic hub compiles everything the vault holds on one topic (a tool category, a model family, a technique) into one undated living page in `05-knowledge/topics/`. Page shape, detail notes, length budget: `05-knowledge/topics/README.md`.
+
+- Before saving or judging a tool, library, model or article, list `05-knowledge/topics/` and read the hub for its topic.
+- A save on a hub's topic updates the hub: a new or corrected row, with its evidence inline or in a detail note that carries `feeds: "[[<hub>]]"`.
+- `/knowledge-consolidation` creates hubs from clusters, splits hubs over the length budget, and lists them in the index.
 
 ## People CRM
 

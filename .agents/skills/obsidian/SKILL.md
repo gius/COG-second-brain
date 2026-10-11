@@ -478,6 +478,7 @@ The standard COG vault layout (created by `/onboarding`):
   patterns/            # Pattern analyses
   timeline/            # Evolution timelines
   booklets/            # URL booklets by category
+  topics/              # Topic hubs, one living page per topic
   research/            # Auto-research outputs
   [domain]/            # KB entries by domain (product/, technical/, process/)
   _logs/               # KB update logs
@@ -505,6 +506,7 @@ Skill outputs follow the pattern: `<type>-YYYY-MM-DD-HHMM-<slug>.md` or `<type>-
 | `"url-bookmark"` | url-dump |
 | `"url-tool"` | url-dump |
 | `"booklet-index"` | url-dump |
+| `"topic-hub"` | url-dump, knowledge-consolidation |
 | `"consolidated-knowledge"` | knowledge-consolidation |
 | `"pattern-analysis"` | knowledge-consolidation |
 | `"timeline-entry"` | knowledge-consolidation |

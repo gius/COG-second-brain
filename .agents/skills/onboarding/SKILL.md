@@ -230,6 +230,7 @@ Based on configuration, create personalized structure:
   patterns/
   timeline/
   booklets/
+  topics/
 06-templates/
 ```
 

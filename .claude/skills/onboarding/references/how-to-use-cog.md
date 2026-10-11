@@ -30,7 +30,7 @@ Say what you want in plain words; the assistant picks the skill. "Capture this",
 | `02-personal/` | Personal braindumps and notes, private domain |
 | `03-professional/` | Work braindumps, strategy, leadership, skills; `COMPETITIVE-WATCHLIST.md` |
 | `04-projects/<project>/` | One folder per project, `PROJECT-OVERVIEW.md` at its root |
-| `05-knowledge/` | What COG compiles from your notes: `_index.md` (entry point), `consolidated/` frameworks, `patterns/`, `booklets/` saved links, `people/` profiles |
+| `05-knowledge/` | What COG compiles from your notes: `_index.md` (entry point), `consolidated/` frameworks, `patterns/`, `booklets/` saved links, `topics/` one hub page per topic, `people/` profiles |
 | `06-templates/` | Note templates |
 
 Inside a project folder the name decides placement, not the topic. Undated files (`PROJECT-OVERVIEW.md`, `build-plan.md`) are living documents at the root, updated in place. Dated files (`<slug>-YYYY-MM-DD.md`) are point-in-time and sit in a subfolder: `braindumps/` raw capture, `research/` findings gathered as input, `planning/` pre-build inputs, `reports/` finished output for an audience, `archive/` superseded.
