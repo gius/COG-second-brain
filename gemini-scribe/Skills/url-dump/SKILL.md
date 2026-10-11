@@ -131,6 +131,11 @@ Identify connections to:
 
 ### 5. Generate Structured Output
 
+**Topic hub first.** List `05-knowledge/topics/` and read the hub for this URL's topic. Hub conventions: `05-knowledge/topics/README.md`.
+- **Hub exists:** add or correct the entry's row. Evidence under the README's detail-note threshold goes inline in the hub's `## Evidence`, and no booklet file is written. Over it: write the booklet file below with `feeds: "[[<hub>]]"` and link it from the row's Detail column.
+- **No hub, and 2+ booklet entries or research notes share the topic:** write the booklet file, then propose a new hub (topic name and slug) in step 8.
+- **No hub, nothing related:** write the booklet file.
+
 Write the file from the bookmark template in `references/output-templates.md`. Read that file now.
 
 Save to appropriate location:
@@ -161,7 +166,7 @@ Summary:
 
 ### 8. Confirm Completion
 - Confirm file(s) created
-- Show user: "URL saved to [file path]"
+- Show user: "URL saved to [file path or hub row]"
 - Show quick summary: title, category, key insight preview
 - Ask if they want to:
   - Add another URL

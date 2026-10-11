@@ -200,6 +200,7 @@ Consolidated, deduplicated list of all sources across threads.
 ### Phase 4: Save & Deliver
 
 1. Save the full analysis to `05-knowledge/research/YYYY-MM-DD-[slug].md`
+   - When the question's topic has a hub in `05-knowledge/topics/` (conventions: `05-knowledge/topics/README.md`), add `feeds: "[[<hub>]]"` to the frontmatter and update the hub's rows from the findings.
 2. Present the Executive Summary + Recommended Actions to the user directly in chat
 
 

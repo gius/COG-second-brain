@@ -51,6 +51,7 @@ Exceptions:
 - "No real reactions found" is a valid, useful result. Fabricated signal is not.
 
 ### 4. Vault coverage (substance, not just URL)
+- **Hub:** list `05-knowledge/topics/` and read the hub for the source's topic; its rows and detail-note links show what the vault already holds.
 - **Exact:** grep the vault for the URL / domain / library name (catches a literal re-save).
 - **Substance:** pull 3-5 key claims/entities from what you just read, grep vault titles, headers, body, and tags for them, read the hits, and judge real overlap vs a passing mention. Quote the overlapping note and let the user decide - a keyword hit is not proof they have already absorbed this.
 
@@ -64,6 +65,7 @@ Step 4 already read the overlapping notes. Compare them against what the source 
 | Target | Action |
 |---|---|
 | Living doc (undated - `PROJECT-OVERVIEW.md`, `architecture.md`, booklet entry, `05-knowledge/patterns/`) | Edit in place |
+| Topic hub (`05-knowledge/topics/`) | Edit in place: correct the row and its `Checked` date; an abandoned or ruled-out entry moves to `## Dropped` |
 | Dated doc (`reports/`, `braindumps/`, `research/<x>-YYYY-MM-DD.md`) | Never edit - point-in-time record. If a newer doc supersedes it, add one pointer line to the successor at the top; otherwise cite the newer source in the report |
 | `05-knowledge/consolidated/` framework | Never edit. Append one line to `05-knowledge/_index.md` -> **Open Contradictions**; only `/knowledge-consolidation` resolves it |
 
@@ -124,7 +126,7 @@ its seven skills already exists in COG in a deeper form. Nothing stale, nothing 
 - **solo:** do all fetching and reading directly.
 
 ## Handoff
-- **Save** -> `/url-dump` with a pre-filled category + any step-4 framework/pattern overlaps as `## Confirms` targets
+- **Save** -> `/url-dump` with a pre-filled category, the topic hub if one exists, and any step-4 framework/pattern overlaps as `## Confirms` targets
 - **Step 5 raised a plan-level contradiction** -> `/knowledge-consolidation` to resolve the Open Contradictions entry
 - **Step 6 hit is worth acting on** -> a task in the project's doc, Obsidian emoji format `- [ ] <action> 📅 YYYY-MM-DD`, or a candidate row in its truth doc
 - **Open-ended question** -> `/auto-research`
