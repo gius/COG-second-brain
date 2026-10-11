@@ -1,16 +1,16 @@
 ---
 name: knowledge-consolidation
-description: Build frameworks from scattered insights, or run a lightweight vault health audit with freshness scoring and orphan detection
+description: Build frameworks from scattered insights, group saved links into topic hubs, or run a lightweight vault health audit with freshness scoring and orphan detection
 metadata:
   roles: all
-  keywords: consolidate knowledge,build frameworks,synthesize insights,extract patterns,knowledge consolidation,create framework,analyze patterns,vault health,vault audit,vault status,stale content,orphan notes
+  keywords: consolidate knowledge,build frameworks,synthesize insights,extract patterns,knowledge consolidation,create framework,analyze patterns,vault health,vault audit,vault status,stale content,orphan notes,topic hubs
   display-name: COG Knowledge Consolidation
 ---
 
 # COG Knowledge Consolidation Skill
 
 ## Purpose
-Transform scattered insights from braindumps, daily briefs, research, bookmarks, and all other vault content into coherent frameworks and "single source of truth" knowledge documents through pattern recognition and systematic synthesis. Optionally run in **audit-only** mode for a lightweight vault health check without full synthesis.
+Transform scattered insights from braindumps, daily briefs, research, bookmarks, and all other vault content into coherent frameworks and "single source of truth" knowledge documents through pattern recognition and systematic synthesis. It also gardens topic hubs (`05-knowledge/topics/`): loose saves grouped into hubs, hubs kept within their length budget. Optionally run in **audit-only** mode for a lightweight vault health check without full synthesis.
 
 Frameworks and patterns are not archives — braindump, weekly-checkin, and ordinary work sessions consult them through `05-knowledge/_index.md` (see `AGENTS.md → Knowledge Reuse`). Every run must leave that index accurate.
 
@@ -34,7 +34,7 @@ The complete pipeline: scan → pattern recognition → framework synthesis → 
 ### Audit Only (lightweight)
 A quick vault health report without framework synthesis. Use when the user says "vault health", "vault audit", "vault status", "what needs attention", or explicitly asks for an audit without consolidation.
 
-**Audit-only skips:** Steps 2 (Pattern Recognition), 3 (Framework Development), and 4 (Knowledge Integration) — except the Knowledge Index refresh in Step 4, which runs in both modes. It runs Step 1 (Data Gathering) with expanded statistics, the Freshness & Decay Assessment, and generates a Vault Health Report instead of the full consolidation report.
+**Audit-only skips:** Steps 2 (Pattern Recognition), 3 (Framework Development), and 4 (Knowledge Integration) — except the Knowledge Index refresh in Step 4 and Step 4b (Topic Hubs), which run in both modes. It runs Step 1 (Data Gathering) with expanded statistics, the Freshness & Decay Assessment, and generates a Vault Health Report instead of the full consolidation report.
 
 ## Agent Mode Awareness
 
@@ -92,6 +92,7 @@ When in doubt, err toward lighter output. A framework created too early from thi
     - Cross-references and patterns across multiple booklets (e.g., clustering of tool evaluations reveals strategic priorities)
     - Connections to braindumps and project goals
     - Skip tool feature descriptions and technical specs — those are documentation, not insight
+    - Entries without `feeds:` that share a topic are hub material for Step 4b
     - `## Confirms` sections: harvest wiki-link targets that resolve to `05-knowledge/consolidated/` or `05-knowledge/patterns/`. These feed the index's External Corroborations section (Step 4) and evidence depth (Step 3). Ignore Confirms links to anything else (braindumps, other booklets).
 
 - **Project artifacts:**
@@ -115,6 +116,7 @@ When in doubt, err toward lighter output. A framework created too early from thi
   - `05-knowledge/_index.md` (knowledge index — read first; its **Open Contradictions** section holds entries appended by braindump and weekly-checkin, mandatory input for Contradiction Analysis in Step 2)
   - `05-knowledge/consolidated/` (frameworks)
   - `05-knowledge/patterns/` (patterns)
+  - `05-knowledge/topics/` (topic hubs)
 
 **Determine scope:**
 - Ask user: "What time period should I analyze? (last week, last month, last quarter, all time, or custom range?)"
@@ -305,6 +307,9 @@ Entry point to compiled knowledge. Maintained by `/knowledge-consolidation`; con
 ## Patterns
 - [[pattern-name]] (frequency) — one-line description
 
+## Topic Hubs
+- [[hub-slug]] (N entries) — one line: what the topic covers
+
 ## External Corroborations
 - [[framework-or-pattern]] ← [[booklet-entry]] (author, published YYYY-MM)
 
@@ -312,7 +317,18 @@ Entry point to compiled knowledge. Maintained by `/knowledge-consolidation`; con
 - [claim] — [[source-doc]] vs [[framework]] (flagged YYYY-MM-DD)
 ```
 
-Rules: one line per doc; frameworks sorted stable → working → emerging (superseded/deprecated docs are archived, not listed); patterns by frequency high → low. Open Contradictions entries survive regeneration unless resolved in Step 2's Contradiction Analysis. External Corroborations is regenerated every run from booklet `## Confirms` sections: one line per target, corroborating booklets comma-appended with (author, published YYYY-MM); list only targets currently in the Frameworks/Patterns sections — superseded/retired targets drop out; never edit booklet entries to match.
+Rules: one line per doc; frameworks sorted stable → working → emerging (superseded/deprecated docs are archived, not listed); patterns by frequency high → low; Topic Hubs regenerated every run from files with `type: "topic-hub"`, sorted by name. Open Contradictions entries survive regeneration unless resolved in Step 2's Contradiction Analysis. External Corroborations is regenerated every run from booklet `## Confirms` sections: one line per target, corroborating booklets comma-appended with (author, published YYYY-MM); list only targets currently in the Frameworks/Patterns sections — superseded/retired targets drop out; never edit booklet entries to match.
+
+### 4b. Topic Hubs
+
+**Runs in both modes.** Full consolidation presents the proposals below as one batch and applies what the user approves; audit-only lists them in the Vault Health Report. Hub conventions: `05-knowledge/topics/README.md`.
+
+1. **Cluster:** group the booklet entries and research notes that have no `feeds:` by topic (tags, title, shared entities). Topic with a hub: propose a row for each loose note plus its `feeds:`. Topic with 3+ notes and no hub: propose the hub, its name and slug.
+2. **Budget:** measure every hub against the README's length budget and propose the split for each hub over it.
+3. **Drift:** compare each hub row with its detail note. Flag a disagreement in the hub's `## Open contradictions`; resolve the entries a newer source settles.
+4. **Debt:** list detail notes with `feeds` and no `consolidated_in`.
+
+Done when every booklet entry and research note in scope either feeds a hub or was judged to have no hub topic.
 
 ### 5. Generate Consolidation Report
 
@@ -328,7 +344,7 @@ Save to: `05-knowledge/consolidated/consolidation-YYYY-MM-DD.md`
 - **Patterns Identified** — For each: frequency, domains, description, implications, link to pattern doc
 - **Thinking Evolution** — Major shifts with catalysts and impact, recorded in the affected framework's Evolution & History section (link it)
 - **Cross-Cutting Insights** — Cross-domain connections, contradictions identified and Open Contradictions processed (with resolution status), strategic implications
-- **Knowledge Base Maintenance** — Updates made checklist, archive actions (braindumps marked consolidated, superseded content archived)
+- **Knowledge Base Maintenance** — Updates made checklist, archive actions (braindumps marked consolidated, superseded content archived), topic hub changes (hubs created or split, rows added)
 - **Future Consolidation Needs** — Ready for framework creation, needs deeper analysis, monitoring required — each with target dates using `📅 YYYY-MM-DD`
 - **Quality Assessment** — Completeness, coherence, traceability, actionability, evolution documented
 
@@ -345,6 +361,7 @@ Save to: `05-knowledge/consolidated/vault-health-YYYY-MM-DD.md`
 - **Content Inventory** — Table: content type | count | unprocessed | oldest unprocessed | avg age. Include all types (braindumps by domain, daily/team briefs, check-ins, research, bookmarks, PRDs, releases, stories, audits, competitive intel, meeting notes, frameworks, patterns, timeline entries). End with totals row.
 - **Freshness Report** — Stale content table (document, type, age, threshold, action needed). Frameworks needing evidence (status emerging/working, last updated, days since update).
 - **Consolidation Debt**: table from the Step 1b check: project | topic | phase | truth doc | pending notes | oldest pending | open contradictions. Omit when no project has a Sources of truth table or `feeds:` note.
+- **Topic Hubs** — table from Step 4b: hub | entries | lines | over budget | pending detail notes | open contradictions; then proposed new hubs. Omit when no hub or candidate exists.
 - **Connectivity Report** — Orphaned documents list (path, type, created date). Dead links list (broken reference, source file). Most connected hub documents table (top 5 by inlink + outlink count).
 - **Recommended Actions** — Three tiers: Immediate (this session), Next Consolidation, Maintenance. Each with specific actionable items.
 
