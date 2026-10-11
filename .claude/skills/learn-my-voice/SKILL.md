@@ -20,7 +20,7 @@ Method follows PRELUDE/CIPHER (Gao et al. 2024, arXiv:2404.15269): infer a prefe
 
 | User says | Mode |
 |---|---|
-| "learn from my edits", "I edited X", hands back a changed draft or the version they sent | **learn** |
+| "learn from my edits", hands back a changed draft or the version they sent | **learn** |
 | "add a rule: ...", "never write X" | **add** |
 | "show my voice", "what have you learned" | **show** |
 
@@ -29,9 +29,9 @@ Method follows PRELUDE/CIPHER (Gao et al. 2024, arXiv:2404.15269): infer a prefe
 | Path | Holds |
 |---|---|
 | `00-inbox/MY-VOICE.md` | The profile. Created from `references/voice-template.md` on the first approved rule |
-| `.cog/learn-my-voice/pending/<YYYYMMDD-HHMM>-<slug>.before.md` + `.after.md` | Edit pairs waiting for **learn**: captured when the user said they edited a file, or pasted in chat. `<slug>` for a file = vault-relative path with `/` replaced by `__` |
+| `.cog/learn-my-voice/pending/<YYYYMMDD-HHMM>-<slug>.before.md` + `.after.md` | Edit pairs waiting for **learn**, pasted in chat |
 | `.cog/learn-my-voice/proposals.md` | Proposed rules waiting for approval. Any session can finish the approval |
-| `.cog/learn-my-voice/runs/` | Scratch for one learn run: git baselines, script output |
+| `.cog/learn-my-voice/runs/` | Scratch for one learn run: script output |
 
 Everything learned about the user stays in these files. Never write rules, examples or pairs into the skill folder or any framework file: the skill ships to other people.
 
@@ -44,14 +44,15 @@ Pair capture is ambient and described in `AGENTS.md` § Voice.
 Take every source that applies, in this order:
 
 1. All pairs in `.cog/learn-my-voice/pending/`.
-2. A file the user names. Baseline from git: show `git log --format='%h %ad %s' --date=short -5 -- <file>` and ask which commit holds the agent's draft. Uncommitted changes against `HEAD` count only if the user confirms nobody else (no agent) edited the file since.
-3. Text pasted in chat: the agent's draft and the version the user sent (email, message, comment). Save both to `pending/` first, so the pair outlives the session.
+2. Text pasted in chat: the agent's draft and the version the user sent (email, message, comment). Save both to `pending/` first, so the pair outlives the session.
+
+A vault file the user edited is not a source: agent sessions edit the same files, and a diff cannot show who wrote which change. Ask the user to paste the version they want learned from.
 
 `proposals.md` exists: finish that approval (step 5) before collecting new pairs. No pairs and no proposals: say so and stop.
 
 ### 2. List changed paragraphs
 
-With a shell: `uv run <skill-dir>/scripts/edit_pairs.py <before> <after>` per pair. Write git baselines to `.cog/learn-my-voice/runs/` first. The script drops frontmatter and `%% comments %%`, ignores table padding and re-wrapping, and prints numbered pairs: rewritten (with % of words changed), added, removed.
+With a shell: `uv run <skill-dir>/scripts/edit_pairs.py <before> <after>` per pair. The script drops frontmatter and `%% comments %%`, ignores table padding and re-wrapping, and prints numbered pairs: rewritten (with % of words changed), added, removed.
 
 Without a shell: read both versions, walk paragraphs in order, list each paragraph whose words differ, plus added and removed paragraphs. Ignore whitespace and table padding.
 
